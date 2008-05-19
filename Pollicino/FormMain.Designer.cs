@@ -38,6 +38,7 @@
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
+            this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -52,6 +53,7 @@
             this.label_lat = new System.Windows.Forms.Label();
             this.pb_GPSActvity = new System.Windows.Forms.PictureBox();
             this.mapcontrol = new MapsLibrary.MapControl();
+            this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -68,6 +70,7 @@
             this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
             this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
             this.menuItem1.MenuItems.Add(this.menuItem_loadtrack);
+            this.menuItem1.MenuItems.Add(this.menuItem_exit);
             this.menuItem1.Text = "Commands";
             // 
             // menuItem_zoomin
@@ -103,6 +106,11 @@
             // 
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
+            // 
+            // menuItem_exit
+            // 
+            this.menuItem_exit.Text = "Exit";
+            this.menuItem_exit.Click += new System.EventHandler(this.menuItem_exit_Click);
             // 
             // menuItem2
             // 
@@ -204,6 +212,11 @@
             this.mapcontrol.Zoom = ((uint)(0u));
             this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
             // 
+            // hardwareButton_app3
+            // 
+            this.hardwareButton_app3.AssociatedControl = this;
+            this.hardwareButton_app3.HardwareKey = Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3;
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -250,6 +263,8 @@
         private System.Windows.Forms.MenuItem menuItem_downloadmaps;
         private System.Windows.Forms.MenuItem menuItem_loadtrack;
         private System.Windows.Forms.MenuItem menuItem_followGPS;
+        private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
+        private System.Windows.Forms.MenuItem menuItem_exit;
 
 
 

@@ -379,5 +379,13 @@ namespace MapperTool
 
         }
 
+        private void menuItem_exit_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo,MessageBoxIcon.None,MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                Application.Exit();
+
+        }
+
+
     }
 }
