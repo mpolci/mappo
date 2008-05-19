@@ -25,7 +25,11 @@ namespace MapperTool
                 opt.GPS.Simulation = cb_Simulation.Checked;
                 opt.GPS.SimulationFile = tb_SimulationFile.Text;
                 opt.GPS.LogsDir = tb_GPSLogPath.Text;
-                //opt.Maps.OSM.OSMTileServer =
+                opt.Maps.OSM.OSMTileServer = tb_TileServer.Text;
+                opt.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
+                opt.Maps.OSM.AutoDownload = cb_autodownload.Checked;
+                opt.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
+                opt.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
                 return opt;
             }
             set
@@ -35,6 +39,11 @@ namespace MapperTool
                 cb_Simulation.Checked = value.GPS.Simulation;
                 tb_SimulationFile.Text = value.GPS.SimulationFile;
                 tb_GPSLogPath.Text = value.GPS.LogsDir;
+                tb_TileServer.Text = value.Maps.OSM.OSMTileServer;
+                tb_TileCacheDir.Text = value.Maps.OSM.TileCachePath;
+                cb_autodownload.Checked = value.Maps.OSM.AutoDownload;
+                num_DownloadDepth.Value = value.Maps.OSM.DownloadDepth;
+                tb_GMapsCacheDir.Text = value.Maps.GMaps.CachePath;
             }
         }
 
@@ -55,6 +64,11 @@ namespace MapperTool
                 tb_SimulationFile.Text = openFileDialog1.FileName;
         }
 
+        private void button_gpslogpath_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.
+        }
+        
     }
 
 

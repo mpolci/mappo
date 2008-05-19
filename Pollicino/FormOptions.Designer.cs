@@ -6,7 +6,6 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MainMenu mainMenu1;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -29,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.menuItem_ok = new System.Windows.Forms.MenuItem();
-            this.menuItem_Cancel = new System.Windows.Forms.MenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_GPS = new System.Windows.Forms.TabPage();
             this.tb_GPSLogPath = new System.Windows.Forms.TextBox();
@@ -46,32 +42,21 @@
             this.tb_GPSPort = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.cb_autodownload = new System.Windows.Forms.CheckBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.num_DownloadDepth = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.tb_GMapsCacheDir = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.tb_TileServer = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.button_gpslogpath = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mainMenu1
-            // 
-            this.mainMenu1.MenuItems.Add(this.menuItem_ok);
-            this.mainMenu1.MenuItems.Add(this.menuItem_Cancel);
-            // 
-            // menuItem_ok
-            // 
-            this.menuItem_ok.Text = "Ok";
-            // 
-            // menuItem_Cancel
-            // 
-            this.menuItem_Cancel.Text = "Cancel";
             // 
             // tabControl1
             // 
@@ -85,6 +70,7 @@
             // 
             // tabPage_GPS
             // 
+            this.tabPage_GPS.Controls.Add(this.button_gpslogpath);
             this.tabPage_GPS.Controls.Add(this.tb_GPSLogPath);
             this.tabPage_GPS.Controls.Add(this.label8);
             this.tabPage_GPS.Controls.Add(this.button_SelectSimulationFile);
@@ -176,14 +162,14 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.cb_autodownload);
-            this.tabPage2.Controls.Add(this.numericUpDown1);
+            this.tabPage2.Controls.Add(this.num_DownloadDepth);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.textBox6);
+            this.tabPage2.Controls.Add(this.tb_GMapsCacheDir);
             this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.textBox5);
+            this.tabPage2.Controls.Add(this.tb_TileCacheDir);
             this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.textBox4);
+            this.tabPage2.Controls.Add(this.tb_TileServer);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(232, 242);
@@ -197,23 +183,23 @@
             this.cb_autodownload.TabIndex = 11;
             this.cb_autodownload.Text = "Automatic tiles download";
             // 
-            // numericUpDown1
+            // num_DownloadDepth
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(184, 101);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.num_DownloadDepth.Location = new System.Drawing.Point(184, 101);
+            this.num_DownloadDepth.Maximum = new decimal(new int[] {
             4,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.num_DownloadDepth.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(49, 22);
-            this.numericUpDown1.TabIndex = 10;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.num_DownloadDepth.Name = "num_DownloadDepth";
+            this.num_DownloadDepth.Size = new System.Drawing.Size(49, 22);
+            this.num_DownloadDepth.TabIndex = 10;
+            this.num_DownloadDepth.Value = new decimal(new int[] {
             3,
             0,
             0,
@@ -233,12 +219,12 @@
             this.label6.Size = new System.Drawing.Size(149, 20);
             this.label6.Text = "GMaps cache path";
             // 
-            // textBox6
+            // tb_GMapsCacheDir
             // 
-            this.textBox6.Location = new System.Drawing.Point(7, 191);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(226, 21);
-            this.textBox6.TabIndex = 7;
+            this.tb_GMapsCacheDir.Location = new System.Drawing.Point(7, 191);
+            this.tb_GMapsCacheDir.Name = "tb_GMapsCacheDir";
+            this.tb_GMapsCacheDir.Size = new System.Drawing.Size(226, 21);
+            this.tb_GMapsCacheDir.TabIndex = 7;
             // 
             // label5
             // 
@@ -247,12 +233,12 @@
             this.label5.Size = new System.Drawing.Size(149, 20);
             this.label5.Text = "Tiles cache path";
             // 
-            // textBox5
+            // tb_TileCacheDir
             // 
-            this.textBox5.Location = new System.Drawing.Point(7, 74);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(226, 21);
-            this.textBox5.TabIndex = 4;
+            this.tb_TileCacheDir.Location = new System.Drawing.Point(7, 74);
+            this.tb_TileCacheDir.Name = "tb_TileCacheDir";
+            this.tb_TileCacheDir.Size = new System.Drawing.Size(226, 21);
+            this.tb_TileCacheDir.TabIndex = 4;
             // 
             // label4
             // 
@@ -261,12 +247,21 @@
             this.label4.Size = new System.Drawing.Size(149, 20);
             this.label4.Text = "OSM tiles server";
             // 
-            // textBox4
+            // tb_TileServer
             // 
-            this.textBox4.Location = new System.Drawing.Point(7, 27);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(226, 21);
-            this.textBox4.TabIndex = 1;
+            this.tb_TileServer.Location = new System.Drawing.Point(7, 27);
+            this.tb_TileServer.Name = "tb_TileServer";
+            this.tb_TileServer.Size = new System.Drawing.Size(226, 21);
+            this.tb_TileServer.TabIndex = 1;
+            // 
+            // button_gpslogpath
+            // 
+            this.button_gpslogpath.Location = new System.Drawing.Point(216, 120);
+            this.button_gpslogpath.Name = "button_gpslogpath";
+            this.button_gpslogpath.Size = new System.Drawing.Size(21, 21);
+            this.button_gpslogpath.TabIndex = 16;
+            this.button_gpslogpath.Text = "...";
+            this.button_gpslogpath.Click += new System.EventHandler(this.button_gpslogpath_Click);
             // 
             // FormOptions
             // 
@@ -298,19 +293,19 @@
         private System.Windows.Forms.TextBox tb_GPSPortSpeed;
         private System.Windows.Forms.CheckBox cb_Simulation;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.MenuItem menuItem_ok;
-        private System.Windows.Forms.MenuItem menuItem_Cancel;
         private System.Windows.Forms.Button button_SelectSimulationFile;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox tb_TileServer;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox tb_GMapsCacheDir;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.TextBox tb_TileCacheDir;
+        private System.Windows.Forms.NumericUpDown num_DownloadDepth;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox cb_autodownload;
         private System.Windows.Forms.TextBox tb_GPSLogPath;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.Button button_gpslogpath;
     }
 }

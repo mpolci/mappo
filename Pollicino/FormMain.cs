@@ -61,10 +61,10 @@ namespace MapperTool
 
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedMapTS(path + "\\tiles", new OSMTileMapSystem(), 20);
+            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(), 20);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new SparseImagesMapSystem(), path + "/gmaps/");
+            gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath);
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
