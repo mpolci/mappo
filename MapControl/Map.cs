@@ -237,7 +237,18 @@ namespace MapsLibrary
         {
             throw new NotImplementedException("Abstract method");
         }
-        
+        /*
+        public class TileNotFoundException: Exception 
+        {
+            private TileNum tn;
+            public TileNum tilenum { get { return tn; } }
+            public TileNotFoundException(TileNum n, Exception inner): base("", inner)
+            {
+                this.tn = n;
+            }
+
+        }
+        */
         /// <summary>
         /// Crea e restituisce il bitmap del tile indicato
         /// </summary>
@@ -251,10 +262,12 @@ namespace MapsLibrary
                 img = new Bitmap(file);
                 return img;
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException e)
             {
+                //throw new TileNotFoundException(tn, e);
                 // sarebbe meglio lanciare un'eccezione indicante il tile non trovato
-                TileNotFound(this, tn);
+                if (TileNotFound != null) 
+                    TileNotFound(this, tn);
             }
             return null;
         }

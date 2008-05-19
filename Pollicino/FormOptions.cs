@@ -66,7 +66,6 @@ namespace MapperTool
 
         private void button_gpslogpath_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.
         }
         
     }

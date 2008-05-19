@@ -277,8 +277,15 @@ namespace MapperTool
 
         private void scarica_tiles(MapControl sender)
         {
-            if (lmap.isVisible(idx_layer_osm)) {
-                this.map.downloadAt(sender.Center, sender.Zoom, false);
+            if (options.Maps.OSM.AutoDownload && lmap.isVisible(idx_layer_osm)) {
+                try
+                {
+                    this.map.downloadAt(sender.Center, sender.Zoom, false);
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Download Error");
+                }
             }
         }
 
