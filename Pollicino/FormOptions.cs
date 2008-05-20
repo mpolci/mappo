@@ -1,11 +1,12 @@
 ﻿using System;
-//using System.Linq;
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MapperTool
 {
@@ -49,24 +50,41 @@ namespace MapperTool
 
         private void button_SelectSimulationFile_Click(object sender, EventArgs e)
         {
-            try
-            {
-                //System.IO.FileInfo simfile = new System.IO.FileInfo(tb_SimulationFile.Text);
-                //System.IO.File.
-                //if (simfile.Directory.Exists)
-                //{
-                    openFileDialog1.FileName = tb_SimulationFile.Text;
-                //    openFileDialog1.InitialDirectory = simfile.DirectoryName;
-                //}
-            }
-            catch (ArgumentException) { }
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
-                tb_SimulationFile.Text = openFileDialog1.FileName;
+            string opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    tb_SimulationFile.Text = openfiledlg.openfile;
+        }
+
+        private static void selectDir(TextBox tb)
+        {
+            string opendir = tb.Text;
+            if (!Directory.Exists(opendir)) 
+                opendir = Path.GetDirectoryName(opendir);
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, true))
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    tb.Text = openfiledlg.directoty;
         }
 
         private void button_gpslogpath_Click(object sender, EventArgs e)
         {
+            selectDir(tb_GPSLogPath);
         }
+
+        private void button_TileCacheDir_Click(object sender, EventArgs e)
+        {
+            selectDir(tb_TileCacheDir);
+        }
+
+        private void button_GMapsCacheDir_Click(object sender, EventArgs e)
+        {
+            selectDir(tb_GMapsCacheDir);
+        }
+
         
     }
 

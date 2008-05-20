@@ -54,7 +54,7 @@ namespace MapperTool
 
             // carica le opzioni dal file di configurazione
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            configfile = path + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
+            configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
             try
             {
                 options = (System.IO.File.Exists(configfile)) ?
