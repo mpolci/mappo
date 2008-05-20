@@ -284,7 +284,11 @@ namespace MapperTool
                 }
                 catch (System.Net.WebException)
                 {
-                    MessageBox.Show("Download Error");
+                    if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+                        == DialogResult.Yes)
+                    {
+                        options.Maps.OSM.AutoDownload = false;
+                    }
                 }
             }
         }

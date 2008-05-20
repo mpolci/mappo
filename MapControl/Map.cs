@@ -260,16 +260,24 @@ namespace MapsLibrary
             try
             {
                 img = new Bitmap(file);
-                return img;
             }
-            catch (FileNotFoundException e)
+            catch (IOException e)
             {
                 //throw new TileNotFoundException(tn, e);
-                // sarebbe meglio lanciare un'eccezione indicante il tile non trovato
                 if (TileNotFound != null) 
-                    TileNotFound(this, tn);
+                    TileNotFound(this, tn); //evento
+                // crea un bitmap nero
+                img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
+                using (Graphics g = Graphics.FromImage(img))
+                using (Font font = new Font(FontFamily.GenericSerif, 10, FontStyle.Regular))
+                using (Brush brush = new SolidBrush(Color.White))
+                using (Pen pen = new Pen(Color.White))
+                {
+                    g.DrawString("Tile Not Available", font, brush, 10, 10);
+                    g.DrawRectangle(pen, 0, 0, mapsys.tilesize, mapsys.tilesize);
+                }
             }
-            return null;
+            return img;
         }
 
         /// <summary>
@@ -1096,6 +1104,14 @@ namespace MapsLibrary
         {
             sTileServer = server;
             uTileSize = tilesize;
+        }
+
+        public int tilesize
+        {
+            get
+            {
+                return (int) uTileSize;
+            }
         }
 
         public PxCoordinates GeoToPx(GeoPoint gp, uint zoom)
