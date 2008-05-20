@@ -15,11 +15,11 @@ namespace MapperTool
         {
             InitializeComponent();
         }
-        public MapperToolOptions data
+        public ApplicationOptions data
         {
             get
             {
-                MapperToolOptions opt = new MapperToolOptions();
+                ApplicationOptions opt = new ApplicationOptions();
                 opt.GPS.PortName = tb_GPSPort.Text;
                 opt.GPS.PortSpeed = int.Parse(tb_GPSPortSpeed.Text);
                 opt.GPS.Simulation = cb_Simulation.Checked;

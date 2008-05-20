@@ -1465,9 +1465,16 @@ namespace MapsLibrary
                 foreach (FileInfo cf in files)
                 {
                     string[] data = cf.Name.Split('_');
-                    Int32 lat = Int32.Parse(data[0], System.Globalization.NumberStyles.HexNumber),
-                          lon = Int32.Parse(data[1], System.Globalization.NumberStyles.HexNumber);
-                    images.Add(new ImgID(new ProjectedGeoPoint(lat, lon), current_zoom), cf.FullName);
+                    try
+                    {
+                        Int32 lat = Int32.Parse(data[0], System.Globalization.NumberStyles.HexNumber),
+                              lon = Int32.Parse(data[1], System.Globalization.NumberStyles.HexNumber);
+                        images.Add(new ImgID(new ProjectedGeoPoint(lat, lon), current_zoom), cf.FullName);
+                    }
+                    catch (Exception e) 
+                    {
+                        System.Windows.Forms.MessageBox.Show("GMaps cache error", e.Message);
+                    }
                 }
             }
 

@@ -17,7 +17,7 @@ namespace MapperTool
         [DllImport("coredll")]
         extern static void SystemIdleTimerReset();
 
-        protected MapperToolOptions options;
+        protected ApplicationOptions options;
         string configfile;
 
         protected MapTS map;
@@ -51,13 +51,22 @@ namespace MapperTool
         public Form_MapperToolMain()
         {
             InitializeComponent();
+
+            // carica le opzioni dal file di configurazione
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            configfile = path + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
+            try
+            {
+                options = (System.IO.File.Exists(configfile)) ?
+                           ApplicationOptions.FromFile(configfile) : DefaultOptions();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Config file error! Resetting options to default.");
+                options = DefaultOptions();
+            }
 
-            configfile = path + "\\" + MapperToolResources.ConfigFile;
-            options = (System.IO.File.Exists(configfile)) ?
-                           MapperToolOptions.FromFile(configfile) : DefaultOptions();            
-
-            this.pb_GPSActvity.Image = MapperToolResources.ImgGPS;
+            this.pb_GPSActvity.Image = ApplicationResources.ImgGPS;
 
             this.lmap = new LayeredMap();
             // OSM
@@ -213,10 +222,10 @@ namespace MapperTool
                 if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
                 {
                     GPS.EnableEmulate(options.GPS.SimulationFile);
-                    // DEBUG
-                    FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt");
-                    swGPSLog = new StreamWriter(logfile.FullName);
-                    swGPSLog.AutoFlush = true;
+                    // DEBUG - normalmente niente log durante la simulazione
+                    //FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt");
+                    //swGPSLog = new StreamWriter(logfile.FullName);
+                    //swGPSLog.AutoFlush = true;
                     // FINE DEBUG
                 }
                 else
@@ -304,10 +313,10 @@ namespace MapperTool
             }
         }
 
-        private static MapperToolOptions DefaultOptions()
+        private static ApplicationOptions DefaultOptions()
         {
             string programpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            MapperToolOptions opt = new MapperToolOptions();
+            ApplicationOptions opt = new ApplicationOptions();
             opt.GPS.PortName = "COM1";
             opt.GPS.PortSpeed = 9600;
             opt.GPS.Simulation = false;

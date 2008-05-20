@@ -100,12 +100,12 @@
   <Class Name="MapsLibrary.TileMapSystem">
     <Position X="0.5" Y="11.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACQAGgAgAAAAAkAAAEAAIAYAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAACQAGgAgAAAQAkAAAEAAIAYAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.OSMTileMapSystem" Collapsed="true">
-    <Position X="0.5" Y="14.75" Width="1.5" />
+  <Class Name="MapsLibrary.OSMTileMapSystem">
+    <Position X="0.5" Y="15.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -125,15 +125,15 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.SparseImagesMapSystem" Collapsed="true">
+  <Class Name="MapsLibrary.SparseImagesMapSystem">
     <Position X="2.75" Y="11.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.SparseImagesMap" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="11.5" Y="2.5" Width="1.5" />
+  <Class Name="MapsLibrary.SparseImagesMap" BaseTypeListCollapsed="true">
+    <Position X="8" Y="8.5" Width="1.5" />
     <NestedTypes>
       <Struct Name="MapsLibrary.SparseImagesMap.ImgID" Collapsed="true">
         <TypeIdentifier>
