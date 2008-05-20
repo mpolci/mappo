@@ -173,8 +173,18 @@ namespace MapperTool
 
         private void menuItem_loadtrack_Click(object sender, EventArgs e)
         {
-            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            string file = path + "\\log.nmea.txt";
+            string opendir = options.GPS.LogsDir,
+                   file;
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+            {
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    file = openfiledlg.openfile;
+                else
+                    return;
+            }
+            
             int count = 0;
 
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
