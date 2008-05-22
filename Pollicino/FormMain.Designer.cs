@@ -34,6 +34,7 @@
             this.menuItem_zoomin = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomout = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
+            this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
@@ -66,6 +67,7 @@
             this.menuItem1.MenuItems.Add(this.menuItem_zoomin);
             this.menuItem1.MenuItems.Add(this.menuItem_zoomout);
             this.menuItem1.MenuItems.Add(this.menuItem_downloadmaps);
+            this.menuItem1.MenuItems.Add(this.menuItem_refreshTileCache);
             this.menuItem1.MenuItems.Add(this.menuItem5);
             this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
             this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
@@ -87,6 +89,11 @@
             // 
             this.menuItem_downloadmaps.Text = "Download maps";
             this.menuItem_downloadmaps.Click += new System.EventHandler(this.menuItem_downloadmaps_Click);
+            // 
+            // menuItem_refreshTileCache
+            // 
+            this.menuItem_refreshTileCache.Enabled = false;
+            this.menuItem_refreshTileCache.Text = "Refresh tiles cache";
             // 
             // menuItem5
             // 
@@ -114,9 +121,9 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.MenuItems.Add(this.menuItem3);
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
+            this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.Text = "Options";
             // 
             // menuItem_config
@@ -132,6 +139,7 @@
             // 
             // menuItem_map_osm
             // 
+            this.menuItem_map_osm.Enabled = false;
             this.menuItem_map_osm.Text = "OSM";
             this.menuItem_map_osm.Click += new System.EventHandler(this.menuItem_map_osm_Click);
             // 
@@ -265,6 +273,7 @@
         private System.Windows.Forms.MenuItem menuItem_followGPS;
         private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
         private System.Windows.Forms.MenuItem menuItem_exit;
+        private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
 
 
 

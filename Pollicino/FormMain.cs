@@ -70,7 +70,7 @@ namespace MapperTool
 
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(), 20);
+            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
             gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath);
@@ -185,8 +185,8 @@ namespace MapperTool
                     return;
             }
             
+            // count: for debug
             int count = 0;
-
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
             try
             {
@@ -194,17 +194,24 @@ namespace MapperTool
                 // The using statement also closes the StreamReader.
                 using (System.IO.StreamReader sr = new System.IO.StreamReader(file))
                 {
+                    GeoPoint gp;
                     String line;
                     // Read and display lines from the file until the end of 
                     // the file is reached.
                     while ((line = sr.ReadLine()) != null)
                     {
-                        if (line.StartsWith("$GPRMC"))
-                        {
-                            SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
-                            GeoPoint gp = new GeoPoint(gpmrc.Position.Latitude, gpmrc.Position.Longitude);
-                            this.trackpoints.addPoint(this.map.mapsystem.CalcProjection(gp));
-                            count++;
+                        switch (line.Substring(0,6)) {
+                            case "$GPRMC":
+                                SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
+                                gp = new GeoPoint(gpmrc.Position.Latitude, gpmrc.Position.Longitude);
+                                this.trackpoints.addPoint(this.map.mapsystem.CalcProjection(gp));
+                                count++;
+                                break;
+                            case "$GPWPL":
+                                GPWPL gpwpl = new GPWPL(line);
+                                gp = new GeoPoint(gpwpl.latitude, gpwpl.longitude);
+                                this.waypoints.addPoint(this.map.mapsystem.CalcProjection(gp));
+                                break;
                         }
                     }
                 }
@@ -241,7 +248,7 @@ namespace MapperTool
                 else
                 {
                     GPS.Emulate = false;
-                    FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-mm-dd_HHmmss") + ".txt");
+                    FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt");
                     if (!logfile.Directory.Exists)
                         logfile.Directory.Create();
                     swGPSLog = new StreamWriter(logfile.FullName);
@@ -284,7 +291,7 @@ namespace MapperTool
             // scarica le mappe di google maps
             gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom, false);
             gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom + 1, false);
-            Int32 delta = gmap.mapsystem.PxToPoint(new PxCoordinates(256, 0), mapcontrol.Zoom + 2).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+            Int32 delta = gmap.mapsystem.PxToPoint(new PxCoordinates(200, 0), mapcontrol.Zoom + 2).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
             ProjectedGeoPoint p = mapcontrol.Center;
             gmap.downloadAt(new ProjectedGeoPoint(p.nLat - delta, p.nLon - delta), mapcontrol.Zoom + 2, false);
             gmap.downloadAt(new ProjectedGeoPoint(p.nLat - delta, p.nLon + delta), mapcontrol.Zoom + 2, false);
@@ -318,8 +325,11 @@ namespace MapperTool
             {
                 opt.data = this.options;
                 opt.ShowDialog();
-                options = opt.data;
+                ApplicationOptions newopt = opt.data;
                 options.SaveToFile(this.configfile);
+                if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer) 
+                    MessageBox.Show("Attention!", "The tile server is changed. You need to restart the application and you may may need to refresh or delete the cache.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                options = newopt;
             }
         }
 
@@ -348,22 +358,8 @@ namespace MapperTool
         private void create_waypoint()
         {
             if (this.started && swGPSLog != null ) {
-                double lat = gpspos.dLat,
-                       lon = gpspos.dLon;
-                string NordSud =  (lat > 0) ? ",N," : ",S,",
-                       EstOvest = (lon > 0) ? ",E," : ",W,";
-                lat = Math.Abs(lat);
-                lon = Math.Abs(lon);
-                int latdeg = (int)Math.Floor(lat),
-                    londeg = (int)Math.Floor(lon);
-                lat = (lat - latdeg) * 60;
-                lon = (lon - londeg) * 60;
-
-                string sentence = "$GPWPL," + latdeg.ToString("D2") + lat.ToString("00.#######") + NordSud
-                                + londeg.ToString("D3") + lon.ToString("00.#######") + EstOvest 
-                                + "WPT " + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + '*';
-                
-                swGPSLog.WriteLine(sentence + getNMEAChecksum(sentence));
+                GPWPL nmeawpt = new GPWPL("WPT " + DateTime.Now.ToString("yyyy-MM-dd_HHmmss"), this.gpspos.dLat, this.gpspos.dLon);
+                swGPSLog.WriteLine(nmeawpt.NMEASentence);
                 waypoints.addPoint(map.mapsystem.CalcProjection(gpspos));
             }
         }

@@ -1231,7 +1231,12 @@ namespace MapsLibrary
         public OSMTileMapSystem()
             : base("http://tile.openstreetmap.org/", 256)
         {
-            
+
+        }
+        public OSMTileMapSystem(string tileserver)
+            : base(tileserver, 256)
+        {
+
         }
         /// <summary>
         /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile

@@ -39,7 +39,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.TileCoordinates" Collapsed="true">
-    <Position X="11.5" Y="1.5" Width="1.5" />
+    <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAIQAAAAAAAAAEAAAAAAAAAAAEAAAACAgDAAgAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -98,35 +98,35 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="MapsLibrary.TileMapSystem">
-    <Position X="0.5" Y="11.25" Width="1.5" />
+    <Position X="0.5" Y="11.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAACQAGgAgAAAQAkAAAEAAIAYAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
-    <Position X="0.5" Y="15.25" Width="1.5" />
+    <Position X="0.5" Y="15.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.CachedMapTS">
-    <Position X="0.5" Y="5.25" Width="1.5" />
+    <Position X="0.5" Y="5.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gCAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
-    <Position X="1.25" Y="9.25" Width="2.25" />
+    <Position X="1.5" Y="9.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQQAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="2.75" Y="11.25" Width="1.5" />
+    <Position X="3" Y="11.25" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
