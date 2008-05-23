@@ -6,9 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
 using System.Runtime.InteropServices;
+
 
 namespace MapperTool
 {
@@ -17,6 +19,8 @@ namespace MapperTool
         [DllImport("coredll")]
         extern static void SystemIdleTimerReset();
 
+        SoundPlayer sount_wpt;
+        
         protected ApplicationOptions options;
         string configfile;
 
@@ -65,6 +69,16 @@ namespace MapperTool
                 MessageBox.Show("Config file error! Resetting options to default.");
                 options = DefaultOptions();
             }
+
+            // sound per nuovo waypoint
+            try
+            {
+                sount_wpt = new SoundPlayer();
+                if (File.Exists(options.Application.WaypointSoundFile))
+                    sount_wpt.SoundLocation = options.Application.WaypointSoundFile;
+            }
+            catch (Exception)
+            { }
 
             this.pb_GPSActvity.Image = ApplicationResources.ImgGPS;
 
@@ -304,16 +318,19 @@ namespace MapperTool
         private void scarica_tiles(MapControl sender)
         {
             if (options.Maps.OSM.AutoDownload && lmap.isVisible(idx_layer_osm)) {
-                try
+                lock (this.map)
                 {
-                    this.map.downloadAt(sender.Center, sender.Zoom, false);
-                }
-                catch (System.Net.WebException)
-                {
-                    if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                        == DialogResult.Yes)
+                    try
                     {
-                        options.Maps.OSM.AutoDownload = false;
+                        this.map.downloadAt(sender.Center, sender.Zoom, false);
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+                            == DialogResult.Yes)
+                        {
+                            options.Maps.OSM.AutoDownload = false;
+                        }
                     }
                 }
             }
@@ -328,7 +345,9 @@ namespace MapperTool
                 ApplicationOptions newopt = opt.data;
                 options.SaveToFile(this.configfile);
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer) 
-                    MessageBox.Show("Attention!", "The tile server is changed. You need to restart the application and you may may need to refresh or delete the cache.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
+                    sount_wpt.SoundLocation = newopt.Application.WaypointSoundFile;
                 options = newopt;
             }
         }
@@ -347,6 +366,8 @@ namespace MapperTool
             opt.Maps.OSM.DownloadDepth = 3;
             opt.Maps.OSM.AutoDownload = true;
             opt.Maps.GMaps.CachePath = programpath + "\\gmaps";
+            opt.Application.WaypointSoundPlay = true;
+            opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
             return opt;
         }
 
@@ -361,6 +382,8 @@ namespace MapperTool
                 GPWPL nmeawpt = new GPWPL("WPT " + DateTime.Now.ToString("yyyy-MM-dd_HHmmss"), this.gpspos.dLat, this.gpspos.dLon);
                 swGPSLog.WriteLine(nmeawpt.NMEASentence);
                 waypoints.addPoint(map.mapsystem.CalcProjection(gpspos));
+                if (options.Application.WaypointSoundPlay && sount_wpt != null)
+                    sount_wpt.Play();
             }
         }
 

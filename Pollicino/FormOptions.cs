@@ -31,6 +31,8 @@ namespace MapperTool
                 opt.Maps.OSM.AutoDownload = cb_autodownload.Checked;
                 opt.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
                 opt.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
+                opt.Application.WaypointSoundPlay = cb_waypointsound.Checked;
+                opt.Application.WaypointSoundFile = tb_waypointsound.Text;
                 return opt;
             }
             set
@@ -45,6 +47,8 @@ namespace MapperTool
                 cb_autodownload.Checked = value.Maps.OSM.AutoDownload;
                 num_DownloadDepth.Value = value.Maps.OSM.DownloadDepth;
                 tb_GMapsCacheDir.Text = value.Maps.GMaps.CachePath;
+                cb_waypointsound.Checked = value.Application.WaypointSoundPlay;
+                tb_waypointsound.Text = value.Application.WaypointSoundFile;
             }
         }
 
@@ -85,8 +89,5 @@ namespace MapperTool
             selectDir(tb_GMapsCacheDir);
         }
 
-        
     }
-
-
 }

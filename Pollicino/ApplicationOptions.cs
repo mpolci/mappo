@@ -32,9 +32,15 @@ namespace MapperTool
             public OSMOptions OSM;
             public GMAPSOptions GMaps;
         }
+        public struct InterfaceOptions
+        {
+            public bool WaypointSoundPlay;
+            public string WaypointSoundFile;
+        }
 
         public GPSOptions GPS;
         public MapsOptions Maps;
+        public InterfaceOptions Application;
 
         public void SaveToFile(string filename)
         {
@@ -65,6 +71,7 @@ namespace MapperTool
             Maps.OSM.OSMTileServer = "";
             Maps.OSM.TileCachePath = "";
             Maps.GMaps.CachePath = "";
+            Application.WaypointSoundFile = "";
         }
     }
 }

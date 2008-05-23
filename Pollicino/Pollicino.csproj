@@ -82,6 +82,7 @@
       <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationOptions.cs" />
+    <Compile Include="GPSAbstraction.cs" />
     <Compile Include="GPWPL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +123,7 @@
     <None Include="Resources\IconGPS.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\ImgGPS.bmp" />
   </ItemGroup>
   <ItemGroup>

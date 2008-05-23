@@ -42,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tb_GPSPort = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button_emptytilescache = new System.Windows.Forms.Button();
             this.button_GMapsCacheDir = new System.Windows.Forms.Button();
             this.button_TileCacheDir = new System.Windows.Forms.Button();
             this.cb_autodownload = new System.Windows.Forms.CheckBox();
@@ -53,18 +54,23 @@
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tb_TileServer = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_waypointsound = new System.Windows.Forms.Button();
+            this.tb_waypointsound = new System.Windows.Forms.TextBox();
+            this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.button_emptytilescache = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage_GPS);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -187,8 +193,17 @@
             this.tabPage2.Controls.Add(this.tb_TileServer);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(240, 245);
+            this.tabPage2.Size = new System.Drawing.Size(232, 242);
             this.tabPage2.Text = "Maps";
+            // 
+            // button_emptytilescache
+            // 
+            this.button_emptytilescache.Enabled = false;
+            this.button_emptytilescache.Location = new System.Drawing.Point(46, 152);
+            this.button_emptytilescache.Name = "button_emptytilescache";
+            this.button_emptytilescache.Size = new System.Drawing.Size(149, 20);
+            this.button_emptytilescache.TabIndex = 23;
+            this.button_emptytilescache.Text = "Empty tiles cache";
             // 
             // button_GMapsCacheDir
             // 
@@ -287,14 +302,41 @@
             this.tb_TileServer.Size = new System.Drawing.Size(226, 21);
             this.tb_TileServer.TabIndex = 1;
             // 
-            // button_emptytilescache
+            // tabPage3
             // 
-            this.button_emptytilescache.Enabled = false;
-            this.button_emptytilescache.Location = new System.Drawing.Point(46, 152);
-            this.button_emptytilescache.Name = "button_emptytilescache";
-            this.button_emptytilescache.Size = new System.Drawing.Size(149, 20);
-            this.button_emptytilescache.TabIndex = 23;
-            this.button_emptytilescache.Text = "Empty tiles cache";
+            this.tabPage3.Controls.Add(this.button_waypointsound);
+            this.tabPage3.Controls.Add(this.tb_waypointsound);
+            this.tabPage3.Controls.Add(this.cb_waypointsound);
+            this.tabPage3.Location = new System.Drawing.Point(0, 0);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(240, 245);
+            this.tabPage3.Text = "Interface";
+            // 
+            // button_waypointsound
+            // 
+            this.button_waypointsound.Location = new System.Drawing.Point(212, 29);
+            this.button_waypointsound.Name = "button_waypointsound";
+            this.button_waypointsound.Size = new System.Drawing.Size(21, 21);
+            this.button_waypointsound.TabIndex = 18;
+            this.button_waypointsound.Text = "...";
+            // 
+            // tb_waypointsound
+            // 
+            this.tb_waypointsound.Location = new System.Drawing.Point(7, 29);
+            this.tb_waypointsound.Name = "tb_waypointsound";
+            this.tb_waypointsound.Size = new System.Drawing.Size(199, 21);
+            this.tb_waypointsound.TabIndex = 1;
+            this.tb_waypointsound.Text = "\\Windows\\Infbeg.wav";
+            // 
+            // cb_waypointsound
+            // 
+            this.cb_waypointsound.Checked = true;
+            this.cb_waypointsound.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_waypointsound.Location = new System.Drawing.Point(3, 3);
+            this.cb_waypointsound.Name = "cb_waypointsound";
+            this.cb_waypointsound.Size = new System.Drawing.Size(230, 20);
+            this.cb_waypointsound.TabIndex = 0;
+            this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
             // FormOptions
             // 
@@ -309,6 +351,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage_GPS.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -343,5 +386,9 @@
         private System.Windows.Forms.Button button_GMapsCacheDir;
         private System.Windows.Forms.Button button_TileCacheDir;
         private System.Windows.Forms.Button button_emptytilescache;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox tb_waypointsound;
+        private System.Windows.Forms.CheckBox cb_waypointsound;
+        private System.Windows.Forms.Button button_waypointsound;
     }
 }
