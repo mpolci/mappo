@@ -31,10 +31,12 @@ namespace MapperTool
         protected LayerPoints waypoints;
         protected int idx_layer_gmaps, idx_layer_osm;
         protected bool autocenter;
+        protected GPSAbstraction gps;
+        /*
         GPSHandler GPS;
         bool started;
         StreamWriter swGPSLog;
-
+        */
         private GeoPoint gpspos;
         public GeoPoint GPSPosition
         {
@@ -108,41 +110,27 @@ namespace MapperTool
             mapcontrol.Zoom = 12;
             mapcontrol.Center = map.mapsystem.CalcProjection(gp);
 
+            this.gps = new GPSAbstraction(this);
+            this.gps.PositionUpdated += new GPSAbstraction.PositionUpdateHandler(GPSEventHandler);
+            /*
             this.GPS = new GPSHandler(this); //Initialize GPS handler
             GPS.TimeOut = 5; //Set timeout to 5 seconds
             GPS.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler); //Hook up GPS data events to Y handler
             started = false;
+            */
         
         }
 
         /// <summary>
         /// Responds to sentence events from GPS receiver
         /// </summary>
-        protected void GPSEventHandler(object sender, GPSHandler.GPSEventArgs e)
+        //protected void GPSEventHandler(object sender, GPSHandler.GPSEventArgs e)
+        protected void GPSEventHandler(GPSAbstraction sender, GPSAbstraction.GPSPosition gpsdata)
         {
-            SystemIdleTimerReset();
+            this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+            this.GPSPosition = gpsdata.position;
 
-            if (swGPSLog != null)
-                swGPSLog.WriteLine(e.Sentence);
-
-            switch (e.TypeOfEvent)
-            {
-                case GPSEventType.GPRMC:  //Recommended minimum specific GPS/Transit data
-                    if (GPS.HasGPSFix) 
-                    {
-                        //lbRMCPosition.Text = GPS.GPRMC.Position.ToString("#.000000");
-                        GeoPoint gp = new GeoPoint(GPS.GPRMC.Position.Latitude, GPS.GPRMC.Position.Longitude);
-                        this.trackpoints.addPoint(map.mapsystem.CalcProjection(gp));
-                        this.GPSPosition = gp;
-                    }
-                    else
-                    {
-                        // NOFIX
-                    }
-                    break;
-            }
-            if (e.TypeOfEvent != GPSEventType.TimeOut)
-                this.pb_GPSActvity.Visible = !this.pb_GPSActvity.Visible;
+            this.pb_GPSActvity.Visible = !this.pb_GPSActvity.Visible;
 
         }
 
@@ -248,11 +236,15 @@ namespace MapperTool
 
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
-            if (!this.started)
+            if (!this.gps.Started)
             {
+                string logname = null;
                 if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
                 {
-                    GPS.EnableEmulate(options.GPS.SimulationFile);
+                    gps.SimulationFile = options.GPS.SimulationFile;
+                    //DEBUG
+                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
+                    //GPS.EnableEmulate(options.GPS.SimulationFile);
                     // DEBUG - normalmente niente log durante la simulazione
                     //FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt");
                     //swGPSLog = new StreamWriter(logfile.FullName);
@@ -261,19 +253,27 @@ namespace MapperTool
                 }
                 else
                 {
+                    gps.SimulationFile = null;
+                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
+                    /*
                     GPS.Emulate = false;
                     FileInfo logfile = new FileInfo(options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt");
                     if (!logfile.Directory.Exists)
                         logfile.Directory.Create();
                     swGPSLog = new StreamWriter(logfile.FullName);
                     swGPSLog.AutoFlush = true;
+                     */
                 }
+                gps.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
+                /*
                 GPS.Start(options.GPS.PortName, options.GPS.PortSpeed);
                 this.started = true;
-                this.menuItem_gpsactivity.Text = "Stop GPS";
+                */
+                this.menuItem_gpsactivity.Text = "stop GPS";
             }
             else
             {
+                /*
                 GPS.Stop();
                 if (swGPSLog != null)
                 {
@@ -282,7 +282,9 @@ namespace MapperTool
                     swGPSLog = null;
                 }
                 this.started = false;
-                this.menuItem_gpsactivity.Text = "Start GPS";
+                */
+                gps.stop();
+                this.menuItem_gpsactivity.Text = "start GPS";
             }
         }
 
@@ -378,10 +380,16 @@ namespace MapperTool
 
         private void create_waypoint()
         {
+            if (gps.Started) {
+                GeoPoint pos = gps.saveWaypoint().position;
+                /*
             if (this.started && swGPSLog != null ) {
                 GPWPL nmeawpt = new GPWPL("WPT " + DateTime.Now.ToString("yyyy-MM-dd_HHmmss"), this.gpspos.dLat, this.gpspos.dLon);
                 swGPSLog.WriteLine(nmeawpt.NMEASentence);
                 waypoints.addPoint(map.mapsystem.CalcProjection(gpspos));
+                 */
+
+                waypoints.addPoint(map.mapsystem.CalcProjection(pos));
                 if (options.Application.WaypointSoundPlay && sount_wpt != null)
                     sount_wpt.Play();
             }
@@ -390,7 +398,7 @@ namespace MapperTool
         // Calculates the checksum for a sentence
         private static string getNMEAChecksum(string sentence)
         {
-            //Start with first Item
+            //start with first Item
             int checksum = Convert.ToByte(sentence[sentence.IndexOf('$') + 1]);
             // Loop through all chars to get a checksum
             for (int i = sentence.IndexOf('$') + 2; i < sentence.IndexOf('*'); i++)

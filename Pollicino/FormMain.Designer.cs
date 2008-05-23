@@ -105,7 +105,7 @@
             // 
             // menuItem_gpsactivity
             // 
-            this.menuItem_gpsactivity.Text = "Start GPS";
+            this.menuItem_gpsactivity.Text = "start GPS";
             this.menuItem_gpsactivity.Click += new System.EventHandler(this.menuItem_gpsactivity_Click);
             // 
             // menuItem_loadtrack
