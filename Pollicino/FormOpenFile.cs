@@ -48,8 +48,16 @@ namespace MapperTool
             Fill_DirContents();
         }
 
+        private static int CompareDirectoryInfoByName(DirectoryInfo a, DirectoryInfo b)
+        {
+            return a.Name.CompareTo(b.Name);
+        }
 
-        
+        private static int CompareFileInfoByName(FileInfo a, FileInfo b)
+        {
+            return a.Name.CompareTo(b.Name);
+        }
+
         private void Fill_DirContents()
         {
             string currentdir = tb_Dir.Text;
@@ -64,6 +72,7 @@ namespace MapperTool
                     lw_dircontent.Items.Add(item);
                 }
                 DirectoryInfo[] subdirs = cdirinfo.GetDirectories();
+                Array.Sort<DirectoryInfo>(subdirs, CompareDirectoryInfoByName);
                 foreach (DirectoryInfo d in subdirs)
                 {
                     ListViewItem item = new ListViewItem(d.Name);
@@ -73,6 +82,7 @@ namespace MapperTool
                 if (!dirselection)
                 {
                     FileInfo[] files = cdirinfo.GetFiles();
+                    Array.Sort<FileInfo>(files, CompareFileInfoByName);
                     foreach (FileInfo f in files)
                     {
                         ListViewItem item = new ListViewItem(f.Name);

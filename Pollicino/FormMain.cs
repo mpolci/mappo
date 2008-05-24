@@ -399,7 +399,7 @@ namespace MapperTool
             {
                 NMEA2GPX.GPXGenerator.NMEAToGPX(file, outfile);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Error!");
             }

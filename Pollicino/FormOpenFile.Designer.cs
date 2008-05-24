@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOpenFile));
             this.tb_Dir = new System.Windows.Forms.TextBox();
             this.lw_dircontent = new System.Windows.Forms.ListView();
@@ -52,19 +52,19 @@
             // lw_dircontent
             // 
             this.lw_dircontent.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            listViewItem4.ImageIndex = 0;
-            listViewItem4.Text = "pippo";
-            listViewItem4.SubItems.Add("sub1");
-            listViewItem4.SubItems.Add("sub2");
-            listViewItem4.SubItems.Add("sub3");
-            listViewItem5.ImageIndex = 1;
-            listViewItem5.Tag = "";
-            listViewItem5.Text = "pluto";
-            listViewItem6.ImageIndex = 1;
-            listViewItem6.Text = "paperino";
-            this.lw_dircontent.Items.Add(listViewItem4);
-            this.lw_dircontent.Items.Add(listViewItem5);
-            this.lw_dircontent.Items.Add(listViewItem6);
+            listViewItem1.ImageIndex = 0;
+            listViewItem1.Text = "pippo";
+            listViewItem1.SubItems.Add("sub1");
+            listViewItem1.SubItems.Add("sub2");
+            listViewItem1.SubItems.Add("sub3");
+            listViewItem2.ImageIndex = 1;
+            listViewItem2.Tag = "";
+            listViewItem2.Text = "pluto";
+            listViewItem3.ImageIndex = 1;
+            listViewItem3.Text = "paperino";
+            this.lw_dircontent.Items.Add(listViewItem1);
+            this.lw_dircontent.Items.Add(listViewItem2);
+            this.lw_dircontent.Items.Add(listViewItem3);
             this.lw_dircontent.Location = new System.Drawing.Point(3, 30);
             this.lw_dircontent.Name = "lw_dircontent";
             this.lw_dircontent.Size = new System.Drawing.Size(234, 235);

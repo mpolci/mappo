@@ -1,25 +1,128 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="MapperTool.GPSAbstraction">
-    <Position X="0.5" Y="0.5" Width="1.75" />
+  <Class Name="NMEA2GPX.GPXGenerator">
+    <Position X="0.5" Y="4" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Struct Name="MapperTool.GPSAbstraction.GPSPosition" Collapsed="true">
+      <Class Name="NMEA2GPX.GPXGenerator.gpx" Collapsed="true">
         <TypeIdentifier>
-          <NewMemberFileName>GPSAbstraction.cs</NewMemberFileName>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="NMEA2GPX.GPXGenerator.waypoint" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Delegate Name="MapperTool.GPSAbstraction.PositionUpdateHandler" Collapsed="true">
+      <Struct Name="NMEA2GPX.GPXGenerator.track" Collapsed="true">
         <TypeIdentifier>
-          <NewMemberFileName>GPSAbstraction.cs</NewMemberFileName>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="NMEA2GPX.GPXGenerator.trkpt" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>NmeaToGpx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.ApplicationOptions">
+    <Position X="4.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="MapperTool.ApplicationOptions.GPSOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="MapperTool.ApplicationOptions.MapsOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="MapperTool.ApplicationOptions.InterfaceOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgABAAAAAAAAAAAAAIAAAAAAAEAAAAAACAAAA=</HashCode>
+      <FileName>ApplicationOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.ApplicationResources" Collapsed="true">
+    <Position X="7" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAABEAAAAQAAAAAAAAQAIAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.Form_MapperToolMain">
+    <Position X="11.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CMACGC4wKCwAADKCKQCQggACAQbEEEkAACoAAIFAIAI=</HashCode>
+      <FileName>FormMain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.FormOpenFile">
+    <Position X="14" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAIIAAAAQCICAAQAAASAAAACEABQEAAACAAAAAAgBAE=</HashCode>
+      <FileName>FormOpenFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.FormOptions">
+    <Position X="9" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>MACAAGgEUiAAYhAAIACAwAACAKAAEQAoABIUAAACBAA=</HashCode>
+      <FileName>FormOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.GPSControl">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="MapperTool.GPSControl.GPSPosition" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GPSControl.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Delegate Name="MapperTool.GPSControl.PositionUpdateHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GPSControl.cs</NewMemberFileName>
         </TypeIdentifier>
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAhEAAABAAAAgIAAAAAAQAAIgAAECAAAQAAAAAAA=</HashCode>
-      <FileName>GPSAbstraction.cs</FileName>
+      <HashCode>AAAAAhEAACBIAAggIACAAgISAAIgAAECAAEQAAAAAAA=</HashCode>
+      <FileName>GPSControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.GPWPL">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAYAAACAAAAACAIAAAAAAgCAAEEAAAAAAABAAAAAA=</HashCode>
+      <FileName>GPWPL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.Program" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.Properties.Resources" Collapsed="true">
+    <Position X="7" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAEAAAAQAAAAAgAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Font Name="Tahoma" Size="8.25" />

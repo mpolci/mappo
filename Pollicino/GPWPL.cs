@@ -47,7 +47,9 @@ namespace MapperTool
 
             _lat = GPSToDecimalDegrees(split[1], split[2]);
             _lon = GPSToDecimalDegrees(split[3], split[4]);
-            _name = split[5];
+            _name = split[5].Trim();
+            if (_name[_name.Length - 3] == '*')
+                _name = _name.Substring(0, _name.Length - 3);
             _nmeasentence = nmea_sentence;
         }
 
@@ -122,7 +124,7 @@ namespace MapperTool
         // Calculates the checksum for a sentence
         private static string getNMEAChecksum(string sentence)
         {
-            //Start with first Item
+            //start with first Item
             int checksum = Convert.ToByte(sentence[sentence.IndexOf('$') + 1]);
             // Loop through all chars to get a checksum
             for (int i = sentence.IndexOf('$') + 2; i < sentence.IndexOf('*'); i++)
