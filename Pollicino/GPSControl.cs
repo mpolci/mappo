@@ -26,6 +26,8 @@ namespace MapperTool
         {
             InitializeComponent();
 
+            this.pb_GPSActvity.Image = ApplicationResources.ImgGPS;
+
             //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
             //gpshandler = new GPSHandler(parent); //Initialize GPS handler
             gpshandler = new GPSHandler(this); //Initialize GPS handler
@@ -42,13 +44,6 @@ namespace MapperTool
         public delegate void PositionUpdateHandler(GPSControl sender, GPSPosition newpos);
         public event PositionUpdateHandler PositionUpdated;
 
-        /*
-        // utilizzate per effettuare in modo asincrono le elaborazioni dell'evento gps di minore urgenza
-        private delegate void AsyncEventHandler(GPSPosition gpsdata, GPSHandler.GPSEventArgs e, bool sendevent);
-        private AsyncEventHandler ProcessGPSEventAsync;
-        private static AsyncCallback callback = new AsyncCallback(EndEvent);
-        //private void GPSEventAsync(GPSPosition gpsdata, GPSHandler.GPSEventArgs e, bool sendevent);
-        */
 
         #region Properties...
         /// <summary>
@@ -152,7 +147,6 @@ namespace MapperTool
                 case GPSEventType.GPRMC:  //Recommended minimum specific GPS/Transit data
                     if (gpshandler.HasGPSFix)
                     {
-                        //gpsdata = new GPSPosition();
                         gpsdata.position = new GeoPoint(gpshandler.GPRMC.Position.Latitude, gpshandler.GPRMC.Position.Longitude);
                         gpsdata.fixtime = gpshandler.GPRMC.TimeOfFix;
                         lock (gpsdatalock)
@@ -169,14 +163,13 @@ namespace MapperTool
 
             SystemIdleTimerReset();
 
-            //ProcessGPSEventAsync.BeginInvoke(gpsdata, e, sendevent, callback, this);
             if (swGPSLog != null)
                 lock (swGPSLog) swGPSLog.WriteLine(e.Sentence);
 
             if (sendevent && PositionUpdated != null)
                 PositionUpdated(this, gpsdata);
-                //PositionUpdated.BeginInvoke(this, gpsdata, new AsyncCallback(EndEvent), this);
-            
+
+            this.pb_GPSActvity.Visible = !this.pb_GPSActvity.Visible;            
                 
         }
 
@@ -189,15 +182,6 @@ namespace MapperTool
                 PositionUpdated(this, gpsdata);
             
         }
-        /*
-        private static void EndEvent(IAsyncResult result)
-        {
-            //AsyncResult delegateResult = (AsyncResult) result;
-            //AsyncEventHandler delegateInstance = (AsyncEventHandler) ((AsyncResult)result).AsyncDelegate;           
-            AsyncEventHandler delegateInstance = ((GPSControl)result.AsyncState).ProcessGPSEventAsync;
-            delegateInstance.EndInvoke(result);
-        }
-        */
         private static void EndEvent(IAsyncResult result)
         {
             ((GPSControl)result.AsyncState).PositionUpdated.EndInvoke(result);

@@ -28,10 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.pb_GPSActvity = new System.Windows.Forms.PictureBox();
+            this.SuspendLayout();
+            // 
+            // pb_GPSActvity
+            // 
+            this.pb_GPSActvity.Location = new System.Drawing.Point(0, 0);
+            this.pb_GPSActvity.Name = "pb_GPSActvity";
+            this.pb_GPSActvity.Size = new System.Drawing.Size(12, 12);
+            // 
+            // GPSControl
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.pb_GPSActvity);
+            this.Name = "GPSControl";
+            this.Size = new System.Drawing.Size(25, 24);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox pb_GPSActvity;
     }
 }

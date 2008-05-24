@@ -53,10 +53,8 @@
             this.label_lon = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label_lat = new System.Windows.Forms.Label();
-            this.pb_GPSActvity = new System.Windows.Forms.PictureBox();
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
-            this.gpsAbstraction1 = new MapperTool.GPSAbstraction();
             this.gpsControl = new MapperTool.GPSControl();
             this.SuspendLayout();
             // 
@@ -211,12 +209,6 @@
             this.label_lat.Size = new System.Drawing.Size(60, 12);
             this.label_lat.Text = "42,1234567";
             // 
-            // pb_GPSActvity
-            // 
-            this.pb_GPSActvity.Location = new System.Drawing.Point(161, 256);
-            this.pb_GPSActvity.Name = "pb_GPSActvity";
-            this.pb_GPSActvity.Size = new System.Drawing.Size(12, 12);
-            // 
             // mapcontrol
             // 
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
@@ -232,18 +224,12 @@
             this.hardwareButton_app3.AssociatedControl = this;
             this.hardwareButton_app3.HardwareKey = Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3;
             // 
-            // gpsAbstraction1
-            // 
-            this.gpsAbstraction1.Location = new System.Drawing.Point(179, 258);
-            this.gpsAbstraction1.Name = "gpsAbstraction1";
-            this.gpsAbstraction1.Size = new System.Drawing.Size(15, 10);
-            this.gpsAbstraction1.TabIndex = 7;
-            // 
             // gpsControl
             // 
-            this.gpsControl.Location = new System.Drawing.Point(180, 257);
+            this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.gpsControl.Location = new System.Drawing.Point(161, 256);
             this.gpsControl.Name = "gpsControl";
-            this.gpsControl.Size = new System.Drawing.Size(10, 10);
+            this.gpsControl.Size = new System.Drawing.Size(12, 12);
             this.gpsControl.TabIndex = 7;
             // 
             // Form_MapperToolMain
@@ -252,7 +238,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.Controls.Add(this.gpsControl);
-            this.Controls.Add(this.pb_GPSActvity);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
             this.Controls.Add(this.label3);
@@ -278,7 +263,6 @@
         private System.Windows.Forms.Label label_lon;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label_lat;
-        private System.Windows.Forms.PictureBox pb_GPSActvity;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem_gpsactivity;
         private System.Windows.Forms.MenuItem menuItem2;
@@ -297,7 +281,6 @@
         private System.Windows.Forms.MenuItem menuItem_exit;
         private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
         private System.Windows.Forms.MenuItem menuItem4;
-        private GPSAbstraction gpsAbstraction1;
         private GPSControl gpsControl;
 
 
