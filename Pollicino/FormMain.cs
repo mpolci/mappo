@@ -379,6 +379,34 @@ namespace MapperTool
 
         }
 
+        private void menuItem_savegpx_Click(object sender, EventArgs e)
+        {
+            string opendir = options.GPS.LogsDir,
+                   file, outfile;
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+            {
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    file = openfiledlg.openfile;
+                else
+                    return;
+            }
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            outfile = (file.EndsWith(".txt")) ? file.Substring(0, file.Length - 4) : file;
+            outfile += ".gpx";
+            try
+            {
+                NMEA2GPX.GPXGenerator.NMEAToGPX(file, outfile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error!");
+            }
+            System.Windows.Forms.Cursor.Current = Cursors.Default;
+        }
+
+
 
     }
 }

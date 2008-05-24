@@ -40,6 +40,7 @@
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
+            this.menuItem_savegpx = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -103,6 +104,7 @@
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
             this.menuItem4.MenuItems.Add(this.menuItem_refreshTileCache);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
+            this.menuItem4.MenuItems.Add(this.menuItem_savegpx);
             this.menuItem4.Text = "Other";
             // 
             // menuItem_downloadmaps
@@ -119,6 +121,11 @@
             // 
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
+            // 
+            // menuItem_savegpx
+            // 
+            this.menuItem_savegpx.Text = "Log to GPX...";
+            this.menuItem_savegpx.Click += new System.EventHandler(this.menuItem_savegpx_Click);
             // 
             // menuItem_exit
             // 
@@ -282,6 +289,7 @@
         private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
+        private System.Windows.Forms.MenuItem menuItem_savegpx;
 
 
 

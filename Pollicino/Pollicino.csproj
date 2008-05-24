@@ -89,6 +89,7 @@
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
     <Compile Include="GPWPL.cs" />
+    <Compile Include="NmeaToGpx.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ApplicationResources.resx">

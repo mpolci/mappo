@@ -90,7 +90,7 @@ namespace MapperTool
 
             if (swGPSLog != null)
             {
-                GPWPL nmeawpt = new GPWPL("WPT " + gpsdata.fixtime.ToString("yyyy-MM-dd_HHmmss"), gpsdata.position.dLat, gpsdata.position.dLon);
+                GPWPL nmeawpt = new GPWPL("wpt-" + gpsdata.fixtime.ToString("o"), gpsdata.position.dLat, gpsdata.position.dLon);
                 lock (swGPSLog)
                 {
                     swGPSLog.WriteLine(nmeawpt.NMEASentence);
@@ -148,7 +148,7 @@ namespace MapperTool
                     if (gpshandler.HasGPSFix)
                     {
                         gpsdata.position = new GeoPoint(gpshandler.GPRMC.Position.Latitude, gpshandler.GPRMC.Position.Longitude);
-                        gpsdata.fixtime = gpshandler.GPRMC.TimeOfFix;
+                        gpsdata.fixtime = DateTime.SpecifyKind(gpshandler.GPRMC.TimeOfFix, DateTimeKind.Utc);
                         lock (gpsdatalock)
                             _gpsdata = gpsdata;
                         sendevent = true;
