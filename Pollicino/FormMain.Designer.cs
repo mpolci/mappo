@@ -33,11 +33,12 @@
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomin = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomout = new System.Windows.Forms.MenuItem();
-            this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
-            this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
+            this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
@@ -55,7 +56,8 @@
             this.pb_GPSActvity = new System.Windows.Forms.PictureBox();
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.gpsAbstraction1 = new MapperTool.GPSAbstraction();
+            this.gpsControl = new MapperTool.GPSControl();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -84,16 +86,6 @@
             this.menuItem_zoomout.Text = "Zoom out";
             this.menuItem_zoomout.Click += new System.EventHandler(this.menuItem_zoomout_Click);
             // 
-            // menuItem_downloadmaps
-            // 
-            this.menuItem_downloadmaps.Text = "Download maps";
-            this.menuItem_downloadmaps.Click += new System.EventHandler(this.menuItem_downloadmaps_Click);
-            // 
-            // menuItem_refreshTileCache
-            // 
-            this.menuItem_refreshTileCache.Enabled = false;
-            this.menuItem_refreshTileCache.Text = "Refresh tiles cache";
-            // 
             // menuItem5
             // 
             this.menuItem5.Text = "-";
@@ -107,6 +99,23 @@
             // 
             this.menuItem_gpsactivity.Text = "start GPS";
             this.menuItem_gpsactivity.Click += new System.EventHandler(this.menuItem_gpsactivity_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
+            this.menuItem4.MenuItems.Add(this.menuItem_refreshTileCache);
+            this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
+            this.menuItem4.Text = "Other";
+            // 
+            // menuItem_downloadmaps
+            // 
+            this.menuItem_downloadmaps.Text = "Download maps";
+            this.menuItem_downloadmaps.Click += new System.EventHandler(this.menuItem_downloadmaps_Click);
+            // 
+            // menuItem_refreshTileCache
+            // 
+            this.menuItem_refreshTileCache.Enabled = false;
+            this.menuItem_refreshTileCache.Text = "Refresh tiles cache";
             // 
             // menuItem_loadtrack
             // 
@@ -212,7 +221,6 @@
             // 
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
-            this.mapcontrol.Map = null;
             this.mapcontrol.Name = "mapcontrol";
             this.mapcontrol.Size = new System.Drawing.Size(240, 256);
             this.mapcontrol.TabIndex = 0;
@@ -224,18 +232,26 @@
             this.hardwareButton_app3.AssociatedControl = this;
             this.hardwareButton_app3.HardwareKey = Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3;
             // 
-            // menuItem4
+            // gpsAbstraction1
             // 
-            this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
-            this.menuItem4.MenuItems.Add(this.menuItem_refreshTileCache);
-            this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
-            this.menuItem4.Text = "Other";
+            this.gpsAbstraction1.Location = new System.Drawing.Point(179, 258);
+            this.gpsAbstraction1.Name = "gpsAbstraction1";
+            this.gpsAbstraction1.Size = new System.Drawing.Size(15, 10);
+            this.gpsAbstraction1.TabIndex = 7;
+            // 
+            // gpsControl
+            // 
+            this.gpsControl.Location = new System.Drawing.Point(180, 257);
+            this.gpsControl.Name = "gpsControl";
+            this.gpsControl.Size = new System.Drawing.Size(10, 10);
+            this.gpsControl.TabIndex = 7;
             // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.gpsControl);
             this.Controls.Add(this.pb_GPSActvity);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
@@ -281,6 +297,8 @@
         private System.Windows.Forms.MenuItem menuItem_exit;
         private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
         private System.Windows.Forms.MenuItem menuItem4;
+        private GPSAbstraction gpsAbstraction1;
+        private GPSControl gpsControl;
 
 
 

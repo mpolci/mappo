@@ -31,7 +31,8 @@ namespace MapperTool
         protected LayerPoints waypoints;
         protected int idx_layer_gmaps, idx_layer_osm;
         protected bool autocenter;
-        protected GPSAbstraction gps;
+        //GPSControl gpsControl = new GPSControl();
+        //protected GPSAbstraction gps;
         /*
         GPSHandler GPS;
         bool started;
@@ -110,8 +111,9 @@ namespace MapperTool
             mapcontrol.Zoom = 12;
             mapcontrol.Center = map.mapsystem.CalcProjection(gp);
 
-            this.gps = new GPSAbstraction(this);
-            this.gps.PositionUpdated += new GPSAbstraction.PositionUpdateHandler(GPSEventHandler);
+            //this.gps = new GPSAbstraction(this);
+            //this.gps = new GPSAbstraction();
+            this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
             /*
             this.GPS = new GPSHandler(this); //Initialize GPS handler
             GPS.TimeOut = 5; //Set timeout to 5 seconds
@@ -125,7 +127,7 @@ namespace MapperTool
         /// Responds to sentence events from GPS receiver
         /// </summary>
         //protected void GPSEventHandler(object sender, GPSHandler.GPSEventArgs e)
-        protected void GPSEventHandler(GPSAbstraction sender, GPSAbstraction.GPSPosition gpsdata)
+        protected void GPSEventHandler(GPSControl sender, GPSControl.GPSPosition gpsdata)
         {
             this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
             this.GPSPosition = gpsdata.position;
@@ -236,12 +238,12 @@ namespace MapperTool
 
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
-            if (!this.gps.Started)
+            if (!this.gpsControl.Started)
             {
                 string logname = null;
                 if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
                 {
-                    gps.SimulationFile = options.GPS.SimulationFile;
+                    gpsControl.SimulationFile = options.GPS.SimulationFile;
                     //DEBUG
                     logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
                     //GPS.EnableEmulate(options.GPS.SimulationFile);
@@ -253,7 +255,7 @@ namespace MapperTool
                 }
                 else
                 {
-                    gps.SimulationFile = null;
+                    gpsControl.SimulationFile = null;
                     logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
                     /*
                     GPS.Emulate = false;
@@ -264,7 +266,7 @@ namespace MapperTool
                     swGPSLog.AutoFlush = true;
                      */
                 }
-                gps.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
+                gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
                 /*
                 GPS.Start(options.GPS.PortName, options.GPS.PortSpeed);
                 this.started = true;
@@ -283,7 +285,7 @@ namespace MapperTool
                 }
                 this.started = false;
                 */
-                gps.stop();
+                gpsControl.stop();
                 this.menuItem_gpsactivity.Text = "start GPS";
             }
         }
@@ -380,8 +382,8 @@ namespace MapperTool
 
         private void create_waypoint()
         {
-            if (gps.Started) {
-                GeoPoint pos = gps.saveWaypoint().position;
+            if (gpsControl.Started) {
+                GeoPoint pos = gpsControl.saveWaypoint().position;
                 /*
             if (this.started && swGPSLog != null ) {
                 GPWPL nmeawpt = new GPWPL("WPT " + DateTime.Now.ToString("yyyy-MM-dd_HHmmss"), this.gpspos.dLat, this.gpspos.dLon);

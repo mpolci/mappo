@@ -82,7 +82,12 @@
       <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationOptions.cs" />
-    <Compile Include="GPSAbstraction.cs" />
+    <Compile Include="GPSControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GPSControl.Designer.cs">
+      <DependentUpon>GPSControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="GPWPL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

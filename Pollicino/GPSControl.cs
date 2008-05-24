@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
 using System.Text;
+using System.Windows.Forms;
 using System.IO;
 using SharpGis.SharpGps;
 using SharpGis.SharpGps.NMEA;
 using MapsLibrary;
 using System.Runtime.InteropServices;
 
+
 namespace MapperTool
 {
-    public class GPSAbstraction
+    public partial class GPSControl : UserControl
     {
         public struct GPSPosition
         {
@@ -17,22 +22,35 @@ namespace MapperTool
             public DateTime fixtime;
         }
 
+        public GPSControl()
+        {
+            InitializeComponent();
+
+            //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
+            //gpshandler = new GPSHandler(parent); //Initialize GPS handler
+            gpshandler = new GPSHandler(this); //Initialize GPS handler
+            gpshandler.TimeOut = 5; //Set timeout to 5 seconds
+            gpshandler.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler); 
+            started = false;
+        }
+        private object gpsdatalock = new object();
         private GPSPosition _gpsdata;
         private GPSHandler gpshandler;
         private StreamWriter swGPSLog;
         private bool started;
 
-        public delegate void PositionUpdateHandler(GPSAbstraction sender, GPSPosition newpos);
+        public delegate void PositionUpdateHandler(GPSControl sender, GPSPosition newpos);
         public event PositionUpdateHandler PositionUpdated;
 
-        public GPSAbstraction(System.Windows.Forms.Control parent)
-        {
-            gpshandler = new GPSHandler(parent); //Initialize GPS handler
-            gpshandler.TimeOut = 5; //Set timeout to 5 seconds
-            gpshandler.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler); //Hook up GPS data events to Y handler
-            started = false;
-        }
+        /*
+        // utilizzate per effettuare in modo asincrono le elaborazioni dell'evento gps di minore urgenza
+        private delegate void AsyncEventHandler(GPSPosition gpsdata, GPSHandler.GPSEventArgs e, bool sendevent);
+        private AsyncEventHandler ProcessGPSEventAsync;
+        private static AsyncCallback callback = new AsyncCallback(EndEvent);
+        //private void GPSEventAsync(GPSPosition gpsdata, GPSHandler.GPSEventArgs e, bool sendevent);
+        */
 
+        #region Properties...
         /// <summary>
         /// True se il GPS è attivo
         /// </summary>
@@ -59,10 +77,11 @@ namespace MapperTool
         {
             get
             {
-                lock (this)
+                lock (gpsdatalock)
                     return _gpsdata;
             }
         }
+        #endregion
 
         [DllImport("coredll")]
         extern static void SystemIdleTimerReset();
@@ -136,7 +155,7 @@ namespace MapperTool
                         //gpsdata = new GPSPosition();
                         gpsdata.position = new GeoPoint(gpshandler.GPRMC.Position.Latitude, gpshandler.GPRMC.Position.Longitude);
                         gpsdata.fixtime = gpshandler.GPRMC.TimeOfFix;
-                        lock (this)
+                        lock (gpsdatalock)
                             _gpsdata = gpsdata;
                         sendevent = true;
 
@@ -150,15 +169,38 @@ namespace MapperTool
 
             SystemIdleTimerReset();
 
+            //ProcessGPSEventAsync.BeginInvoke(gpsdata, e, sendevent, callback, this);
             if (swGPSLog != null)
                 lock (swGPSLog) swGPSLog.WriteLine(e.Sentence);
 
-            if (sendevent && PositionUpdated != null) {
-                // bisognerebbe lanciare l'evento in modo asincrono
+            if (sendevent && PositionUpdated != null)
                 PositionUpdated(this, gpsdata);
-            }
+                //PositionUpdated.BeginInvoke(this, gpsdata, new AsyncCallback(EndEvent), this);
+            
                 
         }
 
+        private void GPSEventAsync(GPSPosition gpsdata, GPSHandler.GPSEventArgs e, bool sendevent)
+        {
+            if (swGPSLog != null)
+                lock (swGPSLog) swGPSLog.WriteLine(e.Sentence);
+
+            if (sendevent && PositionUpdated != null) 
+                PositionUpdated(this, gpsdata);
+            
+        }
+        /*
+        private static void EndEvent(IAsyncResult result)
+        {
+            //AsyncResult delegateResult = (AsyncResult) result;
+            //AsyncEventHandler delegateInstance = (AsyncEventHandler) ((AsyncResult)result).AsyncDelegate;           
+            AsyncEventHandler delegateInstance = ((GPSControl)result.AsyncState).ProcessGPSEventAsync;
+            delegateInstance.EndInvoke(result);
+        }
+        */
+        private static void EndEvent(IAsyncResult result)
+        {
+            ((GPSControl)result.AsyncState).PositionUpdated.EndInvoke(result);
+        }
     }
 }
