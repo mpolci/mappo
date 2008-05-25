@@ -16,6 +16,11 @@ namespace NMEA2GPX
             // The using statement also closes the StreamReader.
             using (System.IO.StreamReader sr = new System.IO.StreamReader(nmea_input))
             {
+                // questa parte di generazione dei nomi sarebbe da inserire in una classe apposita
+                FileInfo fi_in = new FileInfo(nmea_input);
+                String basedir = fi_in.DirectoryName,
+                       audiodir = fi_in.Name.Substring(0, fi_in.Name.Length - 4);
+                // buffer
                 String line;
                 int count = 0;
                 // Read and display lines from the file until the end of 
@@ -41,22 +46,28 @@ namespace NMEA2GPX
                             w.lat = gpwpl.latitude;
                             w.lon = gpwpl.longitude;
                             w.name = gpwpl.name;
-                            if (w.name.StartsWith("wpt-"))
+                            // time & audio
+                            try
                             {
-                                try
-                                {
-                                    w.time = DateTime.Parse(w.name.Substring(4)).ToUniversalTime();
-                                }
-                                catch (Exception) { }
+                                w.time = WaypointNames.DecodeWPName(w.name);
+                                // check for audio record
+                                string recname = WaypointNames.AudioRecFile(nmea_input, (DateTime) w.time);
+                                if (File.Exists(recname))
+                                    w.link = WaypointNames.AudioRecFileLink(nmea_input, (DateTime) w.time);
                             }
+                            catch (Exception) { }
+
                             gpxdata.wpt.Add(w);
                             break;
                     }
                 }
             }
-            StreamWriter outstream = new StreamWriter(gpx_output);
-            XmlSerializer xmls = new XmlSerializer(typeof(gpx));
-            xmls.Serialize(outstream, gpxdata);
+            using (StreamWriter outstream = new StreamWriter(gpx_output))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
+                xmls.Serialize(outstream, gpxdata);
+                outstream.Close();
+            }
         }
 
         [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1")]
@@ -82,7 +93,11 @@ namespace NMEA2GPX
             [XmlAttribute]
             public double lon;
             public string name;
-            public DateTime time;
+            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
+            [XmlElement(typeof(DateTime))]
+            public object time; 
+            public string link;
+            
         }
 
         public struct track
@@ -98,7 +113,9 @@ namespace NMEA2GPX
             [XmlAttribute]
             public double lon;
 
-            public DateTime time;
+            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
+            [XmlElement(typeof(DateTime))]
+            public object time;
         }
 
 

@@ -19,7 +19,8 @@ namespace MapperTool
         [DllImport("coredll")]
         extern static void SystemIdleTimerReset();
 
-        SoundPlayer sount_wpt;
+        SoundPlayer wpt_sound;
+        AudioRecorder wpt_recorder;
         
         protected ApplicationOptions options;
         string configfile;
@@ -31,6 +32,9 @@ namespace MapperTool
         protected LayerPoints waypoints;
         protected int idx_layer_gmaps, idx_layer_osm;
         protected bool autocenter;
+        protected string logname;
+
+        protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
 
         public Form_MapperToolMain()
         {
@@ -53,12 +57,16 @@ namespace MapperTool
             // sound per nuovo waypoint
             try
             {
-                sount_wpt = new SoundPlayer();
                 if (File.Exists(options.Application.WaypointSoundFile))
-                    sount_wpt.SoundLocation = options.Application.WaypointSoundFile;
+                {
+                    wpt_sound = new SoundPlayer();
+                    wpt_sound.SoundLocation = options.Application.WaypointSoundFile;
+                }
             }
             catch (Exception)
             { }
+
+            wpt_recorder = new AudioRecorder();
 
             this.lmap = new LayeredMap();
             // OSM
@@ -208,17 +216,17 @@ namespace MapperTool
         {
             if (!this.gpsControl.Started)
             {
-                string logname = null;
+                logname = null;
                 if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
                 {
                     gpsControl.SimulationFile = options.GPS.SimulationFile;
                     //DEBUG
-                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
+                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
                 }
                 else
                 {
                     gpsControl.SimulationFile = null;
-                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + ".txt";
+                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
                 }
                 gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
                 this.menuItem_gpsactivity.Text = "stop GPS";
@@ -291,7 +299,7 @@ namespace MapperTool
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer) 
                     MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
-                    sount_wpt.SoundLocation = newopt.Application.WaypointSoundFile;
+                    wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 options = newopt;
             }
         }
@@ -312,6 +320,8 @@ namespace MapperTool
             opt.Maps.GMaps.CachePath = programpath + "\\gmaps";
             opt.Application.WaypointSoundPlay = true;
             opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
+            opt.Application.WaypointRecordAudioSeconds = 10;
+            opt.Application.WaypointRecordAudio = true;
             return opt;
         }
 
@@ -323,11 +333,18 @@ namespace MapperTool
         private void create_waypoint()
         {
             if (gpsControl.Started) {
-                GeoPoint pos = gpsControl.saveWaypoint().position;
-
-                waypoints.addPoint(map.mapsystem.CalcProjection(pos));
-                if (options.Application.WaypointSoundPlay && sount_wpt != null)
-                    sount_wpt.Play();
+                GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
+                if (options.Application.WaypointSoundPlay && wpt_sound != null)
+                    wpt_sound.Play();
+                waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+                if (options.Application.WaypointRecordAudio)
+                {
+                    string recdir = WaypointNames.AudioRecDir(logname),
+                           recfilename = WaypointNames.AudioRecFile(logname, gpsdata.fixtime);
+                    if (!Directory.Exists(recdir))
+                        Directory.CreateDirectory(recdir);
+                    wpt_recorder.start(recfilename, options.Application.WaypointRecordAudioSeconds);
+                }
             }
         }
 
@@ -399,7 +416,7 @@ namespace MapperTool
             {
                 NMEA2GPX.GPXGenerator.NMEAToGPX(file, outfile);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error!");
             }

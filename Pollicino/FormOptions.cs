@@ -33,6 +33,8 @@ namespace MapperTool
                 opt.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
                 opt.Application.WaypointSoundPlay = cb_waypointsound.Checked;
                 opt.Application.WaypointSoundFile = tb_waypointsound.Text;
+                opt.Application.WaypointRecordAudio = cb_recordaudio.Checked;
+                opt.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
                 return opt;
             }
             set
@@ -49,6 +51,8 @@ namespace MapperTool
                 tb_GMapsCacheDir.Text = value.Maps.GMaps.CachePath;
                 cb_waypointsound.Checked = value.Application.WaypointSoundPlay;
                 tb_waypointsound.Text = value.Application.WaypointSoundFile;
+                cb_recordaudio.Checked = value.Application.WaypointRecordAudio;
+                num_recordaudioseconds.Value = value.Application.WaypointRecordAudioSeconds;
             }
         }
 

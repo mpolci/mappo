@@ -84,13 +84,18 @@ namespace MapperTool
         /// <summary>
         /// Crea un nuovo waypoint nella posizione attuale e lo registra nel log
         /// </summary>
-        public GPSPosition saveWaypoint()
+        /// <param name="name">
+        /// Il nome del waypoint viene generato con l'istruzione <code>string.Format(name, fixtime)</code>
+        /// quindi per inserire la data e l'ora del fix nel nome utilizzare il riferimento al parametro zero, ad esempio {0:o}.
+        /// </param>
+        public GPSPosition saveWaypoint(string name)
         {
             GPSPosition gpsdata = this.PositionData;
 
             if (swGPSLog != null)
             {
-                GPWPL nmeawpt = new GPWPL("wpt-" + gpsdata.fixtime.ToString("o"), gpsdata.position.dLat, gpsdata.position.dLon);
+                string wptname = string.Format(name, gpsdata.fixtime);
+                GPWPL nmeawpt = new GPWPL(wptname, gpsdata.position.dLat, gpsdata.position.dLon);
                 lock (swGPSLog)
                 {
                     swGPSLog.WriteLine(nmeawpt.NMEASentence);

@@ -47,6 +47,14 @@
   <ItemGroup>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
+    <Reference Include="OpenNETCF, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenNetCF\OpenNETCF.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenNETCF.Configuration, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenNetCF\OpenNETCF.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="SharpGps, Version=0.5.3048.18227, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>sharpgps\SharpGps.dll</HintPath>
@@ -63,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApplicationResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="AudioRecorder.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,7 +97,7 @@
     <Compile Include="GPSControl.Designer.cs">
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPWPL.cs" />
+    <Compile Include="Waypoint.cs" />
     <Compile Include="NmeaToGpx.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

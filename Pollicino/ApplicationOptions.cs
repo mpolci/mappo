@@ -36,6 +36,8 @@ namespace MapperTool
         {
             public bool WaypointSoundPlay;
             public string WaypointSoundFile;
+            public bool WaypointRecordAudio;
+            public int WaypointRecordAudioSeconds;
         }
 
         public GPSOptions GPS;

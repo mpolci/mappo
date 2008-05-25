@@ -4,7 +4,51 @@ using System.Text;
 
 namespace MapperTool
 {
-    class Waypoint
+    public class InvalidWaypointNameException: Exception 
+    {
+        public InvalidWaypointNameException(string msg): base(msg) {}
+    }
+
+    static class WaypointNames
+    {
+        const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
+
+        public const string WPNameFormatString = "wpt-{0:o}";
+
+
+        public static DateTime DecodeWPName(string wpname)
+        {
+            if (wpname.StartsWith("wpt-"))
+            {
+                try
+                {
+                    return DateTime.Parse(wpname.Substring(4)).ToUniversalTime();
+                }
+                catch (Exception) { }
+            }
+            throw new InvalidWaypointNameException(wpname + " in not a valid waypoint name.");
+        }
+
+        public static string AudioRecFile(string nmea_log_name, DateTime wptime)
+        {
+            return AudioRecDir(nmea_log_name) + wptime.ToString(DateOnFilenameFormat) + ".wav";
+        }
+
+        public static string AudioRecFileLink(string nmea_log_name, DateTime wptime)
+        {
+            // rimuove il path dal nome del log
+            string logname = (new System.IO.FileInfo(nmea_log_name)).Name;
+            return AudioRecFile(logname, wptime);
+        }
+
+        public static string AudioRecDir(string nmea_log_name)
+        {
+            return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')) + '\\';
+        }
+
+    }
+
+    class GPWPL
     {
         string _name;
         double _lat, _lon;
@@ -40,7 +84,7 @@ namespace MapperTool
         }
     
 
-        public Waypoint(string nmea_sentence)
+        public GPWPL(string nmea_sentence)
         {
             string[] split = nmea_sentence.Split(new Char[] { ',' });
             // To do: check the checksum validity
@@ -53,7 +97,7 @@ namespace MapperTool
             _nmeasentence = nmea_sentence;
         }
 
-        public Waypoint(string name, double lat, double lon)
+        public GPWPL(string name, double lat, double lon)
         {
             // Mancano i controlli dei valori corretti
 

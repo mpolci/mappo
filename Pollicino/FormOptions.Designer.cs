@@ -60,6 +60,9 @@
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.cb_recordaudio = new System.Windows.Forms.CheckBox();
+            this.num_recordaudioseconds = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -304,6 +307,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.num_recordaudioseconds);
+            this.tabPage3.Controls.Add(this.cb_recordaudio);
             this.tabPage3.Controls.Add(this.button_waypointsound);
             this.tabPage3.Controls.Add(this.tb_waypointsound);
             this.tabPage3.Controls.Add(this.cb_waypointsound);
@@ -337,6 +343,44 @@
             this.cb_waypointsound.Size = new System.Drawing.Size(230, 20);
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
+            // 
+            // cb_recordaudio
+            // 
+            this.cb_recordaudio.Location = new System.Drawing.Point(7, 56);
+            this.cb_recordaudio.Name = "cb_recordaudio";
+            this.cb_recordaudio.Size = new System.Drawing.Size(230, 20);
+            this.cb_recordaudio.TabIndex = 19;
+            this.cb_recordaudio.Text = "Record Audio on new Waypoint";
+            // 
+            // num_recordaudioseconds
+            // 
+            this.num_recordaudioseconds.Location = new System.Drawing.Point(171, 82);
+            this.num_recordaudioseconds.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.num_recordaudioseconds.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.num_recordaudioseconds.Name = "num_recordaudioseconds";
+            this.num_recordaudioseconds.Size = new System.Drawing.Size(62, 22);
+            this.num_recordaudioseconds.TabIndex = 20;
+            this.num_recordaudioseconds.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(24, 85);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(141, 22);
+            this.label9.Text = "Seconds to record:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // FormOptions
             // 
@@ -390,5 +434,8 @@
         private System.Windows.Forms.TextBox tb_waypointsound;
         private System.Windows.Forms.CheckBox cb_waypointsound;
         private System.Windows.Forms.Button button_waypointsound;
+        private System.Windows.Forms.NumericUpDown num_recordaudioseconds;
+        private System.Windows.Forms.CheckBox cb_recordaudio;
+        private System.Windows.Forms.Label label9;
     }
 }
