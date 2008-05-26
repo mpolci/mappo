@@ -53,7 +53,7 @@ namespace NMEA2GPX
                                 // check for audio record
                                 string recname = WaypointNames.AudioRecFile(nmea_input, (DateTime) w.time);
                                 if (File.Exists(recname))
-                                    w.link = WaypointNames.AudioRecFileLink(nmea_input, (DateTime) w.time);
+                                    w.link = new Link(WaypointNames.AudioRecFileLink(nmea_input, (DateTime) w.time));
                             }
                             catch (Exception) { }
 
@@ -96,9 +96,20 @@ namespace NMEA2GPX
             // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
             [XmlElement(typeof(DateTime))]
             public object time; 
-            public string link;
+            public Link link;
             
         }
+
+        public class Link
+        {
+            [XmlAttribute]
+            public string href;
+
+            public Link(string uri) {
+                href = uri;
+            }
+        }
+
 
         public struct track
         {
