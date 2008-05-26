@@ -21,20 +21,59 @@ namespace MapperTool
         private bool _running = false;
         private object runninglock = new object();
         private OpenNETCF.Media.WaveAudio.Recorder recorder;
-        private const int rectimeout = 3600;
+        private int _deviceid;
+        private SoundFormats _recformat = SoundFormats.Mono16bit22kHz;
+        private const short rectimeout = short.MaxValue;
         private int currentrecseconds;
         private string _recfilename;
         private FileStream recordingStream;
         private Timer timer1;
+        private OverlappingRecordBehaviorTypes _overlapbehavior = OverlappingRecordBehaviorTypes.ProlungateRunningRecord;
 
         private SoundPlayer endrec_sound;
 
         public enum NewRecordState {
             NewRecordStarted,
             RunningRercordProlungated,
+            NewRecordIgnored,
             Error
         }
 
+        public enum OverlappingRecordBehaviorTypes
+        {
+            StartNewRecord,
+            ProlungateRunningRecord,
+            IgnoreNewRecord
+        }
+
+        public int DeviceID
+        {
+            get
+            {
+                return _deviceid;
+            }
+            set
+            {
+                if (value != _deviceid)
+                {
+                    if (recorder.Recording) recorder.Stop();
+                    _deviceid = value;
+                    recorder = new Recorder(value);
+                }
+            }
+
+        }
+        public SoundFormats RecordingFormat
+        {
+            get
+            {
+                return _recformat;
+            }
+            set
+            {
+                _recformat = value;
+            }
+        }
         public bool Running
         {
             get
@@ -50,9 +89,22 @@ namespace MapperTool
             }
         }
 
-        public AudioRecorder()
+        public OverlappingRecordBehaviorTypes OverlappingRecordBehavior
         {
-            this.recorder = new OpenNETCF.Media.WaveAudio.Recorder();
+            get
+            {
+                return _overlapbehavior;
+            }
+            set
+            {
+                _overlapbehavior = value;
+            }
+        }
+
+        public AudioRecorder(int devid)
+        {
+            _deviceid = devid;
+            this.recorder = new OpenNETCF.Media.WaveAudio.Recorder(devid);
             this.recorder.DoneRecording += new WaveFinishedHandler(rec_done);
             try
             {
@@ -72,22 +124,29 @@ namespace MapperTool
             {
                 if (_running)
                 {
-                    this.currentrecseconds += seconds;
-                    return NewRecordState.RunningRercordProlungated;
+                    switch (_overlapbehavior) {
+                        case OverlappingRecordBehaviorTypes.ProlungateRunningRecord: 
+                            if (this.currentrecseconds < int.MaxValue - seconds) 
+                                this.currentrecseconds += seconds;
+                            return NewRecordState.RunningRercordProlungated;
+                        case OverlappingRecordBehaviorTypes.IgnoreNewRecord:
+                            return NewRecordState.NewRecordIgnored;
+                        case OverlappingRecordBehaviorTypes.StartNewRecord:
+                            stop();
+                            break;
+                    }
                 }
-                else
-                {
-                    this.recordingStream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
 
-                    this._recfilename = filename;
-                    this.currentrecseconds = seconds;
+                this.recordingStream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
 
-                    this.dtime_StartRec = DateTime.Now;
-                    this._running = true;
+                this._recfilename = filename;
+                this.currentrecseconds = seconds;
 
-                    //start a new recording
-                    recorder.RecordFor(this.recordingStream, AudioRecorder.rectimeout, SoundFormats.Mono16bit22kHz);
-                }
+                this.dtime_StartRec = DateTime.Now;
+                this._running = true;
+
+                //start a new recording
+                recorder.RecordFor(this.recordingStream, AudioRecorder.rectimeout, _recformat);
             }
             // Per sicurezza fa partire il timer fuori dal lock. Se lo mettevo dentro e per qualche strano motivo partiva il primo tick 
             // prima di essere usciti dal lock si creava una situazione di deadlock
@@ -104,14 +163,16 @@ namespace MapperTool
 
                 TimeSpan elapsed = DateTime.Now - this.dtime_StartRec;
                 if (elapsed.Seconds >= this.currentrecseconds)
-                {
-                    timer1.Dispose();
-                    timer1 = null;
-                    _running = false;
-                    this.recorder.Stop();
-                }
+                    stop();
             }
+        }
 
+        private void stop()
+        {
+            timer1.Dispose();
+            timer1 = null;
+            _running = false;
+            this.recorder.Stop();
         }
 
         private void rec_done()

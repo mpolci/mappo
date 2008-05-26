@@ -55,14 +55,18 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tb_TileServer = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.num_recordaudioseconds = new System.Windows.Forms.NumericUpDown();
+            this.cb_recordaudio = new System.Windows.Forms.CheckBox();
             this.button_waypointsound = new System.Windows.Forms.Button();
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.cb_recordaudio = new System.Windows.Forms.CheckBox();
-            this.num_recordaudioseconds = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.num_RecDeviceId = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.combo_RecFormat = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -307,6 +311,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.combo_RecFormat);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.num_RecDeviceId);
+            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.num_recordaudioseconds);
             this.tabPage3.Controls.Add(this.cb_recordaudio);
@@ -317,6 +325,44 @@
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(240, 245);
             this.tabPage3.Text = "Interface";
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(7, 84);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(141, 20);
+            this.label9.Text = "Seconds to record:";
+            // 
+            // num_recordaudioseconds
+            // 
+            this.num_recordaudioseconds.Location = new System.Drawing.Point(165, 82);
+            this.num_recordaudioseconds.Maximum = new decimal(new int[] {
+            7200,
+            0,
+            0,
+            0});
+            this.num_recordaudioseconds.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.num_recordaudioseconds.Name = "num_recordaudioseconds";
+            this.num_recordaudioseconds.Size = new System.Drawing.Size(68, 22);
+            this.num_recordaudioseconds.TabIndex = 20;
+            this.num_recordaudioseconds.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.num_recordaudioseconds.ValueChanged += new System.EventHandler(this.num_recordaudioseconds_ValueChanged);
+            // 
+            // cb_recordaudio
+            // 
+            this.cb_recordaudio.Location = new System.Drawing.Point(0, 56);
+            this.cb_recordaudio.Name = "cb_recordaudio";
+            this.cb_recordaudio.Size = new System.Drawing.Size(230, 20);
+            this.cb_recordaudio.TabIndex = 19;
+            this.cb_recordaudio.Text = "Record Audio on new Waypoint";
             // 
             // button_waypointsound
             // 
@@ -344,43 +390,34 @@
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // cb_recordaudio
+            // label10
             // 
-            this.cb_recordaudio.Location = new System.Drawing.Point(7, 56);
-            this.cb_recordaudio.Name = "cb_recordaudio";
-            this.cb_recordaudio.Size = new System.Drawing.Size(230, 20);
-            this.cb_recordaudio.TabIndex = 19;
-            this.cb_recordaudio.Text = "Record Audio on new Waypoint";
+            this.label10.Location = new System.Drawing.Point(7, 112);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(100, 20);
+            this.label10.Text = "Device ID";
             // 
-            // num_recordaudioseconds
+            // num_RecDeviceId
             // 
-            this.num_recordaudioseconds.Location = new System.Drawing.Point(171, 82);
-            this.num_recordaudioseconds.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.num_recordaudioseconds.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.num_recordaudioseconds.Name = "num_recordaudioseconds";
-            this.num_recordaudioseconds.Size = new System.Drawing.Size(62, 22);
-            this.num_recordaudioseconds.TabIndex = 20;
-            this.num_recordaudioseconds.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+            this.num_RecDeviceId.Location = new System.Drawing.Point(165, 110);
+            this.num_RecDeviceId.Name = "num_RecDeviceId";
+            this.num_RecDeviceId.Size = new System.Drawing.Size(68, 22);
+            this.num_RecDeviceId.TabIndex = 23;
+            this.num_RecDeviceId.ValueChanged += new System.EventHandler(this.num_RecDeviceId_ValueChanged);
             // 
-            // label9
+            // label11
             // 
-            this.label9.Location = new System.Drawing.Point(24, 85);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(141, 22);
-            this.label9.Text = "Seconds to record:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label11.Location = new System.Drawing.Point(7, 140);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(56, 20);
+            this.label11.Text = "Format";
+            // 
+            // combo_RecFormat
+            // 
+            this.combo_RecFormat.Location = new System.Drawing.Point(69, 138);
+            this.combo_RecFormat.Name = "combo_RecFormat";
+            this.combo_RecFormat.Size = new System.Drawing.Size(164, 22);
+            this.combo_RecFormat.TabIndex = 26;
             // 
             // FormOptions
             // 
@@ -437,5 +474,9 @@
         private System.Windows.Forms.NumericUpDown num_recordaudioseconds;
         private System.Windows.Forms.CheckBox cb_recordaudio;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown num_RecDeviceId;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox combo_RecFormat;
     }
 }

@@ -38,6 +38,8 @@ namespace MapperTool
             public string WaypointSoundFile;
             public bool WaypointRecordAudio;
             public int WaypointRecordAudioSeconds;
+            public int RecordAudioDevice;
+            public OpenNETCF.Media.WaveAudio.SoundFormats RecordAudioFormat;
         }
 
         public GPSOptions GPS;

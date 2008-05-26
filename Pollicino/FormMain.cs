@@ -66,7 +66,7 @@ namespace MapperTool
             catch (Exception)
             { }
 
-            wpt_recorder = new AudioRecorder();
+            wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
             this.lmap = new LayeredMap();
             // OSM
@@ -300,6 +300,8 @@ namespace MapperTool
                     MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
+                wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
+                wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
                 options = newopt;
             }
         }
