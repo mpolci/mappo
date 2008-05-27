@@ -33,7 +33,7 @@ namespace NMEA2GPX
                     {
                         case "$GPRMC":
                             SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
-                            trkpt tp = new trkpt();
+                            waypoint tp = new waypoint();
                             tp.lat = gpmrc.Position.Latitude;
                             tp.lon = gpmrc.Position.Longitude;
                             tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
@@ -49,11 +49,14 @@ namespace NMEA2GPX
                             // time & audio
                             try
                             {
-                                w.time = WaypointNames.DecodeWPName(w.name);
+                                DateTime wptime = WaypointNames.DecodeWPName(w.name);
                                 // check for audio record
-                                string recname = WaypointNames.AudioRecFile(nmea_input, (DateTime) w.time);
+                                string recname = WaypointNames.AudioRecFile(nmea_input, wptime);
                                 if (File.Exists(recname))
-                                    w.link = new Link(WaypointNames.AudioRecFileLink(nmea_input, (DateTime) w.time));
+                                    w.link = new Link(WaypointNames.AudioRecFileLink(nmea_input, wptime));
+                                else // because of a josm bug, insert time only if an audio link doesn't exists
+                                    w.time = wptime;
+
                             }
                             catch (Exception) { }
 
@@ -82,7 +85,7 @@ namespace NMEA2GPX
 
             public gpx()
             {
-                trk.trkseg = new List<trkpt>();
+                trk.trkseg = new List<waypoint>();
             }
         }
 
@@ -93,10 +96,13 @@ namespace NMEA2GPX
             [XmlAttribute]
             public double lon;
             public string name;
-            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
+            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
             [XmlElement(typeof(DateTime))]
             public object time; 
             public Link link;
+
+            [XmlElement(typeof(double))]
+            public object ele;
             
         }
 
@@ -114,9 +120,11 @@ namespace NMEA2GPX
         public struct track
         {
             public string name;
-            public List<trkpt> trkseg;
+            [XmlArrayItem(ElementName = "trkpt")]
+            public List<waypoint> trkseg;
         }
 
+        /*
         public struct trkpt
         {
             [XmlAttribute]
@@ -127,8 +135,11 @@ namespace NMEA2GPX
             // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
             [XmlElement(typeof(DateTime))]
             public object time;
-        }
 
+            [XmlElement(typeof(double))]
+            public object ele;
+        }
+        */
 
     }
 }
