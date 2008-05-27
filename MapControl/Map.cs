@@ -198,6 +198,11 @@ namespace MapsLibrary
             }
         }
 
+        public bool tileInCache(TileNum tn)
+        {
+            return File.Exists(strTileCachePath + mapsys.TileFile(tn));
+        }
+
         /// <summary>
         /// Scarica il tile indicato e i tile che coprono la stessa area con Zoom superiore
         /// </summary>
@@ -283,8 +288,7 @@ namespace MapsLibrary
         /// <summary>
         /// Scarica i tile che comprendono l'area indicata
         /// </summary>
-        /// <param name="point1">Coordinate geografiche di un angolo dell'area rettangolare</param>
-        /// <param name="point2">Coordinate geografiche dell'angolo opposto Y point1 dell'area rettangolare</param>
+        /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
         public void downloadArea(ProjectedGeoArea area, uint zoom, bool overwrite)
         {
@@ -301,6 +305,30 @@ namespace MapsLibrary
             for (i.lX = x1; i.lX <= x2; i.lX++)
                 for (i.lY = y1; i.lY <= y2; i.lY++)
                     downloadTile(i, overwrite);
+        }
+
+        /// <summary>
+        /// Aggiorna i tile già in cache che sono compresi nell'area indicata
+        /// </summary>
+        /// <remarks>L'implementazione attuale è poco efficiente, piuttosto che controllare se esiste ogni possibile file relativo all'area indicata, forse sarebbe meglio partire dai file in cache e vedere se sono relativi all'area indicata.</remarks>
+        /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
+        /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
+        public void updateArea(ProjectedGeoArea area, uint zoom)
+        {
+            TileCoordinates tc1 = mapsys.PointToTileCoo(area.pMin, zoom),
+                            tc2 = mapsys.PointToTileCoo(area.pMax, zoom);
+            TileNum tn1 = tc1.tilenum,
+                    tn2 = tc2.tilenum;
+            long x1 = Math.Min(tn1.lX, tn2.lX),
+                 x2 = Math.Max(tn1.lX, tn2.lX),
+                 y1 = Math.Min(tn1.lY, tn2.lY),
+                 y2 = Math.Max(tn1.lY, tn2.lY);
+            TileNum i = new TileNum();
+            i.uZoom = zoom;
+            for (i.lX = x1; i.lX <= x2; i.lX++)
+                for (i.lY = y1; i.lY <= y2; i.lY++)
+                    if (tileInCache(i))
+                        downloadTile(i, true);
         }
     }
 
@@ -1245,6 +1273,14 @@ namespace MapsLibrary
         {
             return tn.uZoom.ToString() + '/' + tn.lX.ToString() + '/' + tn.lY.ToString() + ".png";
         }
+
+        public override uint MaxZoom
+        {
+            get
+            {
+                return 19;
+            }
+        }
     }
 
     public class CachedMapTS : MapTS
@@ -1343,6 +1379,8 @@ namespace MapsLibrary
     /// </remarks>
     public abstract class MercatorProjectionMapSystem
     {
+        public abstract uint MaxZoom { get; }
+    
         public GeoPoint CalcInverseProjection(ProjectedGeoPoint pgp)
         {
             GeoPoint p;
@@ -1412,6 +1450,13 @@ namespace MapsLibrary
             return new ProjectedGeoPoint((Int32)px.ypx * factor, (Int32)px.xpx * factor);
         }
 
+        public override uint MaxZoom
+        {
+            get
+            {
+                return 19;
+            }
+        }
     }
     
 

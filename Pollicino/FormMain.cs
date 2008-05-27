@@ -242,15 +242,15 @@ namespace MapperTool
         {
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
-            PxCoordinates c1, c2;
-            //c1 = map.mapsystem.TileCooToPx(this.pb_Centered.tc);
-            c1 = map.mapsystem.PointToPx(mapcontrol.Center, mapcontrol.Zoom);
-            c1.xpx -= this.mapcontrol.Size.Width / 2;
-            c1.ypx -= this.mapcontrol.Size.Height / 2;
-            c2 = c1;
-            c2.xpx += this.mapcontrol.Size.Width;
-            c2.ypx += this.mapcontrol.Size.Height;
-            ProjectedGeoArea area = new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, mapcontrol.Zoom), map.mapsystem.PxToPoint(c2, mapcontrol.Zoom));
+            //PxCoordinates c1, c2;
+            //c1 = map.mapsystem.PointToPx(mapcontrol.Center, mapcontrol.Zoom);
+            //c1.xpx -= this.mapcontrol.Size.Width / 2;
+            //c1.ypx -= this.mapcontrol.Size.Height / 2;
+            //c2 = c1;
+            //c2.xpx += this.mapcontrol.Size.Width;
+            //c2.ypx += this.mapcontrol.Size.Height;
+            //ProjectedGeoArea area = new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, mapcontrol.Zoom), map.mapsystem.PxToPoint(c2, mapcontrol.Zoom));
+            ProjectedGeoArea area = mapcontrol.VisibleArea;
             for (uint i = 1; i <= options.Maps.OSM.DownloadDepth; i++)
                 map.downloadArea(area, mapcontrol.Zoom + i, false);
 
@@ -267,22 +267,44 @@ namespace MapperTool
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
+        private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+
+            ProjectedGeoArea area = mapcontrol.VisibleArea;
+            uint maxzoom = Math.Min(mapcontrol.Zoom + 6, map.mapsystem.MaxZoom);
+            int errors = 0;
+            for (uint i = mapcontrol.Zoom; i <= maxzoom ; i++)
+            {
+                try {
+                    map.updateArea(area, i); 
+                } catch (Exception ex) {
+                    if (++errors >= 10) break;
+                }
+            }
+            if (errors > 0) {
+                MessageBox.Show("There was problems to get some tiles.");
+            }
+
+            System.Windows.Forms.Cursor.Current = Cursors.Default;
+
+        }
+
+
         private void scarica_tiles(MapControl sender)
         {
             if (options.Maps.OSM.AutoDownload && lmap.isVisible(idx_layer_osm)) {
-                lock (this.map)
+                try
                 {
-                    try
+                    this.map.downloadAt(sender.Center, sender.Zoom, false);
+                }
+                catch (System.Net.WebException)
+                {
+                    options.Maps.OSM.AutoDownload = false;
+                    if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+                        == DialogResult.No)
                     {
-                        this.map.downloadAt(sender.Center, sender.Zoom, false);
-                    }
-                    catch (System.Net.WebException)
-                    {
-                        if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                            == DialogResult.Yes)
-                        {
-                            options.Maps.OSM.AutoDownload = false;
-                        }
+                        options.Maps.OSM.AutoDownload = true;
                     }
                 }
             }

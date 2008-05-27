@@ -55,7 +55,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAAAAIAEAAAAAAAAAAAgAAhAAAAAAACUAAAAIAA0AA=</HashCode>
+      <HashCode>iAAAAAIAEAAAAAAAAAAAgAAhABAAAAECUAAAAIAA0AA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -107,7 +107,7 @@
   <Class Name="MapsLibrary.OSMTileMapSystem">
     <Position X="0.5" Y="15.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -121,14 +121,14 @@
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
     <Position X="1.5" Y="9.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAQQAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAQQAAAAAAAQAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
     <Position X="3" Y="11.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>gAAAAAAAAAAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAAAAAAAAAAAAAAQAAAAAAAQAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -164,7 +164,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gQCQEAAAIDAAAAAMEACAAAADABABAAAIIABAAAAKAAA=</HashCode>
+      <HashCode>gQCQEAAAIDAAAAAMEACAAAEDABABAAAIIABAAAAKAAA=</HashCode>
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
   </Class>

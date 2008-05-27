@@ -114,8 +114,8 @@
             // 
             // menuItem_refreshTileCache
             // 
-            this.menuItem_refreshTileCache.Enabled = false;
             this.menuItem_refreshTileCache.Text = "Refresh tiles cache";
+            this.menuItem_refreshTileCache.Click += new System.EventHandler(this.menuItem_refreshTileCache_Click);
             // 
             // menuItem_loadtrack
             // 

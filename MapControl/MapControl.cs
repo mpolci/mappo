@@ -105,6 +105,21 @@ namespace MapsLibrary
             }
         }
 
+        public ProjectedGeoArea VisibleArea
+        {
+            get
+            {
+                PxCoordinates c1, c2;
+                c1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom);
+                c1.xpx -= this.Size.Width / 2;
+                c1.ypx -= this.Size.Height / 2;
+                c2 = c1;
+                c2.xpx += this.Size.Width;
+                c2.ypx += this.Size.Height;
+                return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             //base.OnPaint(e);
@@ -161,5 +176,6 @@ namespace MapsLibrary
                 this.Center = map.mapsystem.PxToPoint(pxc, this.Zoom);
             }
         }
+
     }
 }
