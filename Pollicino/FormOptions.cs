@@ -44,7 +44,7 @@ namespace MapperTool
                 opt.GPS.Simulation = cb_Simulation.Checked;
                 opt.GPS.SimulationFile = tb_SimulationFile.Text;
                 opt.GPS.LogsDir = tb_GPSLogPath.Text;
-                opt.Maps.OSM.OSMTileServer = tb_TileServer.Text;
+                opt.Maps.OSM.OSMTileServer = combo_TileServer.Text;
                 opt.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
                 opt.Maps.OSM.AutoDownload = cb_autodownload.Checked;
                 opt.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
@@ -64,7 +64,7 @@ namespace MapperTool
                 cb_Simulation.Checked = value.GPS.Simulation;
                 tb_SimulationFile.Text = value.GPS.SimulationFile;
                 tb_GPSLogPath.Text = value.GPS.LogsDir;
-                tb_TileServer.Text = value.Maps.OSM.OSMTileServer;
+                combo_TileServer.Text = value.Maps.OSM.OSMTileServer;
                 tb_TileCacheDir.Text = value.Maps.OSM.TileCachePath;
                 cb_autodownload.Checked = value.Maps.OSM.AutoDownload;
                 try {
@@ -154,6 +154,17 @@ namespace MapperTool
                     combo_RecFormat.Items.Add(curf);
             }
 
+        }
+
+        private void button_emptytilescache_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("It will completely delete the cache directory and subdirs.", "", MessageBoxButtons.OKCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) != DialogResult.OK)
+                return;
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            try {
+                Directory.Delete(tb_TileCacheDir.Text, true);
+            } catch (Exception) {}
+            System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
 

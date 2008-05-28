@@ -70,7 +70,7 @@ namespace MapperTool
 
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20);
+            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
             gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath);
@@ -269,6 +269,10 @@ namespace MapperTool
 
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
         {
+
+            if (MessageBox.Show("Maybe it will takes long time. Do you want to continue?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
+
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
             ProjectedGeoArea area = mapcontrol.VisibleArea;
@@ -287,7 +291,6 @@ namespace MapperTool
             }
 
             System.Windows.Forms.Cursor.Current = Cursors.Default;
-
         }
 
 
@@ -317,7 +320,6 @@ namespace MapperTool
                 opt.data = this.options;
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
-                options.SaveToFile(this.configfile);
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer) 
                     MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
@@ -325,6 +327,7 @@ namespace MapperTool
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
                 options = newopt;
+                options.SaveToFile(this.configfile);
             }
         }
 
@@ -346,6 +349,8 @@ namespace MapperTool
             opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
             opt.Application.WaypointRecordAudioSeconds = 10;
             opt.Application.WaypointRecordAudio = true;
+            opt.Application.RecordAudioDevice = 0;
+            opt.Application.RecordAudioFormat = OpenNETCF.Media.WaveAudio.SoundFormats.Mono16bit11kHz;
             return opt;
         }
 
@@ -433,6 +438,7 @@ namespace MapperTool
                 else
                     return;
             }
+
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
             outfile = (file.EndsWith(".txt")) ? file.Substring(0, file.Length - 4) : file;
             outfile += ".gpx";
@@ -446,8 +452,6 @@ namespace MapperTool
             }
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
-
-
 
     }
 }

@@ -49,7 +49,15 @@ namespace MapperTool
         public void SaveToFile(string filename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationOptions));
-            using (TextWriter writer = new StreamWriter(filename)) {
+#if DEBUG
+            using (TextWriter wdebug = new StreamWriter(filename + ".txt"))
+            {
+                serializer.Serialize(wdebug, this);
+                wdebug.Close();
+            }
+#endif
+            using (TextWriter writer = new StreamWriter(filename))
+            {
                 serializer.Serialize(writer, this);            
                 writer.Close();
             }

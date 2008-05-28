@@ -53,20 +53,19 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.tb_TileServer = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.combo_RecFormat = new System.Windows.Forms.ComboBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.num_RecDeviceId = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.num_recordaudioseconds = new System.Windows.Forms.NumericUpDown();
             this.cb_recordaudio = new System.Windows.Forms.CheckBox();
             this.button_waypointsound = new System.Windows.Forms.Button();
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.label10 = new System.Windows.Forms.Label();
-            this.num_RecDeviceId = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.combo_RecFormat = new System.Windows.Forms.ComboBox();
+            this.combo_TileServer = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -186,6 +185,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.combo_TileServer);
             this.tabPage2.Controls.Add(this.button_emptytilescache);
             this.tabPage2.Controls.Add(this.button_GMapsCacheDir);
             this.tabPage2.Controls.Add(this.button_TileCacheDir);
@@ -197,20 +197,19 @@
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.tb_TileCacheDir);
             this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.tb_TileServer);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 242);
+            this.tabPage2.Size = new System.Drawing.Size(240, 245);
             this.tabPage2.Text = "Maps";
             // 
             // button_emptytilescache
             // 
-            this.button_emptytilescache.Enabled = false;
             this.button_emptytilescache.Location = new System.Drawing.Point(46, 152);
             this.button_emptytilescache.Name = "button_emptytilescache";
             this.button_emptytilescache.Size = new System.Drawing.Size(149, 20);
             this.button_emptytilescache.TabIndex = 23;
             this.button_emptytilescache.Text = "Empty tiles cache";
+            this.button_emptytilescache.Click += new System.EventHandler(this.button_emptytilescache_Click);
             // 
             // button_GMapsCacheDir
             // 
@@ -302,13 +301,6 @@
             this.label4.Size = new System.Drawing.Size(149, 20);
             this.label4.Text = "OSM tiles server";
             // 
-            // tb_TileServer
-            // 
-            this.tb_TileServer.Location = new System.Drawing.Point(7, 27);
-            this.tb_TileServer.Name = "tb_TileServer";
-            this.tb_TileServer.Size = new System.Drawing.Size(226, 21);
-            this.tb_TileServer.TabIndex = 1;
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.combo_RecFormat);
@@ -323,8 +315,37 @@
             this.tabPage3.Controls.Add(this.cb_waypointsound);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(240, 245);
+            this.tabPage3.Size = new System.Drawing.Size(232, 242);
             this.tabPage3.Text = "Interface";
+            // 
+            // combo_RecFormat
+            // 
+            this.combo_RecFormat.Location = new System.Drawing.Point(69, 138);
+            this.combo_RecFormat.Name = "combo_RecFormat";
+            this.combo_RecFormat.Size = new System.Drawing.Size(164, 22);
+            this.combo_RecFormat.TabIndex = 26;
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(7, 140);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(56, 20);
+            this.label11.Text = "Format";
+            // 
+            // num_RecDeviceId
+            // 
+            this.num_RecDeviceId.Location = new System.Drawing.Point(165, 110);
+            this.num_RecDeviceId.Name = "num_RecDeviceId";
+            this.num_RecDeviceId.Size = new System.Drawing.Size(68, 22);
+            this.num_RecDeviceId.TabIndex = 23;
+            this.num_RecDeviceId.ValueChanged += new System.EventHandler(this.num_RecDeviceId_ValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(7, 112);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(100, 20);
+            this.label10.Text = "Device ID";
             // 
             // label9
             // 
@@ -390,34 +411,15 @@
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // label10
+            // combo_TileServer
             // 
-            this.label10.Location = new System.Drawing.Point(7, 112);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(100, 20);
-            this.label10.Text = "Device ID";
-            // 
-            // num_RecDeviceId
-            // 
-            this.num_RecDeviceId.Location = new System.Drawing.Point(165, 110);
-            this.num_RecDeviceId.Name = "num_RecDeviceId";
-            this.num_RecDeviceId.Size = new System.Drawing.Size(68, 22);
-            this.num_RecDeviceId.TabIndex = 23;
-            this.num_RecDeviceId.ValueChanged += new System.EventHandler(this.num_RecDeviceId_ValueChanged);
-            // 
-            // label11
-            // 
-            this.label11.Location = new System.Drawing.Point(7, 140);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(56, 20);
-            this.label11.Text = "Format";
-            // 
-            // combo_RecFormat
-            // 
-            this.combo_RecFormat.Location = new System.Drawing.Point(69, 138);
-            this.combo_RecFormat.Name = "combo_RecFormat";
-            this.combo_RecFormat.Size = new System.Drawing.Size(164, 22);
-            this.combo_RecFormat.TabIndex = 26;
+            this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
+            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile.php/");
+            this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
+            this.combo_TileServer.Name = "combo_TileServer";
+            this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
+            this.combo_TileServer.TabIndex = 28;
             // 
             // FormOptions
             // 
@@ -449,10 +451,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tb_GPSPortSpeed;
         private System.Windows.Forms.CheckBox cb_Simulation;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button_SelectSimulationFile;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tb_TileServer;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tb_GMapsCacheDir;
         private System.Windows.Forms.Label label5;
@@ -478,5 +478,6 @@
         private System.Windows.Forms.NumericUpDown num_RecDeviceId;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox combo_RecFormat;
+        private System.Windows.Forms.ComboBox combo_TileServer;
     }
 }
