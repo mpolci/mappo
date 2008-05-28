@@ -68,7 +68,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.BufferedMapTS">
-    <Position X="3.25" Y="5.25" Width="1.5" />
+    <Position X="3.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>wAAAAAAAAAAAAAAAAAAABAAAAAAAAAACQABAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -112,14 +112,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.CachedMapTS">
-    <Position X="0.5" Y="5.25" Width="1.75" />
+    <Position X="0.5" Y="5.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gCAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <HashCode>gCAACAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
-    <Position X="1.5" Y="9.25" Width="2.5" />
+    <Position X="1.5" Y="9" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQQAAAAAAAQAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>

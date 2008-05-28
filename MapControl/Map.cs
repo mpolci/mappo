@@ -125,7 +125,12 @@ namespace MapsLibrary
         //protected string strTileServerUrl;
         protected TileMapSystem mapsys;
 
-        public delegate void TileNotFoundHandler(object sender, TileNum tn);
+
+        /// <summary>
+        /// Evento chiamato quando non viene trovato un tile nella cache su disco.
+        /// </summary>
+        /// <returns>False per indicare che il problema è stato risolto, True per indicare che il tile continua a non essere presente.</returns>
+        public delegate bool TileNotFoundHandler(object sender, TileNum tn);
         public event TileNotFoundHandler TileNotFound;
 
         public event MapChangedEventHandler MapChanged;
@@ -261,26 +266,27 @@ namespace MapsLibrary
         {
             Bitmap img;
             string file = strTileCachePath + tn.ToString('\\') + ".png";
-
-            try
-            {
-                img = new Bitmap(file);
-            }
-            catch (IOException e)
-            {
-                //throw new TileNotFoundException(tn, e);
-                if (TileNotFound != null) 
-                    TileNotFound(this, tn); //evento
-                // crea un bitmap nero
-                img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
-                using (Graphics g = Graphics.FromImage(img))
-                using (Font font = new Font(FontFamily.GenericSerif, 10, FontStyle.Regular))
-                using (Brush brush = new SolidBrush(Color.White))
-                using (Pen pen = new Pen(Color.White))
-                {
-                    g.DrawString("Tile Not Available", font, brush, 10, 10);
-                    g.DrawRectangle(pen, 0, 0, mapsys.tilesize, mapsys.tilesize);
+            do {
+                if (File.Exists(file)) {
+                    try
+                    {
+                        return new Bitmap(file);
+                    }
+                    catch (Exception e)
+                    {
+                        File.Delete(file);  // file non valido
+                    }
                 }
+            } while (TileNotFound != null && !TileNotFound(this, tn));
+            // crea un bitmap nero
+            img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
+            using (Graphics g = Graphics.FromImage(img))
+            using (Font font = new Font(FontFamily.GenericSerif, 10, FontStyle.Regular))
+            using (Brush brush = new SolidBrush(Color.White))
+            using (Pen pen = new Pen(Color.White))
+            {
+                g.DrawString("Tile Not Available", font, brush, 10, 10);
+                g.DrawRectangle(pen, 0, 0, mapsys.tilesize, mapsys.tilesize);
             }
             return img;
         }
@@ -313,7 +319,7 @@ namespace MapsLibrary
         /// <remarks>L'implementazione attuale è poco efficiente, piuttosto che controllare se esiste ogni possibile file relativo all'area indicata, forse sarebbe meglio partire dai file in cache e vedere se sono relativi all'area indicata.</remarks>
         /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
-        public void updateArea(ProjectedGeoArea area, uint zoom)
+        public virtual void updateArea(ProjectedGeoArea area, uint zoom)
         {
             TileCoordinates tc1 = mapsys.PointToTileCoo(area.pMin, zoom),
                             tc2 = mapsys.PointToTileCoo(area.pMax, zoom);
@@ -633,6 +639,7 @@ namespace MapsLibrary
                 throw e;
             }
         }
+
     }
 
     public class LayerCrossCenter : IMap
@@ -1296,6 +1303,7 @@ namespace MapsLibrary
             q = new Queue<TileNum>((int)cachelen);
             maxitems = cachelen;
         }
+
         public override Bitmap getImageTile(TileNum tn)
         {
             if (cache.Contains(tn))
@@ -1317,6 +1325,12 @@ namespace MapsLibrary
                 q.Enqueue(tn);
                 return bmp;
             }
+        }
+
+        public override void updateArea(ProjectedGeoArea area, uint zoom)
+        {
+            this.cache.Clear();
+            base.updateArea(area, zoom);
         }
     }
 
@@ -1641,20 +1655,56 @@ namespace MapsLibrary
         {
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
             using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
-            using (System.IO.Stream dataStream = httpResponse.GetResponseStream())
-            using (System.IO.FileStream outstream = new FileStream(file, FileMode.Create))
             {
-                const int BUFFSIZE = 8192;
-                byte[] buffer = new byte[BUFFSIZE];
-                int count = dataStream.Read(buffer, 0, BUFFSIZE);
-                while (count > 0)
-                {
-                    outstream.Write(buffer, 0, count);
-                    count = dataStream.Read(buffer, 0, BUFFSIZE);
+                // se il file già esiste legge le informazioni di download per determinare se è necessario
+                // riscaricare il file
+                bool download;
+                System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(FileDownloadInfo));
+                try {
+                    FileDownloadInfo fdi;
+                    using (FileStream ins = new FileStream(file + ".info", FileMode.Open))
+                        fdi = (FileDownloadInfo)ser.Deserialize(ins);
+                    download = fdi.modifiedtime < httpResponse.LastModified
+                               || fdi.lenght != httpResponse.ContentLength;
+                } catch (Exception) {
+                    download = true;
                 }
-                outstream.Close();
-                dataStream.Close();
-                httpResponse.Close();
+
+                if (download) {  // da completare
+                    using (System.IO.Stream dataStream = httpResponse.GetResponseStream())
+                    using (System.IO.FileStream outstream = new FileStream(file, FileMode.Create))
+                    {
+                        const int BUFFSIZE = 8192;
+                        byte[] buffer = new byte[BUFFSIZE];
+                        int count = dataStream.Read(buffer, 0, BUFFSIZE);
+                        while (count > 0)
+                        {
+                            outstream.Write(buffer, 0, count);
+                            count = dataStream.Read(buffer, 0, BUFFSIZE);
+                        }
+                        outstream.Close();
+                        dataStream.Close();
+                        httpResponse.Close();
+                    }
+                    // imposta la data di ultima modifica al file
+                    using (FileStream outs = new FileStream(file + ".info", FileMode.Create))
+                        ser.Serialize(outs, new FileDownloadInfo(httpResponse));
+                }
+            }
+        }
+
+
+        public struct FileDownloadInfo
+        {
+            public string uri;
+            public DateTime modifiedtime;
+            public long lenght;
+
+            public FileDownloadInfo(HttpWebResponse response)
+            {
+                uri = response.ResponseUri.ToString();
+                modifiedtime = response.LastModified;
+                lenght = response.ContentLength;
             }
         }
     }
