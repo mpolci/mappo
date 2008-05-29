@@ -146,10 +146,6 @@ namespace MapsLibrary
         */
         protected override void OnPaint(PaintEventArgs e)
         {
-            // CODICE DI DEBUG
-            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            // FINE CODICE DI DEBUG
 
             if (map != null)
             {
@@ -160,6 +156,10 @@ namespace MapsLibrary
                 PxCoordinates pxcWinCorner = map.mapsystem.PointToPx(drawarea.pMin, this.Zoom);
 
                 Bitmap newbuffer = new Bitmap(this.Size.Width, this.Size.Height);
+                // CODICE DI DEBUG
+                System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+                // FINE CODICE DI DEBUG
                 using (Graphics outg = Graphics.FromImage(newbuffer))
                 {
                     if (this.Zoom != buffer_zoom)
@@ -181,12 +181,21 @@ namespace MapsLibrary
                         this.map.drawImageMapAt(outg, new Point((int)pxcCorner.xpx, (int)pxcCorner.ypx), pr_area, this.Zoom);
                     }
                 }
+                // CODICE DI DEBUG
+                watch.Stop();
+                // FINE CODICE DI DEBUG
                 if (buffer != null) buffer.Dispose();
                 buffer = newbuffer;
                 buffer_area = drawarea;
                 buffer_zoom = Zoom;
 
                 e.Graphics.DrawImage(buffer, 0, 0);
+                // CODICE DI DEBUG
+                string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
+                using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+                using (SolidBrush drawBrush = new SolidBrush(Color.Black))
+                    e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 0);
+                // FINE CODICE DI DEBUG
             }
             else
             {
@@ -194,13 +203,6 @@ namespace MapsLibrary
                 using (Brush b = new SolidBrush(Color.Red))
                     e.Graphics.FillRectangle(b, e.ClipRectangle);
             }
-            // CODICE DI DEBUG
-            watch.Stop();
-            string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
-            using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
-            using (SolidBrush drawBrush = new SolidBrush(Color.Black))
-                e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 0);
-            // FINE CODICE DI DEBUG
         }
 
         // Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 

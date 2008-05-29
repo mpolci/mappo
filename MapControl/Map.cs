@@ -426,33 +426,67 @@ namespace MapsLibrary
         public override void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
         {
             PxCoordinates pxcMin = mapsys.PointToPx(area.pMin, zoom),
-                          pxcMax = mapsys.PointToPx(area.pMax, zoom),
-                          pxAreaSize = pxcMax - pxcMin + new PxCoordinates(1, 1);
+                          pxcMax = mapsys.PointToPx(area.pMax, zoom);
+            //PxCoordinates pxAreaSize = pxcMax - pxcMin + new PxCoordinates(1, 1);
             TileNum tnMin = mapsys.PxToTileNum(pxcMin, zoom),
                     tnMax = mapsys.PxToTileNum(pxcMax, zoom);
+            pxcMax += new PxCoordinates(1, 1);  // credo vada bene giusto per l'utilizzo che ne faccio dopo
 
-            // forse l'utilizzo di una clip area è poco efficiente
-            Region oldclip = g.Clip;
-            Rectangle rectClip = new Rectangle(delta.X, delta.Y, (int) pxAreaSize.xpx, (int) pxAreaSize.ypx);
-            using (Region newclip = new Region(rectClip))
+            TileNum tn;
+            tn.uZoom = zoom;
+            for (tn.lX = tnMin.lX; tn.lX <= tnMax.lX; tn.lX++)
             {
-                g.Clip = newclip;
-                TileNum tn;
-                tn.uZoom = zoom;
-                for (long x = tnMin.lX; x <= tnMax.lX; x++)
+                for (tn.lY = tnMin.lY; tn.lY <= tnMax.lY; tn.lY++)
                 {
-                    for (long y = tnMin.lY; y <= tnMax.lY; y++)
-                    {
-                        tn.lX = x; tn.lY = y;
-                        PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
-                                      tileareaoffset = pxcTileCorner - pxcMin;
-                        Bitmap imgsrc = this.getImageTile(tn);
-                        // presumo che in graphics ci sia una clipregion già impostata all'area da disegnare
-                        g.DrawImage(imgsrc, (int)(delta.X + tileareaoffset.xpx), (int)(delta.Y + tileareaoffset.ypx));
+                    PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
+                                  tileareaoffset = pxcTileCorner - pxcMin;
+
+                    //------------------------- X ------------------
+                    int outx, // coordinata x su g dove piazzare il tile;
+                        srcx, srcsx;
+                    // se il tile inizia prima dell'area da disegnare
+                    if (tileareaoffset.xpx < 0) {
+                        outx = delta.X;
+                        srcx = (int) -tileareaoffset.xpx;
+                    } else {
+                        outx = (int) (delta.X + tileareaoffset.xpx);
+                        srcx = 0;
                     }
+                    long pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
+
+                    srcsx = mapsys.tilesize - srcx;
+                    // se il tile va oltre l'area d disegnare
+                    if (pxTileMaxX > pxcMax.xpx)
+                        srcsx -= (int) (pxTileMaxX - pxcMax.xpx);
+
+                    //------------------------- Y ------------------
+                    int outy, // coordinata y su g dove piazzare il tile;
+                        srcy, srcsy;
+                    // se il tile inizia prima dell'area da disegnare
+                    if (tileareaoffset.ypx < 0)
+                    {
+                        outy = delta.Y;
+                        srcy = (int) -tileareaoffset.ypx;
+                    }
+                    else
+                    {
+                        outy = (int) (delta.Y + tileareaoffset.ypx);
+                        srcy = 0;
+                    }
+                    long pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
+
+                    srcsy = mapsys.tilesize - srcy;
+                    // se il tile va oltre l'area d disegnare
+                    if (pxTileMaxY > pxcMax.ypx)
+                        srcsy -= (int) (pxTileMaxY - pxcMax.ypx);
+
+                    //----------------------------------------------
+
+                    Rectangle src_rect = new Rectangle(srcx, srcy, srcsx, srcsy);
+                    Bitmap imgsrc = this.getImageTile(tn);
+                    g.DrawImage(imgsrc, outx, outy, src_rect, GraphicsUnit.Pixel);
                 }
             }
-            g.Clip = oldclip;
         }
 
         /*
