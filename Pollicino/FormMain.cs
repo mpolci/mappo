@@ -12,10 +12,13 @@ using MapsLibrary;
 using System.Runtime.InteropServices;
 
 
+
 namespace MapperTool
 {
     public partial class Form_MapperToolMain : Form
     {
+        OpenNETCF.Windows.Forms.NotifyIcon notify_icon;
+
         [DllImport("coredll")]
         extern static void SystemIdleTimerReset();
 
@@ -30,7 +33,7 @@ namespace MapperTool
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
         protected LayerPoints waypoints;
-        protected int idx_layer_gmaps, idx_layer_osm;
+        protected int idx_layer_gmaps, idx_layer_osm, idx_layer_trkpnt, idx_layer_waypnt;
         protected bool autocenter;
         protected string logname;
 
@@ -40,6 +43,11 @@ namespace MapperTool
         {
             InitializeComponent();
 
+            notify_icon = new OpenNETCF.Windows.Forms.NotifyIcon();
+            notify_icon.Icon = ApplicationResources.Map;
+            notify_icon.Visible = true;
+            notify_icon.Click += new EventHandler(this.notify_icon_click);
+            
             // carica le opzioni dal file di configurazione
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
@@ -79,11 +87,11 @@ namespace MapperTool
             // Tracciato GPS
             //trackpoints = new LayerBufferedPoints(map.mapsystem);
             trackpoints = new LayerPoints(map.mapsystem);
-            lmap.addLayerOnTop(trackpoints);
+            idx_layer_trkpnt = lmap.addLayerOnTop(trackpoints);
             // Waypoints
             waypoints = new LayerPoints(map.mapsystem);
             waypoints.SetDrawPointFunction(LayerPoints.DrawEmptySquare, new Pen(Color.Red));
-            lmap.addLayerOnTop(waypoints);
+            idx_layer_waypnt = lmap.addLayerOnTop(waypoints);
             // Croce centrale
             //lmap.addLayerOnTop(new LayerCrossCenter(20));
 
@@ -169,6 +177,8 @@ namespace MapperTool
             // count: for debug
             int count = 0;
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            lmap.setVisibility(idx_layer_trkpnt, false);
+            lmap.setVisibility(idx_layer_waypnt, false);
             try
             {
                 // Create an instance of StreamReader to read from a file.
@@ -203,8 +213,10 @@ namespace MapperTool
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(ex.Message);
             }
+            lmap.setVisibility(idx_layer_trkpnt, true);
+            lmap.setVisibility(idx_layer_waypnt, true);
             System.Windows.Forms.Cursor.Current = Cursors.Default;
-            mapcontrol.Invalidate();
+            
         }
 
         private void menuItem_followGPS_Click(object sender, EventArgs e)
@@ -243,14 +255,6 @@ namespace MapperTool
         {
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
-            //PxCoordinates c1, c2;
-            //c1 = map.mapsystem.PointToPx(mapcontrol.Center, mapcontrol.Zoom);
-            //c1.xpx -= this.mapcontrol.Size.Width / 2;
-            //c1.ypx -= this.mapcontrol.Size.Height / 2;
-            //c2 = c1;
-            //c2.xpx += this.mapcontrol.Size.Width;
-            //c2.ypx += this.mapcontrol.Size.Height;
-            //ProjectedGeoArea area = new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, mapcontrol.Zoom), map.mapsystem.PxToPoint(c2, mapcontrol.Zoom));
             ProjectedGeoArea area = mapcontrol.VisibleArea;
             for (uint i = 1; i <= options.Maps.OSM.DownloadDepth; i++)
                 map.downloadArea(area, mapcontrol.Zoom + i, false);
@@ -452,6 +456,11 @@ namespace MapperTool
                 MessageBox.Show("Error!");
             }
             System.Windows.Forms.Cursor.Current = Cursors.Default;
+        }
+
+        private void notify_icon_click(object obj, EventArgs args)
+        {
+            this.Activate();
         }
 
     }

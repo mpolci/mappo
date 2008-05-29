@@ -79,5 +79,12 @@ namespace MapperTool {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Icon Map {
+            get {
+                object obj = ResourceManager.GetObject("Map", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
