@@ -77,14 +77,15 @@ namespace MapperTool
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
-            trackpoints = new LayerBufferedPoints(map.mapsystem);
+            //trackpoints = new LayerBufferedPoints(map.mapsystem);
+            trackpoints = new LayerPoints(map.mapsystem);
             lmap.addLayerOnTop(trackpoints);
             // Waypoints
             waypoints = new LayerPoints(map.mapsystem);
             waypoints.SetDrawPointFunction(LayerPoints.DrawEmptySquare, new Pen(Color.Red));
             lmap.addLayerOnTop(waypoints);
             // Croce centrale
-            lmap.addLayerOnTop(new LayerCrossCenter(20));
+            //lmap.addLayerOnTop(new LayerCrossCenter(20));
 
 
             mapcontrol.Map = lmap;

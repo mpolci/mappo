@@ -298,6 +298,7 @@ namespace MapsLibrary
         protected class DrawPointIterator : PointsCollection.Iterator
         {
             System.Drawing.Graphics gDst;
+            Point pDestDelta;
             /// <summary>
             /// angolo corrispondente al pixel di coordinate (0, 0) dell'area del Graphics
             /// </summary>
@@ -314,6 +315,7 @@ namespace MapsLibrary
             {
                 mapsys = mapsystem;
                 this.gDst = dst;
+                //pDestDelta = delta;
                 pxCorner = corner;
                 this.zoom = z;
                 //pen = p;
@@ -327,7 +329,8 @@ namespace MapsLibrary
             public void process(ProjectedGeoPoint pgp)
             {
                 PxCoordinates pxc = mapsys.PointToPx(pgp, this.zoom);
-                Point p = new Point((int)(pxc.xpx - pxCorner.xpx), (int)(pxc.ypx - pxCorner.ypx));
+                Point p = new Point((int)(pxc.xpx - pxCorner.xpx),
+                                    (int)(pxc.ypx - pxCorner.ypx));
                 drawfn(gDst, p, drawfnarg);
             }
 
@@ -353,6 +356,27 @@ namespace MapsLibrary
 
         #region ILayer Members
 
+        public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
+        {
+            // calcola la profondità massima per la visita dell'albero
+            PxCoordinates pxcsize = mapsys.PointToPx(area.pMax - area.pMin, zoom);
+            int depth = calcMaxDepth(area, new Size((int)pxcsize.xpx, (int)pxcsize.ypx));
+            PxCoordinates pxGraphCorner = mapsys.PointToPx(area.pMin, zoom);
+            pxGraphCorner.xpx -= delta.X;
+            pxGraphCorner.ypx -= delta.Y;
+            if (this.customdrawfn != null)
+            {
+                DrawPointIterator pi = new DrawPointIterator(dst, customdrawfn, customdrawarg, pxGraphCorner, zoom, this.mapsys);
+                points.Iterate(area, pi, depth);
+            }
+            else using (Brush brush = new SolidBrush(Color.Blue))
+            {
+                DrawPointIterator pi = new DrawPointIterator(dst, DrawFilledSquare, brush, pxGraphCorner, zoom, this.mapsys);
+                points.Iterate(area, pi, depth);
+            }
+        }
+
+        /*
         public virtual void drawImageMapAt(Graphics dst, ProjectedGeoPoint center, uint zoom, Size size)
         {
             PxCoordinates pxCorner; 
@@ -374,7 +398,7 @@ namespace MapsLibrary
                 points.Iterate(area, pi, depth);
             }            
         }
-
+        */
         #endregion
 
         protected int calcMaxDepth(ProjectedGeoArea drawarea, Size wsize)
@@ -401,6 +425,7 @@ namespace MapsLibrary
         }
     }
 
+    /*
     public class LayerBufferedPoints : LayerPoints
     {
         protected Bitmap buffer;
@@ -412,6 +437,13 @@ namespace MapsLibrary
         {
         }
 
+        // forse questa classe posso eliminarla quindi non è necessario reimplementare questo metodo
+        public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
+        {
+            throw new NotImplementedException();
+        }
+
+        // forse questa classe posso eliminarla quindi non è necessario reimplementare questo metodo
         public override void drawImageMapAt(Graphics dst, ProjectedGeoPoint center, uint zoom, Size size)
         {
             PxCoordinates corner = mapsystem.PointToPx(center, zoom);
@@ -527,5 +559,5 @@ namespace MapsLibrary
         }
 
     }
-
+    */
 }

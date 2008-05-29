@@ -14,7 +14,11 @@ namespace MapsLibrary
         private IMap map;
         private ProjectedGeoPoint pgpCenter;
         private uint uZoom;
-        private Bitmap buffer;
+        //private Bitmap buffer;
+
+        protected Bitmap buffer;
+        protected uint buffer_zoom;
+        protected ProjectedGeoArea buffer_area;
 
         // per le operazioni di dragging
         private int drag_lastx, drag_lasty;
@@ -119,7 +123,7 @@ namespace MapsLibrary
                 return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
             }
         }
-
+        /*
         protected override void OnPaint(PaintEventArgs e)
         {
             //base.OnPaint(e);
@@ -128,17 +132,75 @@ namespace MapsLibrary
                 if (PrePaint != null) PrePaint(this);  // genera l'evento PrePaint
                 if (buffer == null) buffer = new Bitmap(this.Size.Width, this.Size.Height);
                 using (Graphics goff = Graphics.FromImage(buffer))
-                    this.map.drawImageMapAt(goff, this.Center, this.Zoom, this.Size);
+                    this.map.drawImageMapAt(goff, new Point(0, 0), this.VisibleArea, this.Zoom);
+                //this.map.drawImageMapAt(goff, this.Center, this.Zoom, this.Size);
                 e.Graphics.DrawImage(buffer, 0, 0);
-                //this.map.drawImageMapAt(e.Graphics, this.Center, this.Zoom, this.Size);
-                //base.OnPaint(e);
             }
             else
             {
+                // Nessuna mappa. Colora tutto di rosso.
                 using (Brush b = new SolidBrush(Color.Red))
                     e.Graphics.FillRectangle(b, e.ClipRectangle);
             }
+        }
+        */
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            // CODICE DI DEBUG
+            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            // FINE CODICE DI DEBUG
 
+            if (map != null)
+            {
+                if (PrePaint != null) PrePaint(this);  // genera l'evento PrePaint
+
+                ProjectedGeoArea drawarea = this.VisibleArea;
+                ProjectedGeoArea[] zones;
+                PxCoordinates pxcWinCorner = map.mapsystem.PointToPx(drawarea.pMin, this.Zoom);
+
+                Bitmap newbuffer = new Bitmap(this.Size.Width, this.Size.Height);
+                using (Graphics outg = Graphics.FromImage(newbuffer))
+                {
+                    if (this.Zoom != buffer_zoom)
+                        zones = new ProjectedGeoArea[] { drawarea };
+                    else
+                    {
+                        // disegna il buffer attuale dentro il nuovo 
+                        PxCoordinates bufpxpos = map.mapsystem.PointToPx(buffer_area.pMin, buffer_zoom);
+                        Point bufpos = new Point((int)(bufpxpos.xpx - pxcWinCorner.xpx), (int)(bufpxpos.ypx - pxcWinCorner.ypx));
+                        outg.DrawImage(buffer, bufpos.X, bufpos.Y);
+                        zones = drawarea.difference(this.buffer_area);
+                    }
+                    // disegna nel buffer le parti mancanti
+                    foreach (ProjectedGeoArea pr_area in zones)
+                    {
+                        PxCoordinates pxccorn = map.mapsystem.PointToPx(pr_area.pMin, Zoom);
+                        PxCoordinates pxcCorner = map.mapsystem.PointToPx(pr_area.pMin, Zoom) - pxcWinCorner;
+
+                        this.map.drawImageMapAt(outg, new Point((int)pxcCorner.xpx, (int)pxcCorner.ypx), pr_area, this.Zoom);
+                    }
+                }
+                if (buffer != null) buffer.Dispose();
+                buffer = newbuffer;
+                buffer_area = drawarea;
+                buffer_zoom = Zoom;
+
+                e.Graphics.DrawImage(buffer, 0, 0);
+            }
+            else
+            {
+                // Nessuna mappa. Colora tutto di rosso.
+                using (Brush b = new SolidBrush(Color.Red))
+                    e.Graphics.FillRectangle(b, e.ClipRectangle);
+            }
+            // CODICE DI DEBUG
+            watch.Stop();
+            string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
+            using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+            using (SolidBrush drawBrush = new SolidBrush(Color.Black))
+                e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 0);
+            // FINE CODICE DI DEBUG
         }
 
         // Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 
