@@ -62,15 +62,26 @@ namespace MapsLibrary
 
         void mapchanged(IMap map, ProjectedGeoArea area)
         {
-            //ProjectedGeoPoint delta = area.center - this.pgpCenter;
-            //area.pMin -= delta;
-            //area.pMax -= delta;
+            // aggiorna il buffer
+            if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
+            {
+                using (Graphics g = Graphics.FromImage(buffer))
+                {
+                    PxCoordinates pxcBufCorn = map.mapsystem.PointToPx(buffer_area.pMin, buffer_zoom),
+                                  pxcInvAreaCorn = map.mapsystem.PointToPx(area.pMin, buffer_zoom),
+                                  outpos = pxcInvAreaCorn - pxcBufCorn;
+                    this.map.drawImageMapAt(g, new Point((int)outpos.xpx, (int)outpos.ypx), area, this.Zoom);
+                }
+            }
+            // invalida l'area del controllo (tenendo un margine di 2 pixel)
+            const int marg = 2;
             PxCoordinates c = map.mapsystem.PointToPx(pgpCenter, uZoom);
             c.xpx -= this.Size.Width / 2;
             c.ypx -= this.Size.Height / 2;
             PxCoordinates px1 = map.mapsystem.PointToPx(area.pMin, uZoom),
                           px2 = map.mapsystem.PointToPx(area.pMax, uZoom);
-            Rectangle rect = new Rectangle((int)(px1.xpx - c.xpx - 1), (int)(px1.ypx - c.ypx - 1), (int)(px2.xpx - px1.xpx + 3), (int)(px2.ypx - px1.ypx + 3));
+            Rectangle rect = new Rectangle((int)(px1.xpx - c.xpx - marg), (int)(px1.ypx - c.ypx - marg),
+                                           (int)(px2.xpx - px1.xpx + 1 + 2 * marg), (int)(px2.ypx - px1.ypx + 1 + 2 * marg));
             this.Invalidate(rect);
         }
 

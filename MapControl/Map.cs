@@ -826,6 +826,9 @@ namespace MapsLibrary
             return this.aLayers.Add(new LayerItem(newLayer));            
         }
 
+        /// <summary>
+        /// cattura l'evento mapchanged dei vari layer
+        /// </summary>
         protected void mapchangedhandler(IMap map, ProjectedGeoArea area)
         {
             if (MapChanged != null)
@@ -835,8 +838,13 @@ namespace MapsLibrary
         public void setVisibility(int idx, bool v)
         {
             LayerItem layer =  (LayerItem) aLayers[idx];
-            layer.visible = v;
-            aLayers[idx] = layer;
+            if (layer.visible != v)
+            {
+                layer.visible = v;
+                aLayers[idx] = layer;
+                if (MapChanged != null)
+                    MapChanged(this, this.mapsystem.FullMapArea);
+            }
         }
 
         public bool isVisible(int idx)
@@ -1502,6 +1510,8 @@ namespace MapsLibrary
         /// Da un altro punto di vista i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor
         /// </remarks>
         public abstract uint PixelZoomFactor { get; }
+
+        public readonly ProjectedGeoArea FullMapArea = new ProjectedGeoArea(new ProjectedGeoPoint(0, 0), new ProjectedGeoPoint((Int32)1 << (Int32)30, (Int32)1 << (Int32)30));
     
         public GeoPoint CalcInverseProjection(ProjectedGeoPoint pgp)
         {

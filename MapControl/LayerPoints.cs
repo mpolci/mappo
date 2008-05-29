@@ -351,7 +351,7 @@ namespace MapsLibrary
         {
             points.addPoint(point);
             if (MapChanged != null)
-                MapChanged(this, new ProjectedGeoArea(point, point));
+                MapChanged(this, new ProjectedGeoArea(point, new ProjectedGeoPoint(point.nLat + 1, point.nLon +1)));
         }
 
         #region ILayer Members
@@ -359,7 +359,7 @@ namespace MapsLibrary
         public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
         {
             // calcola la profondità massima per la visita dell'albero
-            PxCoordinates pxcsize = mapsys.PointToPx(area.pMax - area.pMin, zoom);
+            PxCoordinates pxcsize = mapsys.PointToPx(area.pMax - area.pMin, zoom) + new PxCoordinates(1, 1); ;
             int depth = calcMaxDepth(area, new Size((int)pxcsize.xpx, (int)pxcsize.ypx));
             PxCoordinates pxGraphCorner = mapsys.PointToPx(area.pMin, zoom);
             pxGraphCorner.xpx -= delta.X;
