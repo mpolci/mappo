@@ -1172,8 +1172,8 @@ namespace MapsLibrary
                 // nessuna intersezione
                 zones.Add(this);
             } else {
-                Int32 top = Math.Min(area.pMin.nLat-1, this.pMax.nLat),
-                      bottom = Math.Max(area.pMax.nLat + 1, this.pMin.nLat);
+                Int32 top = Math.Min(area.pMin.nLat, this.pMax.nLat),
+                      bottom = Math.Max(area.pMax.nLat, this.pMin.nLat);
                 if (area.pMin.nLat > pMin.nLat) {
                     // fascia superiore
                     zones.Add( new ProjectedGeoArea(pMin, new ProjectedGeoPoint(top, this.pMax.nLon)) );
@@ -1184,11 +1184,11 @@ namespace MapsLibrary
                 }
                 if (area.pMin.nLon > this.pMin.nLon) {
                     // fascia di sinistra
-                    zones.Add( new ProjectedGeoArea(new ProjectedGeoPoint(top, this.pMin.nLon), new ProjectedGeoPoint(bottom, Math.Min(area.pMin.nLon - 1, this.pMax.nLon))) );
+                    zones.Add( new ProjectedGeoArea(new ProjectedGeoPoint(top, this.pMin.nLon), new ProjectedGeoPoint(bottom, Math.Min(area.pMin.nLon, this.pMax.nLon))) );
                 }
                 if (area.pMax.nLon < this.pMax.nLon) {
                     // fascia di destra
-                    zones.Add( new ProjectedGeoArea(new ProjectedGeoPoint(top, Math.Max(area.pMax.nLon + 1, this.pMin.nLon)), new ProjectedGeoPoint(bottom, this.pMax.nLon)) );
+                    zones.Add( new ProjectedGeoArea(new ProjectedGeoPoint(top, Math.Max(area.pMax.nLon, this.pMin.nLon)), new ProjectedGeoPoint(bottom, this.pMax.nLon)) );
                 }
             }
             ProjectedGeoArea[] retval = new ProjectedGeoArea[zones.Count];
@@ -1748,21 +1748,59 @@ namespace MapsLibrary
 
                     PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),
                                   pxareamin = msys.PointToPx(area.pMin, zoom),
-                                  pximgcorner = msys.PointToPx(imgid.point, imgid.zoom);
+                                  pximgcorner = msys.PointToPx(imgid.point, imgid.zoom),
+                                  pximgsup;
+                    Size pxareasize = new Size((int)pxareamax.xpx - (int)pxareamin.xpx, (int)pxareamax.ypx - (int)pxareamin.ypx);
                     pximgcorner.xpx -= bmp.Width / 2; pximgcorner.ypx -= bmp.Height / 2;
-                    Point outpoint = new Point((int)pximgcorner.xpx - (int)pxareamin.xpx + delta.X,
-                                               (int)pximgcorner.ypx - (int)pxareamin.ypx + delta.Y);
-
-                    if (pximgcorner.xpx <= pxareamax.xpx && pximgcorner.ypx <= pxareamax.ypx)
-                    {
-                        // disegna l'immagine della mappa
-                        dst.DrawImage(bmp, outpoint.X, outpoint.Y);
+                    pximgsup = pximgcorner + new PxCoordinates(bmp.Width, bmp.Height); // pximgsup non fa parte dell'immagine
+                    int outx, outy,
+                        srcx, srcy, srcsx, srcsy;
+                    // l'immagine inizia prima dell'area
+                    if (pximgcorner.xpx < pxareamin.xpx) {
+                        srcx = (int)pxareamin.xpx - (int)pximgcorner.xpx;
+                        outx = 0;
+                    } else {
+                        srcx = 0;
+                        outx = (int)pximgcorner.xpx - (int)pxareamin.xpx;
                     }
-                    // riempie di nero la zona non coperta
-                    using (Region blackregion = dst.Clip.Clone())
+                    srcsx = bmp.Width - srcx;
+                    if (pximgsup.xpx > pxareamax.xpx + 1) {
+                        // considero pxareamax facente parte dell'area da disegnare
+                        srcsx -= (int)pximgsup.xpx - (int)pxareamax.xpx;
+                    }
+                    // l'immagine inizia prima dell'area
+                    if (pximgcorner.ypx < pxareamin.ypx)
                     {
-                        Rectangle rect_outimg = new Rectangle(outpoint.X, outpoint.Y, bmp.Width, bmp.Height);
-                        blackregion.Xor(rect_outimg);
+                        srcy = (int)pxareamin.ypx - (int)pximgcorner.ypx;
+                        outy = 0;
+                    }
+                    else
+                    {
+                        srcy = 0;
+                        outy = (int)pximgcorner.ypx - (int)pxareamin.ypx;
+                    }
+                    srcsy = bmp.Height - srcy;
+                    if (pximgsup.ypx > pxareamax.ypx + 1)
+                    {
+                        // considero pxareamax facente parte dell'area da disegnare
+                        srcsy -= (int)pximgsup.ypx - (int)pxareamax.ypx;
+                    }
+
+                    outx += delta.X; outy += delta.Y;
+
+                    // riempie di nero la zona non coperta
+                    using (Region blackregion = new Region(new Rectangle(delta.X, delta.Y, pxareasize.Width, pxareasize.Height)))
+                    {
+                        if (srcsx > 0 && srcsy > 0)
+                        {
+                            // disegna l'immagine della mappa
+                            Rectangle srcrect = new Rectangle(srcx, srcy, srcsx, srcsy);
+                            dst.DrawImage(bmp, outx, outy, srcrect, GraphicsUnit.Pixel);
+                            // prepara l'area da annerire
+                            Rectangle rect_outimg = new Rectangle(outx, outy, srcsx, srcsy);
+                            blackregion.Exclude(rect_outimg);
+                        }
+                        // riempie di nero l'area non coperta dalla mappa
                         dst.FillRegion(blackbrush, blackregion);
                     }
                 }
@@ -1880,8 +1918,6 @@ namespace MapsLibrary
             }
         }
     }
-
-
 
 
 }
