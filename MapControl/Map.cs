@@ -538,6 +538,11 @@ namespace MapsLibrary
                 map = m;
                 visible = true;
             }
+            public override bool Equals(object obj)
+            {
+                return Object.ReferenceEquals(((LayerItem)obj).map, map);
+            }
+
         }
 
         private ArrayList aLayers = new ArrayList();
@@ -597,7 +602,11 @@ namespace MapsLibrary
         protected void mapchangedhandler(IMap map, ProjectedGeoArea area)
         {
             if (MapChanged != null)
-                MapChanged(this, area);
+            {
+                int idx = aLayers.IndexOf(new LayerItem(map));
+                if ( ((LayerItem) aLayers[idx]).visible )
+                    MapChanged(this, area);
+            }
         }
 
         public void setVisibility(int idx, bool v)
