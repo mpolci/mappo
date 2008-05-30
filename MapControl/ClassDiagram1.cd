@@ -40,25 +40,26 @@
   </Class>
   <Class Name="MapsLibrary.TilesMap">
     <Position X="0.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Delegate Name="MapsLibrary.TilesMap.TileNotFoundHandler" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Map.cs</NewMemberFileName>
         </TypeIdentifier>
       </Delegate>
+      <Class Name="MapsLibrary.TilesMap.TileNotFoundException" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAAAAIAEAAAAAAAAAAAgAAhABAAAAECUAAAAIAA0AA=</HashCode>
+      <HashCode>iAAAAAIAEAAAAAAAAAAAgAAhABEAAAECUAAAAAAAwAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="MapsLibrary.MapTS">
-    <Position X="3.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAwAA=</HashCode>
-      <FileName>Map.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.LayeredMap" BaseTypeListCollapsed="true">
     <Position X="9.75" Y="0.5" Width="1.5" />
@@ -76,35 +77,35 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="MapsLibrary.TileMapSystem">
-    <Position X="0.5" Y="11.5" Width="2.25" />
+    <Position X="0.5" Y="9.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAACAAGgAwCAAQAAAAAEAAIAYAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
-    <Position X="0.5" Y="15" Width="2.25" />
+    <Position X="0.5" Y="13.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.CachedMapTS">
-    <Position X="0.5" Y="5.75" Width="1.75" />
+    <Position X="3.25" Y="2.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>gCAACAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAAAA=</HashCode>
+      <HashCode>gCAACAAAAIAAAAAAAAAAAAAAAAAAAAEAACAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
-    <Position X="1.5" Y="9" Width="2.5" />
+    <Position X="1.5" Y="6.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQQAAEAAAAQAAEAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3" Y="11.5" Width="2" />
+    <Position X="3" Y="9.75" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -126,7 +127,14 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="MapsLibrary.Tools" Collapsed="true">
-    <Position X="8" Y="2" Width="1.5" />
+    <Position X="8" Y="1.25" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="MapsLibrary.Tools.FileDownloadInfo" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -150,13 +158,6 @@
     <Position X="11.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
-      <FileName>Map.cs</FileName>
-    </TypeIdentifier>
-  </Struct>
-  <Struct Name="MapsLibrary.GeoPoint">
-    <Position X="9.75" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAQBAAAAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
@@ -188,8 +189,15 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
+  <Struct Name="MapsLibrary.GeoPoint">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAQBAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Interface Name="MapsLibrary.IMap">
-    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="0.5" Width="2" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
