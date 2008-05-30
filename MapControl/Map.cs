@@ -155,11 +155,6 @@ namespace MapsLibrary
             }
         }
 
-        protected TileMapSystem GetMapSystem()
-        {
-            return mapsys;
-        }
-
         //public abstract void drawImageMapAt(Graphics g, TileCoordinates tc, Size size);
         //public abstract void drawImageMapAt(Graphics g, Point delta, TileCoordinates tc, Size size);
         /*
@@ -244,6 +239,7 @@ namespace MapsLibrary
             downloadTile(mapsys.PointToTileCoo(p, zoom).tilenum, overwrite);
         }
 
+        /*
         /// <summary>
         /// Restituisce il bitmap del tile contenente le coordinate indicate
         /// </summary>
@@ -251,7 +247,9 @@ namespace MapsLibrary
         {
             return this.getImageTile(tc.tilenum);
         }
+        */
 
+        /*
         /// <summary>
         /// Restituisce il bitmap del tile indicato
         /// </summary>
@@ -259,7 +257,8 @@ namespace MapsLibrary
         {
             throw new NotImplementedException("Abstract method");
         }
-        /*
+         */ 
+        
         public class TileNotFoundException: Exception 
         {
             private TileNum tn;
@@ -270,7 +269,7 @@ namespace MapsLibrary
             }
 
         }
-        */
+        
         /// <summary>
         /// Crea e restituisce il bitmap del tile indicato
         /// </summary>
@@ -289,9 +288,19 @@ namespace MapsLibrary
                         File.Delete(file);  // file non valido
                     }
                 }
+                // lancia l'evento TileNotFound e, se questo lo indica, tenta nuovamente di caricare il tile
             } while (TileNotFound != null && !TileNotFound(this, tn));
+
+            throw new TileNotFoundException(tn, null);
+        }
+
+        /// <summary>
+        /// Crea e restituisce il bitmap del tile indicato
+        /// </summary>
+        public Bitmap createNotFoundImageTile()
+        {
             // crea un bitmap nero
-            img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
+            Bitmap img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
             using (Graphics g = Graphics.FromImage(img))
             using (Font font = new Font(FontFamily.GenericSerif, 10, FontStyle.Regular))
             using (Brush brush = new SolidBrush(Color.White))
@@ -331,7 +340,7 @@ namespace MapsLibrary
         /// <remarks>L'implementazione attuale è poco efficiente, piuttosto che controllare se esiste ogni possibile file relativo all'area indicata, forse sarebbe meglio partire dai file in cache e vedere se sono relativi all'area indicata.</remarks>
         /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
-        public virtual void updateArea(ProjectedGeoArea area, uint zoom)
+        public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
             TileCoordinates tc1 = mapsys.PointToTileCoo(area.pMin, zoom),
                             tc2 = mapsys.PointToTileCoo(area.pMax, zoom);
@@ -348,251 +357,7 @@ namespace MapsLibrary
                     if (tileInCache(i))
                         downloadTile(i, true);
         }
-    }
 
-    /// <summary>
-    /// Permette l'estrazione di un pezzo di mappa di dimensione inferiore o uguale Y quella di un tile
-    /// </summary>
-    /// <remarks></remarks>
-    public class MapTS : TilesMap
-    {
-        public MapTS(string tileCachePath, TileMapSystem ms)
-            : base(tileCachePath, ms)
-        {
-            
-        }
-    
-        public Image createImageMosaic(TileCoordinates tc)
-        {
-            TileNum tn = tc.tilenum;
-            long x = tn.lX,
-                 y = tn.lY;
-            long[] xb = new long[2],
-                   yb = new long[2]; 
-            long max;
-            uint zoom = tn.uZoom;
-            double cx = tc.getIntDX(),
-                   cy = tc.getIntDY();
-            max = ((int)1 << (int)zoom) - 1;
-
-            // determina i tile per i vari quadranti
-            if (cx > 0.5)  
-            {
-                xb[0] = x;
-                xb[1] = (x == max) ? 0 : x + 1;
-            }
-            else
-            {
-                xb[0] = (x == 0) ? max : x - 1;
-                xb[1] = x;
-            }
-
-            if (cy > 0.5)
-            {
-                yb[0] = y;
-                yb[1] = (y == max) ? 0 : y + 1;
-            }
-            else
-            {
-                yb[0] = (y == 0) ? max : y - 1;
-                yb[1] = y;
-            }
-
-            Bitmap imgCompose = new Bitmap(512, 512);
-            using (Graphics g = Graphics.FromImage(imgCompose))
-            {
-                for (int iX = 0; iX <= 1; iX++)
-                    for (int iY = 0; iY <= 1; iY++) {
-                        Bitmap tile = getImageTile(new TileNum(xb[iX], yb[iY], zoom));
-                        g.DrawImage(tile, iX * 256, iY * 256);
-                    }
-            }
-
-            return imgCompose;
-        }
-        /*
-        public virtual Image createImageMapAt(TileCoordinates tc, uint sx, uint sy)
-        {
-            // ATTENZIONE in caso di eccezioni bisognerebbe liberare questa bitmap
-            Bitmap img = new Bitmap((int)sx, (int)sy);
-            using (Graphics g = Graphics.FromImage(img))
-            {
-                drawImageMapAt(g, tc, new Size((int)sx, (int)sy));
-            }
-            return img;
-        }
-        */
-
-        public override void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
-        {
-            PxCoordinates pxcMin = mapsys.PointToPx(area.pMin, zoom),
-                          pxcMax = mapsys.PointToPx(area.pMax, zoom);
-            //PxCoordinates pxAreaSize = pxcMax - pxcMin + new PxCoordinates(1, 1);
-            TileNum tnMin = mapsys.PxToTileNum(pxcMin, zoom),
-                    tnMax = mapsys.PxToTileNum(pxcMax, zoom);
-            pxcMax += new PxCoordinates(1, 1);  // credo vada bene giusto per l'utilizzo che ne faccio dopo
-
-            TileNum tn;
-            tn.uZoom = zoom;
-            for (tn.lX = tnMin.lX; tn.lX <= tnMax.lX; tn.lX++)
-            {
-                for (tn.lY = tnMin.lY; tn.lY <= tnMax.lY; tn.lY++)
-                {
-                    PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
-                                  tileareaoffset = pxcTileCorner - pxcMin;
-
-                    //------------------------- X ------------------
-                    int outx, // coordinata x su g dove piazzare il tile;
-                        srcx, srcsx;
-                    // se il tile inizia prima dell'area da disegnare
-                    if (tileareaoffset.xpx < 0) {
-                        outx = delta.X;
-                        srcx = (int) -tileareaoffset.xpx;
-                    } else {
-                        outx = (int) (delta.X + tileareaoffset.xpx);
-                        srcx = 0;
-                    }
-                    long pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
-
-                    srcsx = mapsys.tilesize - srcx;
-                    // se il tile va oltre l'area d disegnare
-                    if (pxTileMaxX > pxcMax.xpx)
-                        srcsx -= (int) (pxTileMaxX - pxcMax.xpx);
-
-                    //------------------------- Y ------------------
-                    int outy, // coordinata y su g dove piazzare il tile;
-                        srcy, srcsy;
-                    // se il tile inizia prima dell'area da disegnare
-                    if (tileareaoffset.ypx < 0)
-                    {
-                        outy = delta.Y;
-                        srcy = (int) -tileareaoffset.ypx;
-                    }
-                    else
-                    {
-                        outy = (int) (delta.Y + tileareaoffset.ypx);
-                        srcy = 0;
-                    }
-                    long pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
-
-                    srcsy = mapsys.tilesize - srcy;
-                    // se il tile va oltre l'area d disegnare
-                    if (pxTileMaxY > pxcMax.ypx)
-                        srcsy -= (int) (pxTileMaxY - pxcMax.ypx);
-
-                    //----------------------------------------------
-
-                    Rectangle src_rect = new Rectangle(srcx, srcy, srcsx, srcsy);
-                    Bitmap imgsrc = this.getImageTile(tn);
-                    g.DrawImage(imgsrc, outx, outy, src_rect, GraphicsUnit.Pixel);
-                }
-            }
-        }
-
-        /*
-        public override void drawImageMapAt(Graphics g, Point delta, TileCoordinates tc, Size size)
-        {
-            Int32 px = (Int32)(tc.getIntDX() * 256),
-                  py = (Int32)(tc.getIntDY() * 256);
-            Rectangle r = new Rectangle(px - (int)size.Width / 2, py - (int)size.Height / 2, (int) size.Width, (int) size.Height);
-
-            int cornDeltaX = (r.Left < 0)? -1 : 0,
-                cornDeltaY = (r.Top < 0) ? -1 : 0;
-
-            TileNum tnCorner = new TileNum(tc.tilenum.lX + cornDeltaX, tc.tilenum.lY + cornDeltaY, tc.tilenum.uZoom);
-            r.Offset(-256 * cornDeltaX, -256 * cornDeltaY);
-            Int32 q1width = (r.Right > 256) ? 256 - r.Left : r.Width,
-                  q1height = (r.Bottom > 256) ? 256 - r.Top : r.Height;
-            Bitmap imgsrc;
-
-            // quadrante 1
-            imgsrc = this.getImageTile(tnCorner);
-            Rectangle r1 = new Rectangle(r.Left, r.Top, q1width, q1height);
-            //g.DrawImage(imgsrc, 0, 0, r1, GraphicsUnit.Pixel);
-            g.DrawImage(imgsrc, delta.X, delta.Y, r1, GraphicsUnit.Pixel);
-
-            // quadrante 2
-            if (r.Right > 256)
-            {
-                imgsrc = this.getImageTile(new TileNum(tnCorner.lX+1,tnCorner.lY,tnCorner.uZoom));
-                Rectangle r2 = new Rectangle(0, r.Top, (int) size.Width - q1width, q1height);
-                //g.DrawImage(imgsrc, q1width, 0, r2, GraphicsUnit.Pixel);
-                g.DrawImage(imgsrc, delta.X + q1width, delta.Y, r2, GraphicsUnit.Pixel);
-            }
-
-            // quadrante 3
-            if (r.Bottom > 256)
-            {
-                imgsrc = this.getImageTile(new TileNum(tnCorner.lX, tnCorner.lY + 1, tnCorner.uZoom));
-                Rectangle r3 = new Rectangle(r.Left, 0, q1width, (int) size.Height - q1height);
-                //g.DrawImage(imgsrc, 0, q1height, r3, GraphicsUnit.Pixel);
-                g.DrawImage(imgsrc, delta.X, delta.Y + q1height, r3, GraphicsUnit.Pixel);
-            }
-
-            // quadrante 4
-            if (r.Right > 256 && r.Bottom > 256)
-            {
-                imgsrc = this.getImageTile(new TileNum(tnCorner.lX + 1, tnCorner.lY + 1, tnCorner.uZoom));
-                Rectangle r4 = new Rectangle(0, 0, (int) size.Width - q1width, (int) size.Height - q1height);
-                //g.DrawImage(imgsrc, q1width, q1height, r4, GraphicsUnit.Pixel);
-                g.DrawImage(imgsrc, delta.X + q1width, delta.Y + q1height, r4, GraphicsUnit.Pixel);
-            }
-        }
-        */
-
-        /// <summary>
-        /// Scarica il tile ad una certa coordinata geografica
-        /// </summary>
-        /// <remarks>Rispetto al metodo della classe base vengono scaricati anche i tile più vicini al punto indicato in modo da avere l'intero mosaico.</remarks>
-        public override void downloadAt(ProjectedGeoPoint point, uint z, bool overwrite)
-        {
-            // QUESTO METODO E' DA RISCRIVERE
-            TileCoordinates tc = mapsys.PointToTileCoo(point, z);
-            TileNum tn = tc.tilenum;
-            long x = tn.lX,
-                 y = tn.lY,
-                 x1, x2, y1, y2, ix, iy,
-                 max;
-            uint zoom = tn.uZoom;
-            double cx = tc.getIntDX(),
-                   cy = tc.getIntDY();
-
-            if (zoom == 0) {
-                downloadTile(new TileNum(x, y, zoom));
-            } else {
-                // determina i tile per i vari quadranti
-                if (cx > 0.5)
-                {
-                    x1 = x;
-                    x2 = x + 1;
-                }
-                else
-                {
-                    x1 = x - 1;
-                    x2 = x;
-                }
-
-                if (cy > 0.5)
-                {
-                    y1 = y;
-                    y2 = y + 1;
-                }
-                else
-                {
-                    y1 = y - 1;
-                    y2 = y;
-                }
-                max = ((int) 1 << (int)zoom) -1;
-                //scarica i tile
-                for (ix = x1; ix <= x2; ix++)
-                    for (iy = y1; iy <= y2; iy++)
-                    {
-                        long effx = (ix < 0) ? max : (ix > max ? 0 : ix),
-                             effy = (iy < 0) ? max : (iy > max ? 0 : iy);
-                        downloadTile(new TileNum(effx, effy, zoom));
-                    }
-            }
-        }
     }
 
     public struct GeoPoint
@@ -1397,24 +1162,44 @@ namespace MapsLibrary
 
     }
 
-    public class CachedMapTS : MapTS
+    public class CachedMapTS : TilesMap
     {
         private Hashtable cache;
-        private Queue<TileNum> q;
+        //private Queue<TileNum> q;
+        private LinkedList<TileNum> lru;
         uint maxitems;
+        protected Bitmap _imgTileNotFound;
 
         public CachedMapTS(string tileCachePath, TileMapSystem ms, uint cachelen)
             : base(tileCachePath, ms)
         {
             cache = new Hashtable((int)cachelen);
-            q = new Queue<TileNum>((int)cachelen);
+            //q = new Queue<TileNum>((int)cachelen);
+            lru = new LinkedList<TileNum>();
             maxitems = cachelen;
         }
 
-        public override Bitmap getImageTile(TileNum tn)
+        protected Bitmap ImgTileNotFound
+        {
+            get
+            {
+                if (_imgTileNotFound == null)
+                    _imgTileNotFound = createNotFoundImageTile();
+                return _imgTileNotFound;
+            }
+        }
+
+        /// <summary>
+        /// Restituisce il bitmap del tile indicato
+        /// </summary>
+        public Bitmap getImageTile(TileNum tn)
         {
             if (cache.Contains(tn))
             {
+                LinkedListNode<TileNum> node = lru.Find(tn);
+                lru.Remove(node);
+                lru.AddFirst(node);
+
                 Bitmap bmp = (System.Drawing.Bitmap)cache[tn];
                 return bmp;
             }
@@ -1422,22 +1207,107 @@ namespace MapsLibrary
             {
                 if (cache.Count >= maxitems)
                 {
-                    TileNum oldertn = q.Dequeue();
+                    // rimuove un elemento dalla coda
+                    //TileNum oldertn = q.Dequeue();
+                    //Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
+                    //olderbmp.Dispose();
+                    //cache.Remove(oldertn);
+                    // rimuove un elemento dalla coda
+                    TileNum oldertn = lru.Last.Value;
+                    lru.RemoveLast();
                     Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
                     olderbmp.Dispose();
                     cache.Remove(oldertn);
                 }
-                Bitmap bmp = base.createImageTile(tn);
-                cache.Add(tn, bmp);
-                q.Enqueue(tn);
+                Bitmap bmp;
+                try
+                {
+                    bmp = base.createImageTile(tn);
+                    cache.Add(tn, bmp);
+                    //q.Enqueue(tn);
+                    lru.AddFirst(tn);
+                }
+                catch (Exception e)
+                {
+                    bmp = ImgTileNotFound;
+                }
                 return bmp;
             }
         }
 
-        public override void updateArea(ProjectedGeoArea area, uint zoom)
+        public override void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
             this.cache.Clear();
-            base.updateArea(area, zoom);
+            base.updateTilesInArea(area, zoom);
+        }
+
+        public override void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
+        {
+            PxCoordinates pxcMin = mapsys.PointToPx(area.pMin, zoom),
+                          pxcMax = mapsys.PointToPx(area.pMax, zoom);
+            //PxCoordinates pxAreaSize = pxcMax - pxcMin + new PxCoordinates(1, 1);
+            TileNum tnMin = mapsys.PxToTileNum(pxcMin, zoom),
+                    tnMax = mapsys.PxToTileNum(pxcMax, zoom);
+            pxcMax += new PxCoordinates(1, 1);  // credo vada bene giusto per l'utilizzo che ne faccio dopo
+
+            TileNum tn;
+            tn.uZoom = zoom;
+            for (tn.lX = tnMin.lX; tn.lX <= tnMax.lX; tn.lX++)
+            {
+                for (tn.lY = tnMin.lY; tn.lY <= tnMax.lY; tn.lY++)
+                {
+                    PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
+                                  tileareaoffset = pxcTileCorner - pxcMin;
+
+                    //------------------------- X ------------------
+                    int outx, // coordinata x su g dove piazzare il tile;
+                        srcx, srcsx;
+                    // se il tile inizia prima dell'area da disegnare
+                    if (tileareaoffset.xpx < 0)
+                    {
+                        outx = delta.X;
+                        srcx = (int)-tileareaoffset.xpx;
+                    }
+                    else
+                    {
+                        outx = (int)(delta.X + tileareaoffset.xpx);
+                        srcx = 0;
+                    }
+                    long pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
+
+                    srcsx = mapsys.tilesize - srcx;
+                    // se il tile va oltre l'area d disegnare
+                    if (pxTileMaxX > pxcMax.xpx)
+                        srcsx -= (int)(pxTileMaxX - pxcMax.xpx);
+
+                    //------------------------- Y ------------------
+                    int outy, // coordinata y su g dove piazzare il tile;
+                        srcy, srcsy;
+                    // se il tile inizia prima dell'area da disegnare
+                    if (tileareaoffset.ypx < 0)
+                    {
+                        outy = delta.Y;
+                        srcy = (int)-tileareaoffset.ypx;
+                    }
+                    else
+                    {
+                        outy = (int)(delta.Y + tileareaoffset.ypx);
+                        srcy = 0;
+                    }
+                    long pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
+
+                    srcsy = mapsys.tilesize - srcy;
+                    // se il tile va oltre l'area d disegnare
+                    if (pxTileMaxY > pxcMax.ypx)
+                        srcsy -= (int)(pxTileMaxY - pxcMax.ypx);
+
+                    //----------------------------------------------
+
+                    Rectangle src_rect = new Rectangle(srcx, srcy, srcsx, srcsy);
+                    Bitmap imgsrc = this.getImageTile(tn);
+                    g.DrawImage(imgsrc, outx, outy, src_rect, GraphicsUnit.Pixel);
+                }
+            }
         }
     }
 
