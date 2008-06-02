@@ -144,7 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="log.nmea.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Map.ico" />
     <Content Include="tiles\12\2185\1486.png">
