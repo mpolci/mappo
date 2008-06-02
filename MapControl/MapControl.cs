@@ -65,6 +65,11 @@ namespace MapsLibrary
             // aggiorna il buffer
             if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
             {
+                //dovrei invalidare solo l'intersezione fra le 2 aree, l'area indicata potrebbe essere molto estesa
+                // SOLUZIONE TEMPORANEA. REIMPLEMENTARE!!!!
+                buffer.Dispose();
+                buffer = null;
+                /*
                 using (Graphics g = Graphics.FromImage(buffer))
                 {
                     PxCoordinates pxcBufCorn = map.mapsystem.PointToPx(buffer_area.pMin, buffer_zoom),
@@ -72,6 +77,7 @@ namespace MapsLibrary
                                   outpos = pxcInvAreaCorn - pxcBufCorn;
                     this.map.drawImageMapAt(g, new Point((int)outpos.xpx, (int)outpos.ypx), area, this.Zoom);
                 }
+                 */
             }
             // invalida l'area del controllo (tenendo un margine di 2 pixel)
             const int marg = 2;
@@ -173,7 +179,7 @@ namespace MapsLibrary
                 // FINE CODICE DI DEBUG
                 using (Graphics outg = Graphics.FromImage(newbuffer))
                 {
-                    if (this.Zoom != buffer_zoom)
+                    if (this.Zoom != buffer_zoom || buffer == null)
                         zones = new ProjectedGeoArea[] { drawarea };
                     else
                     {
