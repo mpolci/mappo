@@ -105,7 +105,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMap" BaseTypeListCollapsed="true">
-    <Position X="8" Y="8.5" Width="1.5" />
+    <Position X="7" Y="8.5" Width="1.5" />
     <NestedTypes>
       <Struct Name="MapsLibrary.SparseImagesMap.ImgID" Collapsed="true">
         <TypeIdentifier>
@@ -114,7 +114,7 @@
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gBAABAAQAAAAEgAAAAAAAAAhEAAAAAAAEACAAAAAgAA=</HashCode>
+      <HashCode>gBAABAAQAAAAEgAAAAEAAAAhEAAAAAAAEACAAAAAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />

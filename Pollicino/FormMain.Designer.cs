@@ -256,6 +256,7 @@
             this.Menu = this.mainMenu;
             this.Name = "Form_MapperToolMain";
             this.Text = "Pollicino";
+            this.Deactivate += new System.EventHandler(this.Form_MapperToolMain_Deactivate);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
             this.ResumeLayout(false);
 

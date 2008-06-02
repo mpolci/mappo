@@ -28,7 +28,7 @@ namespace MapperTool
         protected ApplicationOptions options;
         string configfile;
 
-        protected MapTS map;
+        protected CachedMapTS map;
         protected SparseImagesMap gmap;
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
@@ -82,6 +82,7 @@ namespace MapperTool
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
             gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath);
+            gmap.autodownload = options.Maps.OSM.AutoDownload;  // uso l'opzione anche per le mappe di gmaps
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
@@ -97,7 +98,7 @@ namespace MapperTool
 
 
             mapcontrol.Map = lmap;
-            this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.scarica_tiles);
+            this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.prepara_mappe);
 
             GeoPoint gp = new GeoPoint(44.1429, 12.2618);
             mapcontrol.Zoom = 12;
@@ -286,7 +287,7 @@ namespace MapperTool
             for (uint i = mapcontrol.Zoom; i <= maxzoom ; i++)
             {
                 try {
-                    map.updateArea(area, i); 
+                    map.updateTilesInArea(area, i); 
                 } catch (Exception ex) {
                     if (++errors >= 10) break;
                 }
@@ -299,22 +300,32 @@ namespace MapperTool
         }
 
 
-        private void scarica_tiles(MapControl sender)
+        private void prepara_mappe(MapControl sender)
         {
-            if (options.Maps.OSM.AutoDownload && lmap.isVisible(idx_layer_osm)) {
-                try
+            if (lmap.isVisible(idx_layer_osm))
+            {
+                if (options.Maps.OSM.AutoDownload)
                 {
-                    this.map.downloadAt(sender.Center, sender.Zoom, false);
-                }
-                catch (System.Net.WebException)
-                {
-                    options.Maps.OSM.AutoDownload = false;
-                    if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                        == DialogResult.No)
+                    try
                     {
-                        options.Maps.OSM.AutoDownload = true;
+                        //this.map.downloadAt(sender.Center, sender.Zoom, false);
+                        map.downloadArea(mapcontrol.VisibleArea, mapcontrol.Zoom, false);
+
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        options.Maps.OSM.AutoDownload = false;
+                        if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+                            == DialogResult.No)
+                        {
+                            options.Maps.OSM.AutoDownload = true;
+                        }
                     }
                 }
+            }
+            else
+            {
+                gmap.PrepareMap(mapcontrol.VisibleArea, mapcontrol.Zoom);
             }
         }
 
@@ -331,6 +342,7 @@ namespace MapperTool
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
+                gmap.autodownload = newopt.Maps.OSM.AutoDownload;  // uso l'opzione autodownload anche per le mappe di google
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -461,6 +473,11 @@ namespace MapperTool
         private void notify_icon_click(object obj, EventArgs args)
         {
             this.Activate();
+        }
+
+        private void Form_MapperToolMain_Deactivate(object sender, EventArgs e)
+        {
+            int i = 0;
         }
 
     }

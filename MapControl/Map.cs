@@ -278,7 +278,7 @@ namespace MapsLibrary
         /// </summary>
         public Bitmap createImageTile(TileNum tn) 
         {
-            Bitmap img;
+            //Bitmap img;
             string file = strTileCachePath + tn.ToString('\\') + ".png";
             do {
                 if (File.Exists(file)) {
@@ -1518,20 +1518,25 @@ namespace MapsLibrary
         ImgID currentID;
         Bitmap currentImg;
 
+        private bool _autodownload;
+
         public event MapChangedEventHandler MapChanged;
 
         public SparseImagesMap(SparseImagesMapSystem ms, string cachepath)
         {
+            _autodownload = false;
             msys = ms;
             images = new Hashtable();
             if (string.IsNullOrEmpty(cachepath))
                 cachepath = "./";
             else if (!Directory.Exists(cachepath))
                 Directory.CreateDirectory(cachepath);
-            if (!cachepath.EndsWith("/") || ! cachepath.EndsWith("\\"))
+            if (!cachepath.EndsWith("/") || !cachepath.EndsWith("\\"))
                 cachepath += '/';
             cachedir = cachepath;
-            parseCache();
+           
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.parseCache));
+            //parseCache();
         }
 
         public MercatorProjectionMapSystem mapsystem
@@ -1541,7 +1546,19 @@ namespace MapsLibrary
             }
         }
 
-        protected void parseCache()
+        public bool autodownload
+        {
+            get
+            {
+                return _autodownload;
+            }
+            set
+            {
+                _autodownload = value;
+            }
+        }
+
+        protected void parseCache(object nullparam)
         {
             string[] dirs = Directory.GetDirectories(this.cachedir);
             foreach (string dn in dirs)
@@ -1595,6 +1612,24 @@ namespace MapsLibrary
             } // altrimenti si suppone che il file sia già stato caricato
         }
 
+        public void PrepareMap(ProjectedGeoArea area, uint zoom)
+        {
+            ProjectedGeoPoint center = area.center;
+            try
+            {
+                Int32 maxdist = msys.PxToPoint(new PxCoordinates(256, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                ImgID imgid = findNearest(center, zoom, maxdist);
+                getMap(imgid);
+            }
+            catch (Exception)
+            {
+                if (autodownload) {
+                    downloadAt(center, zoom, false);
+                    getMap(new ImgID(center, zoom));
+                }
+            }
+        }
+
         protected ImgID findNearest(ProjectedGeoPoint point, uint zoom, Int32 maxdist)
         {
             Int32 mindist = maxdist; 
@@ -1637,9 +1672,11 @@ namespace MapsLibrary
             {
                 try
                 {
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                    ImgID imgid = findNearest(area.center, zoom, maxdist);
-                    Bitmap bmp = getMap(imgid);
+                    //Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                    //ImgID imgid = findNearest(area.center, zoom, maxdist);
+                    //Bitmap bmp = getMap(imgid);
+                    ImgID imgid = currentID;
+                    Bitmap bmp = currentImg;
 
 
                     PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),
@@ -1710,6 +1747,7 @@ namespace MapsLibrary
                 }
             }
         }
+
 
         /*
         public void drawImageMapAt(Graphics g, ProjectedGeoPoint center, uint zoom, Size size)
