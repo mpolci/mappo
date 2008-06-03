@@ -143,6 +143,9 @@
     <None Include="Resources\ImgGPS.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="log.nmea.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
