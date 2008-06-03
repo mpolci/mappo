@@ -41,7 +41,7 @@ namespace MapsLibrary
         /// <summary>
         /// Mappa disegnata dal controllo
         /// </summary>
-        /// <remarks>bla bla bla</remarks>
+        /// <remarks></remarks>
         /// <value>oggetto di tipo IMap</value>
         public IMap Map
         {
@@ -65,27 +65,27 @@ namespace MapsLibrary
             // aggiorna il buffer
             if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
             {
-                //dovrei invalidare solo l'intersezione fra le 2 aree, l'area indicata potrebbe essere molto estesa
-                // SOLUZIONE TEMPORANEA. REIMPLEMENTARE!!!!
-                buffer.Dispose();
-                buffer = null;
-                /*
+                ProjectedGeoArea redrawarea = ProjectedGeoArea.Intersection(buffer_area, area);
                 using (Graphics g = Graphics.FromImage(buffer))
                 {
                     PxCoordinates pxcBufCorn = map.mapsystem.PointToPx(buffer_area.pMin, buffer_zoom),
-                                  pxcInvAreaCorn = map.mapsystem.PointToPx(area.pMin, buffer_zoom),
+                                  pxcInvAreaCorn = map.mapsystem.PointToPx(redrawarea.pMin, buffer_zoom),
                                   outpos = pxcInvAreaCorn - pxcBufCorn;
-                    this.map.drawImageMapAt(g, new Point((int)outpos.xpx, (int)outpos.ypx), area, this.Zoom);
+                    // bisognerebbe tenere in considerazione il margine anche qui
+                    this.map.drawImageMapAt(g, new Point((int)outpos.xpx, (int)outpos.ypx), redrawarea, this.Zoom);
                 }
-                 */
+
             }
             // invalida l'area del controllo (tenendo un margine di 2 pixel)
             const int marg = 2;
             PxCoordinates c = map.mapsystem.PointToPx(pgpCenter, uZoom);
             c.xpx -= this.Size.Width / 2;
             c.ypx -= this.Size.Height / 2;
-            PxCoordinates px1 = map.mapsystem.PointToPx(area.pMin, uZoom),
-                          px2 = map.mapsystem.PointToPx(area.pMax, uZoom);
+            //PxCoordinates px1 = map.mapsystem.PointToPx(area.pMin, uZoom),
+            //              px2 = map.mapsystem.PointToPx(area.pMax, uZoom);
+            ProjectedGeoArea invalidarea = ProjectedGeoArea.Intersection(this.VisibleArea, area);
+            PxCoordinates px1 = map.mapsystem.PointToPx(invalidarea.pMin, uZoom),
+                          px2 = map.mapsystem.PointToPx(invalidarea.pMax, uZoom);
             Rectangle rect = new Rectangle((int)(px1.xpx - c.xpx - marg), (int)(px1.ypx - c.ypx - marg),
                                            (int)(px2.xpx - px1.xpx + 1 + 2 * marg), (int)(px2.ypx - px1.ypx + 1 + 2 * marg));
             this.Invalidate(rect);

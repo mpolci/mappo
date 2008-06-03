@@ -302,30 +302,32 @@ namespace MapperTool
 
         private void prepara_mappe(MapControl sender)
         {
-            if (lmap.isVisible(idx_layer_osm))
+            try
             {
-                if (options.Maps.OSM.AutoDownload)
+                if (lmap.isVisible(idx_layer_osm))
                 {
-                    try
+                    if (options.Maps.OSM.AutoDownload)
                     {
                         //this.map.downloadAt(sender.Center, sender.Zoom, false);
                         map.downloadArea(mapcontrol.VisibleArea, mapcontrol.Zoom, false);
 
                     }
-                    catch (System.Net.WebException)
-                    {
-                        options.Maps.OSM.AutoDownload = false;
-                        if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                            == DialogResult.No)
-                        {
-                            options.Maps.OSM.AutoDownload = true;
-                        }
-                    }
+                }
+                else
+                {
+                    gmap.PrepareMap(mapcontrol.VisibleArea, mapcontrol.Zoom);
                 }
             }
-            else
+            catch (System.Net.WebException)
             {
-                gmap.PrepareMap(mapcontrol.VisibleArea, mapcontrol.Zoom);
+                options.Maps.OSM.AutoDownload = false;
+                gmap.autodownload = false;
+                if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+                    == DialogResult.No)
+                {
+                    options.Maps.OSM.AutoDownload = true;
+                    gmap.autodownload = true;
+                }
             }
         }
 

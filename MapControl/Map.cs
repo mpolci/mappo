@@ -204,6 +204,14 @@ namespace MapsLibrary
                 {
                     // può lanciare l'eccezzione System.Net.WebException
                     Tools.downloadHttpToFile(url, file.FullName, true);
+                    // invalida l'area relativa al tile
+                    if (this.MapChanged != null)
+                    {
+                        PxCoordinates corner = mapsys.TileNumToPx(tn),
+                                      limit = corner + new PxCoordinates(mapsys.tilesize, mapsys.tilesize);
+                        ProjectedGeoArea tilearea = new ProjectedGeoArea(mapsys.PxToPoint(corner, tn.uZoom), mapsys.PxToPoint(limit, tn.uZoom));
+                        MapChanged(this, tilearea);
+                    }
                 }
             }
             catch (WebException we)
@@ -850,6 +858,18 @@ namespace MapsLibrary
                    (pMin.nLon <= point.nLon && point.nLon <= pMax.nLon);
         }
 
+        public static ProjectedGeoArea Intersection(ProjectedGeoArea a, ProjectedGeoArea b)
+        {
+            Int32 minlat = Math.Max(a.pMin.nLat, b.pMin.nLat),
+                  minLon = Math.Max(a.pMin.nLon, b.pMin.nLon),
+                  maxLat = Math.Min(a.pMax.nLat, b.pMax.nLat),
+                  maxLon = Math.Min(a.pMax.nLon, b.pMax.nLon);
+            if (minlat > maxLat || minLon > maxLon)
+                return new ProjectedGeoArea(new ProjectedGeoPoint(0, 0), new ProjectedGeoPoint(0, 0));
+            else
+                return new ProjectedGeoArea(new ProjectedGeoPoint(minlat, minLon), new ProjectedGeoPoint(maxLat, maxLon));
+        }
+
         public AreaIntersectionType testIntersection(ProjectedGeoArea testarea)
         {
             if (pMin.nLat <= testarea.pMin.nLat)
@@ -1383,6 +1403,10 @@ namespace MapsLibrary
         {
             return new ProjectedGeoPoint(a.nLat + b.nLat, a.nLon + b.nLon);
         }
+        public static ProjectedGeoPoint operator /(ProjectedGeoPoint num, int den)
+        {
+            return new ProjectedGeoPoint(num.nLat / den, num.nLon / den);
+        }
 
     }
 
@@ -1517,6 +1541,7 @@ namespace MapsLibrary
 
         ImgID currentID;
         Bitmap currentImg;
+        ProjectedGeoArea currentImgArea;
 
         private bool _autodownload;
 
@@ -1614,18 +1639,22 @@ namespace MapsLibrary
 
         public void PrepareMap(ProjectedGeoArea area, uint zoom)
         {
-            ProjectedGeoPoint center = area.center;
-            try
+            if (currentImg == null || currentID.zoom != zoom || currentImgArea.testIntersection(area) != AreaIntersectionType.fullContains)
             {
-                Int32 maxdist = msys.PxToPoint(new PxCoordinates(256, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                ImgID imgid = findNearest(center, zoom, maxdist);
-                getMap(imgid);
-            }
-            catch (Exception)
-            {
-                if (autodownload) {
-                    downloadAt(center, zoom, false);
-                    getMap(new ImgID(center, zoom));
+                ProjectedGeoPoint center = area.center;
+                try
+                {
+                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(256, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                    ImgID imgid = findNearest(center, zoom, maxdist);
+                    getMap(imgid);
+                }
+                catch (Exception)
+                {
+                    if (autodownload)
+                    {
+                        downloadAt(center, zoom, false);
+                        getMap(new ImgID(center, zoom));
+                    }
                 }
             }
         }
@@ -1655,11 +1684,25 @@ namespace MapsLibrary
         {
             if (currentImg == null || currentID.zoom != id.zoom || currentID.point != id.point)
             {
-                //string filename = msys.ImageFile(id.point, id.Zoom);
+                bool currentimgpresent = currentImg != null;
                 string filename = (string)images[id];
-                if (currentImg != null) currentImg.Dispose();
-                currentImg = new Bitmap(filename);
+                Bitmap newimg = new Bitmap(filename);
+                ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(newimg.Width, newimg.Height), id.zoom),
+                                  c1 = id.point - size / 2,
+                                  c2 = c1 + size;
+                ProjectedGeoArea newarea = new ProjectedGeoArea(c1, c2), 
+                                 oldarea = currentImgArea;
+                
+                if (currentimgpresent) currentImg.Dispose();
                 currentID = id;
+                currentImg = newimg;
+                currentImgArea = newarea;
+
+                if (MapChanged != null)
+                {
+                    if (currentimgpresent) MapChanged(this, oldarea);
+                    MapChanged(this, newarea);
+                }
             }
             return currentImg;
         }
