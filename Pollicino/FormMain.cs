@@ -55,6 +55,7 @@ namespace MapperTool
         protected int idx_layer_gmaps, idx_layer_osm, idx_layer_trkpnt, idx_layer_waypnt;
         protected bool autocenter;
         protected string logname;
+        protected Downloader downloader;
 
         protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
 
@@ -95,13 +96,18 @@ namespace MapperTool
 
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
+            // thread per il download automatico delle mappe
+            downloader = new Downloader();
+            downloader.startThread();
+
+            // mappe
             this.lmap = new LayeredMap();
             // OSM
             this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath);
-            gmap.autodownload = options.Maps.OSM.AutoDownload;  // uso l'opzione anche per le mappe di gmaps
+            gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath, new Point(mapcontrol.Size.Width / 2, mapcontrol.Size.Height / 2));
+            //gmap.autodownload = options.Maps.OSM.AutoDownload;  // uso l'opzione anche per le mappe di gmaps
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
@@ -130,7 +136,6 @@ namespace MapperTool
         /// <summary>
         /// Responds to sentence events from GPS receiver
         /// </summary>
-        //protected void GPSEventHandler(object sender, GPSHandler.GPSEventArgs e)
         protected void GPSEventHandler(GPSControl sender, GPSControl.GPSPosition gpsdata)
         {
             this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
@@ -321,32 +326,10 @@ namespace MapperTool
 
         private void prepara_mappe(MapControl sender)
         {
-            try
+            if (options.Maps.OSM.AutoDownload)
             {
-                if (lmap.isVisible(idx_layer_osm))
-                {
-                    if (options.Maps.OSM.AutoDownload)
-                    {
-                        //this.map.downloadAt(sender.Center, sender.Zoom, false);
-                        map.downloadArea(mapcontrol.VisibleArea, mapcontrol.Zoom, false);
-
-                    }
-                }
-                else
-                {
-                    gmap.PrepareMap(mapcontrol.VisibleArea, mapcontrol.Zoom);
-                }
-            }
-            catch (System.Net.WebException)
-            {
-                options.Maps.OSM.AutoDownload = false;
-                gmap.autodownload = false;
-                if (MessageBox.Show("Disable autodownload?", "Download Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                    == DialogResult.No)
-                {
-                    options.Maps.OSM.AutoDownload = true;
-                    gmap.autodownload = true;
-                }
+                IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
+                downloader.addDownloadArea(vm, mapcontrol.VisibleArea, mapcontrol.Zoom);
             }
         }
 
@@ -363,7 +346,7 @@ namespace MapperTool
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
-                gmap.autodownload = newopt.Maps.OSM.AutoDownload;  // uso l'opzione autodownload anche per le mappe di google
+                //gmap.autodownload = newopt.Maps.OSM.AutoDownload;  // uso l'opzione autodownload anche per le mappe di google
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -458,8 +441,9 @@ namespace MapperTool
 
         private void menuItem_exit_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo,MessageBoxIcon.None,MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                Application.Exit();
+            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                //Application.Exit();
+                this.Close();
 
         }
 
@@ -499,6 +483,12 @@ namespace MapperTool
         private void Form_MapperToolMain_Deactivate(object sender, EventArgs e)
         {
             int i = 0;
+        }
+
+        private void Form_MapperToolMain_Closing(object sender, CancelEventArgs e)
+        {
+            this.downloader.stopThread();
+            this.notify_icon.Dispose();
         }
 
     }

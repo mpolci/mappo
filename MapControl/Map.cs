@@ -38,8 +38,19 @@ namespace MapsLibrary
             get;
         }
 
-        //void drawImageMapAt(Graphics g, ProjectedGeoPoint center, uint zoom, Size size);
-        void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom);
+        /// <summary>
+        /// Disegna un'area della mappa.
+        /// </summary>
+        /// <remarks>
+        /// Disegna un'area di mappa su un oggetto Graphics ad una posizione indicata. 
+        /// La mappa è univocamente identificata dal suo centro e dal livello di zoom.
+        /// </remarks>
+        /// <param name="map_center">Centro della mappa. Serve per identificarla e non è correlato all'area che effettivamente va disegnata. Di solito corrisponde alle coordinate geografiche del centro della finestra di visualizzazione.</param>
+        /// <param name="zoom">Livello di zoom della mappa.</param>
+        /// <param name="area">Area della mappa da disegnare.</param>
+        /// <param name="g">Oggetto Graphics dove disegnare la mappa.</param>
+        /// <param name="delta">Coordinate all'interno dell'oggetto "g" dove disegnare l'area "area".</param>
+        void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta);
 
     }
 
@@ -141,7 +152,7 @@ namespace MapsLibrary
     }
     */
 
-    public abstract class TilesMap : IMap
+    public abstract class TilesMap : IMap, IDownloadableMap
     {
         protected string strTileCachePath;
         //protected string strTileServerUrl;
@@ -176,24 +187,7 @@ namespace MapsLibrary
             }
         }
 
-        //public abstract void drawImageMapAt(Graphics g, TileCoordinates tc, Size size);
-        //public abstract void drawImageMapAt(Graphics g, Point delta, TileCoordinates tc, Size size);
-        /*
-        public void drawImageMapAt(Graphics g, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            drawImageMapAt(g, mapsys.PointToTileCoo(center, zoom), size);
-        }
-        */
-
-        public abstract void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom);
-
-        // soluzione temporanea DA REIMPLEMENTARE
-        //public void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
-        //{
-        //    PxCoordinates pxcsize = mapsys.PointToPx(area.pMax, zoom) - mapsys.PointToPx(area.pMin, zoom);
-        //    Size size = new Size((int)pxcsize.xpx, (int)pxcsize.ypx);
-        //    drawImageMapAt(g, delta, mapsys.PointToTileCoo(area.center, zoom), size);
-        //}
+        public abstract void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta);
 
         protected static string TileNumToString(long x, long y, uint zoom, string separator) {
             return zoom.ToString() + separator + x.ToString() + separator + y.ToString();
@@ -342,6 +336,15 @@ namespace MapsLibrary
             return img;
         }
 
+        
+        /// <summary>
+        /// Scarica, se necessario, i tile relativi all'area indicata
+        /// </summary>
+        public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
+        {
+            downloadArea(area, zoom, false);
+        }
+        
         /// <summary>
         /// Scarica i tile che comprendono l'area indicata
         /// </summary>
@@ -349,10 +352,6 @@ namespace MapsLibrary
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
         public void downloadArea(ProjectedGeoArea area, uint zoom, bool overwrite)
         {
-            //TileCoordinates tc1 = mapsys.PointToTileCoo(area.pMin, zoom),
-            //                tc2 = mapsys.PointToTileCoo(area.pMax, zoom);
-            //TileNum tn1 = tc1.tilenum,
-            //        tn2 = tc2.tilenum;
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
             long x1 = Math.Min(tn1.lX, tn2.lX),
@@ -374,10 +373,6 @@ namespace MapsLibrary
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
         public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
-            //TileCoordinates tc1 = mapsys.PointToTileCoo(area.pMin, zoom),
-            //                tc2 = mapsys.PointToTileCoo(area.pMax, zoom);
-            //TileNum tn1 = tc1.tilenum,
-            //        tn2 = tc2.tilenum;
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
             long x1 = Math.Min(tn1.lX, tn2.lX),
@@ -391,6 +386,7 @@ namespace MapsLibrary
                     if (tileInCache(i))
                         downloadTile(i, true);
         }
+
 
     }
 
@@ -593,35 +589,15 @@ namespace MapsLibrary
             }
         }
 
-        public void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
+        public void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta)
         {
             foreach (LayerItem layer in this.aLayers)
             {
                 if (layer.visible)
-                    layer.map.drawImageMapAt(g, delta, area, zoom);
+                    layer.map.drawImageMapAt(map_center, zoom, area, g, delta);
             }
         }
-        /*
-        public void drawImageMapAt(Graphics g, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            // CODICE DI DEBUG
-            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            // FINE CODICE DI DEBUG
-            foreach (LayerItem layer in this.aLayers)
-            {
-                if (layer.visible)
-                    layer.map.drawImageMapAt(g, center, zoom, size);
-            }
-            // CODICE DI DEBUG
-            watch.Stop();
-            string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
-            using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
-            using (SolidBrush drawBrush = new SolidBrush(Color.Black))
-                g.DrawString(msg, drawFont, drawBrush, 0, 0);
-            // FINE CODICE DI DEBUG
-        }
-        */
+
         #endregion
 
         public int addLayerOnTop(IMap newLayer)
@@ -1047,6 +1023,15 @@ namespace MapsLibrary
         {
             return new Point((int)p.xpx, (int)p.ypx);
         }
+
+        public static implicit operator PxCoordinates(System.Drawing.Point p)
+        {
+            return new PxCoordinates(p.X, p.Y);
+        }
+        public override string ToString()
+        {
+            return "(x: " + this.xpx.ToString() + " y: " + this.ypx.ToString() + ")"; 
+        }
     }
 
     public abstract class TileMapSystem : MercatorProjectionMapSystem
@@ -1306,7 +1291,7 @@ namespace MapsLibrary
             base.updateTilesInArea(area, zoom);
         }
 
-        public override void drawImageMapAt(Graphics g, Point delta, ProjectedGeoArea area, uint zoom)
+        public override void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta)
         {
             PxCoordinates pxcMin = mapsys.PointToPx(area.pMin, zoom),
                           pxcMax = mapsys.PointToPx(area.pMax, zoom);
@@ -1540,7 +1525,7 @@ namespace MapsLibrary
     }
     
 
-    public class SparseImagesMap : IMap
+    public class SparseImagesMap : IMap, IDownloadableMap
     {
         protected struct ImgID
         {
@@ -1562,13 +1547,16 @@ namespace MapsLibrary
         Bitmap currentImg;
         ProjectedGeoArea currentImgArea;
 
-        private bool _autodownload;
+        /// <summary>
+        /// Centro dell'area di visualizzazione logica. Utilizzato per selezionare la mappa
+        /// </summary>
+        Point center_offset;
 
         public event MapChangedEventHandler MapChanged;
 
-        public SparseImagesMap(SparseImagesMapSystem ms, string cachepath)
+        public SparseImagesMap(SparseImagesMapSystem ms, string cachepath, Point centerdelta)
         {
-            _autodownload = false;
+            center_offset = centerdelta;
             msys = ms;
             images = new Hashtable();
             if (string.IsNullOrEmpty(cachepath))
@@ -1587,18 +1575,6 @@ namespace MapsLibrary
         {
             get {
                 return msys;
-            }
-        }
-
-        public bool autodownload
-        {
-            get
-            {
-                return _autodownload;
-            }
-            set
-            {
-                _autodownload = value;
             }
         }
 
@@ -1652,30 +1628,34 @@ namespace MapsLibrary
                     // mappa non trovata, bisogna scaricarla
                     Tools.downloadHttpToFile(url, filename, false);
                     images.Add(new ImgID(point, zoom), filename);
+                    ProjectedGeoArea imgarea = ImgArea(new Size(512, 512), point, zoom);   // dipende dalla dimensione di un'immagine di mappa
+                    if (MapChanged != null)
+                        MapChanged(this, imgarea);
                 }
             } // altrimenti si suppone che il file sia già stato caricato
         }
 
-        public void PrepareMap(ProjectedGeoArea area, uint zoom)
+        public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
             if (currentImg == null || currentID.zoom != zoom || currentImgArea.testIntersection(area) != AreaIntersectionType.fullContains)
             {
                 ProjectedGeoPoint center = area.center;
                 try
                 {
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(256, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                    // se esiste una mappa nelle vicinanze non è necessario scaricarne un'altra
+                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(320, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
                     ImgID imgid = findNearest(center, zoom, maxdist);
-                    getMap(imgid);
                 }
-                catch (Exception)
+                catch (ImageMapNotFoundException)
                 {
-                    if (autodownload)
-                    {
-                        downloadAt(center, zoom, false);
-                        getMap(new ImgID(center, zoom));
-                    }
+                    downloadAt(center, zoom, false);
                 }
             }
+        }
+
+        public class ImageMapNotFoundException : Exception
+        {
+            public ImageMapNotFoundException(string msg) : base(msg) { }
         }
 
         protected ImgID findNearest(ProjectedGeoPoint point, uint zoom, Int32 maxdist)
@@ -1695,8 +1675,17 @@ namespace MapsLibrary
                 }
             }
             if (found.zoom == 0)
-                throw new Exception("Empty images set");
+                throw new ImageMapNotFoundException("Empty images set");
             return found;
+        }
+
+        protected ProjectedGeoArea ImgArea(Size imgsize, ProjectedGeoPoint center, uint zoom)
+        {
+                //ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(img.Width, img.Height), zoom),
+                ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(imgsize.Width, imgsize.Height), zoom),
+                                  c1 = center - size / 2,
+                                  c2 = c1 + size;
+                return new ProjectedGeoArea(c1, c2);
         }
 
         protected virtual Bitmap getMap(ImgID id)
@@ -1706,10 +1695,14 @@ namespace MapsLibrary
                 bool currentimgpresent = currentImg != null;
                 string filename = (string)images[id];
                 Bitmap newimg = new Bitmap(filename);
+                
+                /*
                 ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(newimg.Width, newimg.Height), id.zoom),
                                   c1 = id.point - size / 2,
                                   c2 = c1 + size;
                 ProjectedGeoArea newarea = new ProjectedGeoArea(c1, c2), 
+                 */
+                ProjectedGeoArea newarea = ImgArea(newimg.Size, id.point, id.zoom), 
                                  oldarea = currentImgArea;
                 
                 if (currentimgpresent) currentImg.Dispose();
@@ -1717,9 +1710,12 @@ namespace MapsLibrary
                 currentImg = newimg;
                 currentImgArea = newarea;
 
+                // notificare qui il cambiamento di mappa altrimenti può inescare un'ulteriore cambiamento di mappa,
+                // forse è meglio spostarlo alla fine di drawImageMapAt
                 if (MapChanged != null)
                 {
-                    if (currentimgpresent) MapChanged(this, oldarea);
+                    if (currentimgpresent) 
+                        MapChanged(this, oldarea);
                     MapChanged(this, newarea);
                 }
             }
@@ -1728,8 +1724,14 @@ namespace MapsLibrary
 
         #region IMap Members
 
-        public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
+        // da rivedere
+        /// <summary>
+        /// Disegna l'area indicata presa dall'immagine più vicina al centro della mappa indicato.
+        /// </summary>
+        /// <remarks>Attenzione: questo metodo può generare uno o più eventi MapChanged in modo sincrono. Può essere un errore elaborare questi eventi causando delle nuove chiamate a drawImageMapAt prima che la chiamata iniziale sia terminata.</remarks>
+        public virtual void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics dst, Point delta)
         {
+            //if (zoom != currentID.zoom) throw new Exception("Area non preparata");
             using (Brush blackbrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black))
             {
                 try
@@ -1737,15 +1739,23 @@ namespace MapsLibrary
                     //Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
                     //ImgID imgid = findNearest(area.center, zoom, maxdist);
                     //Bitmap bmp = getMap(imgid);
-                    ImgID imgid = currentID;
-                    Bitmap bmp = currentImg;
+                    //ImgID imgid = currentID;
+                    //Bitmap bmp = currentImg;
 
-
-                    PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),
+                    PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),           // CONTROLLARE: forse va incrementato di 1, specialmente per il calcolo di pxareasize
                                   pxareamin = msys.PointToPx(area.pMin, zoom),
-                                  pximgcorner = msys.PointToPx(imgid.point, imgid.zoom),
-                                  pximgsup;
+                                  pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
                     Size pxareasize = new Size((int)pxareamax.xpx - (int)pxareamin.xpx, (int)pxareamax.ypx - (int)pxareamin.ypx);
+
+                    //ImgID oldId = currentID;
+                    // seleziona l'immagine da utilizzare
+                    //ProjectedGeoPoint center = msys.PxToPoint(pxwincenter, zoom);
+                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                    ImgID imgid = findNearest(map_center, zoom, maxdist);
+                    Bitmap bmp = getMap(imgid);
+
+                    PxCoordinates pximgcorner = msys.PointToPx(imgid.point, imgid.zoom), // angolo di coordinate minime dell'immagine
+                                  pximgsup; // limite superiore dell'area dell'immagine
                     pximgcorner.xpx -= bmp.Width / 2; pximgcorner.ypx -= bmp.Height / 2;
                     pximgsup = pximgcorner + new PxCoordinates(bmp.Width, bmp.Height); // pximgsup non fa parte dell'immagine
                     int outx, outy,
@@ -1798,8 +1808,9 @@ namespace MapsLibrary
                         // riempie di nero l'area non coperta dalla mappa
                         dst.FillRegion(blackbrush, blackregion);
                     }
+                    //if (oldId.point != currentID.point && MapChanged != null) MapChanged(this, msys.FullMapArea);
                 }
-                catch (Exception)
+                catch (ImageMapNotFoundException)
                 {
                     //dst.FillRectangle(blackbrush, 0, 0, size.Width, size.Height);
                     dst.FillRegion(blackbrush, dst.Clip);
@@ -1810,44 +1821,6 @@ namespace MapsLibrary
             }
         }
 
-
-        /*
-        public void drawImageMapAt(Graphics g, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            using (Brush blackbrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black))
-            {
-                try
-                {
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                    ImgID imgid = findNearest(center, zoom, maxdist);
-                    Bitmap bmp = getMap(imgid);
-                    PxCoordinates corner = msys.PointToPx(center, zoom),
-                                  imgcorner = msys.PointToPx(imgid.point, imgid.zoom);
-                    corner.xpx -= size.Width / 2; corner.ypx -= size.Height / 2;
-                    imgcorner.xpx -= bmp.Width / 2; imgcorner.ypx -= bmp.Height / 2;
-                    System.Drawing.Point outpoint = new Point((int)imgcorner.xpx - (int)corner.xpx, (int)imgcorner.ypx - (int)corner.ypx);
-                    if (outpoint.X < size.Width && outpoint.Y < size.Height)
-                    {
-                        Rectangle rect_outimg = new Rectangle(outpoint.X, outpoint.Y, bmp.Width, bmp.Height),
-                                  rect_screen = new Rectangle(0, 0, size.Width, size.Height);
-                        using (Region blackregion = new Region(rect_screen))
-                        {
-                            blackregion.Xor(rect_outimg);
-                            g.FillRegion(blackbrush, blackregion);
-                        }
-                        g.DrawImage(bmp, outpoint.X, outpoint.Y);
-                    }
-                }
-                catch (Exception)
-                {
-                    g.FillRectangle(blackbrush, 0, 0, size.Width, size.Height);
-                    using (Font drawFont = new Font("Arial", 12, FontStyle.Regular))
-                    using (SolidBrush drawBrush = new SolidBrush(Color.White))
-                        g.DrawString("mappa non disponibile", drawFont, drawBrush, 0, size.Height / 2 - 6);
-                }
-            }
-        }
-        */
         #endregion
     }
 
@@ -1913,6 +1886,14 @@ namespace MapsLibrary
                 lenght = response.ContentLength;
             }
         }
+    }
+
+    public interface IDownloadableMap
+    {
+        /// <summary>
+        /// Metodo utilizzato per scaricare i dati relativi ad un'area 
+        /// </summary>
+        void DownloadMapArea(ProjectedGeoArea area, uint zoom);
     }
 
 

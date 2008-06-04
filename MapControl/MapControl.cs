@@ -73,10 +73,19 @@ namespace MapsLibrary
                 map = value;
                 if (value != null)
                 {
-                    map.MapChanged += new MapChangedEventHandler(mapchanged);
+                    //map.MapChanged += new MapChangedEventHandler(mapchanged);
+                    map.MapChanged += new MapChangedEventHandler(invokemapchanged);
                     Invalidate();
                 }
             }
+        }
+
+        private delegate void mapchangeddelegate(IMap map, ProjectedGeoArea area);
+
+        void invokemapchanged(IMap map, ProjectedGeoArea area)
+        {
+            mapchangeddelegate mydelegate = this.mapchanged;
+            BeginInvoke(mydelegate, new object[] { map, area });
         }
 
         void mapchanged(IMap map, ProjectedGeoArea area)
@@ -84,6 +93,11 @@ namespace MapsLibrary
             // aggiorna il buffer
             if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
             {
+                // ATTENZIONE! qui rigenero il buffer causando delle nuove chiamate a drawImageMapAt. Sarebbe meglio 
+                // semplicemente trovare un meccanismo per invalidare la parte del buffer interessata e lasciare
+                // la rigenerazione al momento del Paint del controllo. In particolare in alcuni casi posso avere
+                // più invalidazioni su aree parzialmente sovrapposte prima che venga elaborato un Paint, e in tale
+                // situazione può capitare di rigenerare più volte la stessa area del buffer inutilmente
                 ProjectedGeoArea redrawarea = ProjectedGeoArea.Intersection(buffer_area, area);
                 using (Graphics g = Graphics.FromImage(buffer))
                 {
@@ -91,9 +105,8 @@ namespace MapsLibrary
                                   pxcInvAreaCorn = map.mapsystem.PointToPx(redrawarea.pMin, buffer_zoom),
                                   outpos = pxcInvAreaCorn - pxcBufCorn;
                     // bisognerebbe tenere in considerazione il margine anche qui
-                    this.map.drawImageMapAt(g, new Point((int)outpos.xpx, (int)outpos.ypx), redrawarea, this.Zoom);
+                    this.map.drawImageMapAt(this.Center, this.Zoom, redrawarea, g, (Point)outpos);
                 }
-
             }
             // invalida l'area del controllo (tenendo un margine di 2 pixel)
             const int marg = 2;
@@ -104,7 +117,7 @@ namespace MapsLibrary
             //              px2 = map.mapsystem.PointToPx(area.pMax, uZoom);
             ProjectedGeoArea invalidarea = ProjectedGeoArea.Intersection(this.VisibleArea, area);
             PxCoordinates px1 = map.mapsystem.PointToPx(invalidarea.pMin, uZoom),
-                          px2 = map.mapsystem.PointToPx(invalidarea.pMax, uZoom);
+                          px2 = map.mapsystem.PointToPx(invalidarea.pMax, uZoom);  // CONTROLLARE è compreso nell'area da invalidare ????
             Rectangle rect = new Rectangle((int)(px1.xpx - c.xpx - marg), (int)(px1.ypx - c.ypx - marg),
                                            (int)(px2.xpx - px1.xpx + 1 + 2 * marg), (int)(px2.ypx - px1.ypx + 1 + 2 * marg));
             this.Invalidate(rect);
@@ -121,6 +134,7 @@ namespace MapsLibrary
                 if (uZoom != value)
                 {
                     uZoom = value;
+                    //map.PrepareMap(VisibleArea, Zoom);
                     Invalidate();
                     if (ZoomChanged != null) ZoomChanged(this); // evento
                 }
@@ -138,6 +152,7 @@ namespace MapsLibrary
                 if (pgpCenter != value)
                 {
                     pgpCenter = value;
+                    //map.PrepareMap(VisibleArea, Zoom);
                     Invalidate();
                     if (PositionChanged != null) 
                         PositionChanged(this); // evento
@@ -211,10 +226,10 @@ namespace MapsLibrary
                     // disegna nel buffer le parti mancanti
                     foreach (ProjectedGeoArea pr_area in zones)
                     {
-                        PxCoordinates pxccorn = map.mapsystem.PointToPx(pr_area.pMin, Zoom);
+                        //PxCoordinates pxccorn = map.mapsystem.PointToPx(pr_area.pMin, Zoom);
                         PxCoordinates pxcCorner = map.mapsystem.PointToPx(pr_area.pMin, Zoom) - pxcWinCorner;
 
-                        this.map.drawImageMapAt(outg, new Point((int)pxcCorner.xpx, (int)pxcCorner.ypx), pr_area, this.Zoom);
+                        this.map.drawImageMapAt(this.Center, this.Zoom, pr_area, outg, (Point) pxcCorner);
                     }
                 }
                 // CODICE DI DEBUG

@@ -317,7 +317,7 @@ namespace MapsLibrary
         protected class DrawPointIterator : PointsCollection.Iterator
         {
             System.Drawing.Graphics gDst;
-            Point pDestDelta;
+            //Point pDestDelta;
             /// <summary>
             /// angolo corrispondente al pixel di coordinate (0, 0) dell'area del Graphics
             /// </summary>
@@ -375,7 +375,7 @@ namespace MapsLibrary
 
         #region ILayer Members
 
-        public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
+        public virtual void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics dst, Point delta)
         {
             // calcola la profondità massima per la visita dell'albero
             PxCoordinates pxcsize = mapsys.PointToPx(area.pMax - area.pMin, zoom) + new PxCoordinates(1, 1); ;
@@ -442,6 +442,7 @@ namespace MapsLibrary
             p2.ypx += size.Height;  
             return new ProjectedGeoArea(mapsys.PxToPoint(p1, zoom), mapsys.PxToPoint(p2, zoom));
         }
+
     }
 
     /*

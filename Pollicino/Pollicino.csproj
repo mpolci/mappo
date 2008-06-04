@@ -69,6 +69,7 @@
       <DependentUpon>ApplicationResources.resx</DependentUpon>
     </Compile>
     <Compile Include="AudioRecorder.cs" />
+    <Compile Include="Downloader.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
