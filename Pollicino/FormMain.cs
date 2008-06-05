@@ -106,7 +106,8 @@ namespace MapperTool
             this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath, new Point(mapcontrol.Size.Width / 2, mapcontrol.Size.Height / 2));
+            //gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath, new Point(mapcontrol.Size.Width / 2, mapcontrol.Size.Height / 2));
+            gmap = new SparseImagesMap(new GoogleMapsSystem(ApplicationResources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
             //gmap.autodownload = options.Maps.OSM.AutoDownload;  // uso l'opzione anche per le mappe di gmaps
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
@@ -278,12 +279,18 @@ namespace MapperTool
 
         private void menuItem_downloadmaps_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            //System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
             ProjectedGeoArea area = mapcontrol.VisibleArea;
-            for (uint i = 1; i <= options.Maps.OSM.DownloadDepth; i++)
-                map.downloadArea(area, mapcontrol.Zoom + i, false);
+            for (uint i = 0; i <= options.Maps.OSM.DownloadDepth; i++)
+            {
+                uint z = mapcontrol.Zoom + i;
+                downloader.addDownloadArea(map, area, z);
+                downloader.addDownloadArea(gmap, area, z);
+            }
 
+
+            /*
             // scarica le mappe di google maps
             gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom, false);
             gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom + 1, false);
@@ -295,6 +302,7 @@ namespace MapperTool
             gmap.downloadAt(new ProjectedGeoPoint(p.nLat + delta, p.nLon + delta), mapcontrol.Zoom + 2, false);
 
             System.Windows.Forms.Cursor.Current = Cursors.Default;
+            */
         }
 
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)

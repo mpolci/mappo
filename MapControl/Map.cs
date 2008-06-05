@@ -1497,7 +1497,7 @@ namespace MapsLibrary
 
     }
 
-    public class SparseImagesMapSystem : MercatorProjectionMapSystem
+    public abstract class SparseImagesMapSystem : MercatorProjectionMapSystem
     {
         /// <summary>
         /// Restituisce il nome del file che deve
@@ -1507,21 +1507,11 @@ namespace MapsLibrary
             return zoom.ToString() + '/' + center.nLat.ToString("X8") + '_' + center.nLon.ToString("X8");
         }
 
+        public abstract void RetrieveMap(GeoPoint center, uint zoom, string outfile);
 
-        public override uint MaxZoom
-        {
-            get
-            {
-                return 19;
-            }
-        }
-        public override uint PixelZoomFactor
-        {
-            get
-            {
-                return 8;
-            }
-        }
+
+
+        public abstract int imagemapsize { get; }
     }
     
 
@@ -1539,24 +1529,22 @@ namespace MapsLibrary
             }
         }
 
+        private int _downloadimageoverlap;
+        public int downloadimageoverlap { get { return _downloadimageoverlap; } set { _downloadimageoverlap = value; } }
+
+
         protected Hashtable images;  // ImgID => nomefile
         protected SparseImagesMapSystem msys;
-        string cachedir;
+        protected string cachedir;
 
         ImgID currentID;
         Bitmap currentImg;
         ProjectedGeoArea currentImgArea;
 
-        /// <summary>
-        /// Centro dell'area di visualizzazione logica. Utilizzato per selezionare la mappa
-        /// </summary>
-        Point center_offset;
-
         public event MapChangedEventHandler MapChanged;
 
-        public SparseImagesMap(SparseImagesMapSystem ms, string cachepath, Point centerdelta)
+        public SparseImagesMap(SparseImagesMapSystem ms, string cachepath, int maps_overlap )
         {
-            center_offset = centerdelta;
             msys = ms;
             images = new Hashtable();
             if (string.IsNullOrEmpty(cachepath))
@@ -1566,9 +1554,10 @@ namespace MapsLibrary
             if (!cachepath.EndsWith("/") || !cachepath.EndsWith("\\"))
                 cachepath += '/';
             cachedir = cachepath;
+
+            _downloadimageoverlap = maps_overlap;
            
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.parseCache));
-            //parseCache();
         }
 
         public MercatorProjectionMapSystem mapsystem
@@ -1602,56 +1591,89 @@ namespace MapsLibrary
                     }
                 }
             }
-
-        }
-
-        public virtual void downloadAt(ProjectedGeoPoint point, uint zoom, bool overwrite)
-        {
-            GeoPoint gp = msys.CalcInverseProjection(point);
-            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-us");
-            string url = "http://maps.google.com/staticmap?center="
-                         + gp.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + gp.dLon.ToString("F6", ci)
-                         + "&size=500x500&key=ABQIAAAAh1PZgzRL2L5R0KjFvh5Q8RSpRh2vAE_NR2zRhX5ZJ3rp2ZZDExTpIUr3qM9vMNqCFi7gF1XEEyaRAA"
-                         + "&zoom=" + zoom.ToString();
-            string filename = cachedir + msys.ImageFile(point, zoom);
-            FileInfo fileinfo = new FileInfo(filename);
-            if (!fileinfo.Exists || overwrite)
-            {
-                if (!fileinfo.Directory.Exists)
-                    fileinfo.Directory.Create();
-                // bisognerebbe controllare che non ci sia una mappa troppo vicina
-                try {
-                    Int32 mindist = msys.PxToPoint(new PxCoordinates(180, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                    findNearest(point, zoom, mindist);
-                    // mappa trovata, non c'è altro da fare
-                } catch (Exception) {
-                    // mappa non trovata, bisogna scaricarla
-                    Tools.downloadHttpToFile(url, filename, false);
-                    images.Add(new ImgID(point, zoom), filename);
-                    ProjectedGeoArea imgarea = ImgArea(new Size(512, 512), point, zoom);   // dipende dalla dimensione di un'immagine di mappa
-                    if (MapChanged != null)
-                        MapChanged(this, imgarea);
-                }
-            } // altrimenti si suppone che il file sia già stato caricato
         }
 
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
-            if (currentImg == null || currentID.zoom != zoom || currentImgArea.testIntersection(area) != AreaIntersectionType.fullContains)
+            PxCoordinates cursorstart = msys.PointToPx(area.pMin, zoom) + new PxCoordinates(msys.imagemapsize / 2, msys.imagemapsize / 2),
+                          areacenter = msys.PointToPx(area.center, zoom),
+                          areasuplimit = msys.PointToPx(area.pMax, zoom);
+            if (cursorstart.xpx > areacenter.xpx) 
+                cursorstart.xpx = areacenter.xpx;
+            if (cursorstart.ypx > areacenter.ypx)
+                cursorstart.ypx = areacenter.ypx;
+
+            int step = msys.imagemapsize - downloadimageoverlap, 
+                maxdist = msys.PxToPoint(new PxCoordinates(step, 0), zoom).nLon;  
+
+            PxCoordinates cursor;
+            for (cursor.xpx = cursorstart.xpx; cursor.xpx <= areasuplimit.xpx; cursor.xpx += step)
             {
-                ProjectedGeoPoint center = area.center;
-                try
+                for (cursor.ypx = cursorstart.ypx; cursor.ypx <= areasuplimit.ypx; cursor.ypx += step)
                 {
+                    ProjectedGeoPoint center = msys.PxToPoint(cursor, zoom);
                     // se esiste una mappa nelle vicinanze non è necessario scaricarne un'altra
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(320, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                    ImgID imgid = findNearest(center, zoom, maxdist);
-                }
-                catch (ImageMapNotFoundException)
-                {
-                    downloadAt(center, zoom, false);
+                    try
+                    {
+                        findNearest(center, zoom, maxdist);
+                    }
+                    catch (ImageMapNotFoundException)
+                    {
+                        downloadAt(center, zoom, false);
+                    }
                 }
             }
         }
+
+        protected void downloadAt(ProjectedGeoPoint center, uint zoom, bool overwrite)
+        {
+            string filename = cachedir + msys.ImageFile(center, zoom);
+
+            if (!File.Exists(filename) || overwrite)
+            {
+                msys.RetrieveMap(msys.CalcInverseProjection(center), zoom, filename);
+                images.Add(new ImgID(center, zoom), filename);
+                // invalida l'area
+                ProjectedGeoArea imgarea = ImgArea(new Size(msys.imagemapsize, msys.imagemapsize), center, zoom);
+                if (MapChanged != null)
+                    MapChanged(this, imgarea);
+            } // altrimenti si suppone che il file sia già stato caricato
+        }
+
+        /*
+                public override void downloadAt(ProjectedGeoPoint point, uint zoom, bool overwrite)
+                {
+                    GeoPoint gp = msys.CalcInverseProjection(point);
+                    System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-us");
+                    string url = "http://maps.google.com/staticmap?center="
+                                 + gp.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + gp.dLon.ToString("F6", ci)
+                                 + "&size=500x500&key=" + APIKey
+                                 + "&zoom=" + zoom.ToString();
+                    string filename = cachedir + msys.ImageFile(point, zoom);
+                    FileInfo fileinfo = new FileInfo(filename);
+                    if (!fileinfo.Exists || overwrite)
+                    {
+                        if (!fileinfo.Directory.Exists)
+                            fileinfo.Directory.Create();
+                        // bisognerebbe controllare che non ci sia una mappa troppo vicina
+                        try
+                        {
+                            Int32 mindist = msys.PxToPoint(new PxCoordinates(180, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                            findNearest(point, zoom, mindist);
+                            // mappa trovata, non c'è altro da fare
+                        }
+                        catch (Exception)
+                        {
+                            // mappa non trovata, bisogna scaricarla
+                            Tools.downloadHttpToFile(url, filename, false);
+                            images.Add(new ImgID(point, zoom), filename);
+                            ProjectedGeoArea imgarea = ImgArea(new Size(512, 512), point, zoom);   // dipende dalla dimensione di un'immagine di mappa
+                            if (MapChanged != null)
+                                MapChanged(this, imgarea);
+                        }
+                    } // altrimenti si suppone che il file sia già stato caricato
+                }
+        */
 
         public class ImageMapNotFoundException : Exception
         {
@@ -1681,7 +1703,6 @@ namespace MapsLibrary
 
         protected ProjectedGeoArea ImgArea(Size imgsize, ProjectedGeoPoint center, uint zoom)
         {
-                //ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(img.Width, img.Height), zoom),
                 ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(imgsize.Width, imgsize.Height), zoom),
                                   c1 = center - size / 2,
                                   c2 = c1 + size;
@@ -1696,12 +1717,6 @@ namespace MapsLibrary
                 string filename = (string)images[id];
                 Bitmap newimg = new Bitmap(filename);
                 
-                /*
-                ProjectedGeoPoint size = mapsystem.PxToPoint(new PxCoordinates(newimg.Width, newimg.Height), id.zoom),
-                                  c1 = id.point - size / 2,
-                                  c2 = c1 + size;
-                ProjectedGeoArea newarea = new ProjectedGeoArea(c1, c2), 
-                 */
                 ProjectedGeoArea newarea = ImgArea(newimg.Size, id.point, id.zoom), 
                                  oldarea = currentImgArea;
                 
@@ -1724,7 +1739,6 @@ namespace MapsLibrary
 
         #region IMap Members
 
-        // da rivedere
         /// <summary>
         /// Disegna l'area indicata presa dall'immagine più vicina al centro della mappa indicato.
         /// </summary>
@@ -1743,14 +1757,14 @@ namespace MapsLibrary
                     //Bitmap bmp = currentImg;
 
                     PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),           // CONTROLLARE: forse va incrementato di 1, specialmente per il calcolo di pxareasize
-                                  pxareamin = msys.PointToPx(area.pMin, zoom),
-                                  pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
+                                  pxareamin = msys.PointToPx(area.pMin, zoom);
+                                  //pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
                     Size pxareasize = new Size((int)pxareamax.xpx - (int)pxareamin.xpx, (int)pxareamax.ypx - (int)pxareamin.ypx);
 
                     //ImgID oldId = currentID;
                     // seleziona l'immagine da utilizzare
                     //ProjectedGeoPoint center = msys.PxToPoint(pxwincenter, zoom);
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
+                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(msys.imagemapsize, 0), zoom).nLon;  
                     ImgID imgid = findNearest(map_center, zoom, maxdist);
                     Bitmap bmp = getMap(imgid);
 
@@ -1822,6 +1836,8 @@ namespace MapsLibrary
         }
 
         #endregion
+
+
     }
 
     internal static class Tools
@@ -1894,6 +1910,40 @@ namespace MapsLibrary
         /// Metodo utilizzato per scaricare i dati relativi ad un'area 
         /// </summary>
         void DownloadMapArea(ProjectedGeoArea area, uint zoom);
+    }
+
+    public class GoogleMapsSystem : SparseImagesMapSystem
+    {
+        public GoogleMapsSystem(string apikey)
+            : base()
+        {
+            _gmapskey = apikey;
+        }
+
+        private string _gmapskey;
+        public string APIKey { get { return _gmapskey; } set { _gmapskey = value; } }
+
+        public override uint MaxZoom         { get { return 19; } }
+        public override uint PixelZoomFactor { get { return 8;  } }
+        public override int imagemapsize     { get { return 500; } }
+
+        public override void RetrieveMap(GeoPoint center, uint zoom, string outfilename)
+        {
+            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-us");
+            string url = "http://maps.google.com/staticmap?center="
+                         + center.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + center.dLon.ToString("F6", ci)
+                         + "&size=" + imagemapsize.ToString() + 'x' + imagemapsize.ToString()
+                         + "&key=" + APIKey
+                         + "&zoom=" + zoom.ToString();
+
+            FileInfo fileinfo = new FileInfo(outfilename);
+            if (!fileinfo.Directory.Exists)
+                fileinfo.Directory.Create();
+
+            Tools.downloadHttpToFile(url, outfilename, false);
+        }
+
+
     }
 
 

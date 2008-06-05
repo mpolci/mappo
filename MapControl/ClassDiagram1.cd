@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="MapsLibrary.PointsCollection" Collapsed="true">
-    <Position X="8" Y="0.5" Width="1.5" />
+    <Position X="11.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAAAgAAAIAAAAAAAAAAAAAAAAEAA=</HashCode>
       <FileName>LayerPoints.cs</FileName>
@@ -55,7 +55,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.LayeredMap" BaseTypeListCollapsed="true">
-    <Position X="9.75" Y="0.5" Width="1.5" />
+    <Position X="5.5" Y="8.5" Width="1.5" />
     <NestedTypes>
       <Struct Name="MapsLibrary.LayeredMap.LayerItem" Collapsed="true">
         <TypeIdentifier>
@@ -100,7 +100,7 @@
   <Class Name="MapsLibrary.SparseImagesMapSystem">
     <Position X="3" Y="9.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>gAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -119,13 +119,13 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gBAABAAQAAAAEgAAEAEAAAAhEQAAAAAAEACEAAAAgAA=</HashCode>
+      <HashCode>gFAABAAQAAABEgABAAAAAAAhEQAAAAAAEACEAAAAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.Tools" Collapsed="true">
-    <Position X="8" Y="1.25" Width="1.5" />
+    <Position X="11.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -150,43 +150,50 @@
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="MapsLibrary.GoogleMapsSystem">
+    <Position X="3" Y="13" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAQAAIAAAABAAAhAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="MapsLibrary.TileNum" Collapsed="true">
-    <Position X="11.5" Y="4.75" Width="1.5" />
+    <Position X="7.75" Y="6" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="MapsLibrary.GeoArea">
-    <Position X="8" Y="4.25" Width="1.5" />
+    <Position X="7.75" Y="2.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>ABgAAQAAAAAAAAAEAAAAAAAAIAAIAAAAAAEAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="MapsLibrary.ProjectedGeoArea">
-    <Position X="11.5" Y="3.75" Width="1.5" />
+    <Position X="9.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABgAAQAAAAAAAAQEQABAAABAIAAIAAAAAAEAAAAABAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="MapsLibrary.PxCoordinates">
-    <Position X="9.75" Y="4" Width="1.5" />
+    <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAQAEAAAAAAIAAAAAAAAAAAGAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEQAEAAAAAAMAAAAAAAAAAAGAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="MapsLibrary.ProjectedGeoPoint">
-    <Position X="11.5" Y="0.5" Width="1.5" />
+    <Position X="9.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEQAcAAAAAAAAAABAAAEAAAAAAAiA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="MapsLibrary.GeoPoint">
-    <Position X="8" Y="2" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAAQBAAAAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -210,7 +217,7 @@
     </TypeIdentifier>
   </Interface>
   <Enum Name="MapsLibrary.AreaIntersectionType" Collapsed="true">
-    <Position X="11.5" Y="7.25" Width="2" />
+    <Position X="7.75" Y="5.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAAAAAAAAgCAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Map.cs</FileName>
