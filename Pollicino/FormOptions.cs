@@ -53,31 +53,34 @@ namespace MapperTool
             fill_RecFormats();
         }
 
+        private ApplicationOptions _data;
         public ApplicationOptions data
         {
             get
             {
-                ApplicationOptions opt = new ApplicationOptions();
-                opt.GPS.PortName = tb_GPSPort.Text;
-                opt.GPS.PortSpeed = int.Parse(tb_GPSPortSpeed.Text);
-                opt.GPS.Simulation = cb_Simulation.Checked;
-                opt.GPS.SimulationFile = tb_SimulationFile.Text;
-                opt.GPS.LogsDir = tb_GPSLogPath.Text;
-                opt.Maps.OSM.OSMTileServer = combo_TileServer.Text;
-                opt.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
-                opt.Maps.OSM.AutoDownload = cb_autodownload.Checked;
-                opt.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
-                opt.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
-                opt.Application.WaypointSoundPlay = cb_waypointsound.Checked;
-                opt.Application.WaypointSoundFile = tb_waypointsound.Text;
-                opt.Application.WaypointRecordAudio = cb_recordaudio.Checked;
-                opt.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
-                opt.Application.RecordAudioDevice = (int)num_RecDeviceId.Value;
-                opt.Application.RecordAudioFormat = (OpenNETCF.Media.WaveAudio.SoundFormats)combo_RecFormat.SelectedItem;
-                return opt;
+                if (_data == null) 
+                    _data = new ApplicationOptions();
+                _data.GPS.PortName = tb_GPSPort.Text;
+                _data.GPS.PortSpeed = int.Parse(tb_GPSPortSpeed.Text);
+                _data.GPS.Simulation = cb_Simulation.Checked;
+                _data.GPS.SimulationFile = tb_SimulationFile.Text;
+                _data.GPS.LogsDir = tb_GPSLogPath.Text;
+                _data.Maps.OSM.OSMTileServer = combo_TileServer.Text;
+                _data.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
+                _data.Maps.OSM.AutoDownload = cb_autodownload.Checked;
+                _data.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
+                _data.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
+                _data.Application.WaypointSoundPlay = cb_waypointsound.Checked;
+                _data.Application.WaypointSoundFile = tb_waypointsound.Text;
+                _data.Application.WaypointRecordAudio = cb_recordaudio.Checked;
+                _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
+                _data.Application.RecordAudioDevice = (int)num_RecDeviceId.Value;
+                _data.Application.RecordAudioFormat = (OpenNETCF.Media.WaveAudio.SoundFormats)combo_RecFormat.SelectedItem;
+                return _data;
             }
             set
             {
+                _data = value;
                 tb_GPSPort.Text = value.GPS.PortName;
                 tb_GPSPortSpeed.Text = value.GPS.PortSpeed.ToString();
                 cb_Simulation.Checked = value.GPS.Simulation;
