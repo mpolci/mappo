@@ -158,9 +158,6 @@ namespace MapperTool
                     return 0.0;
                 }
                 //Get the fractional part of minutes
-                //DM = '5512.45',  Dir='N'
-                //DM = '12311.12', Dir='E'
-
                 string t = DM.Substring(DM.IndexOf("."));
                 double FM = double.Parse(DM.Substring(DM.IndexOf(".")), numberFormat_EnUS);
 

@@ -73,7 +73,6 @@ namespace MapsLibrary
                 map = value;
                 if (value != null)
                 {
-                    //map.MapChanged += new MapChangedEventHandler(mapchanged);
                     map.MapChanged += new MapChangedEventHandler(invokemapchanged);
                     Invalidate();
                 }
@@ -113,8 +112,6 @@ namespace MapsLibrary
             PxCoordinates c = map.mapsystem.PointToPx(pgpCenter, uZoom);
             c.xpx -= this.Size.Width / 2;
             c.ypx -= this.Size.Height / 2;
-            //PxCoordinates px1 = map.mapsystem.PointToPx(area.pMin, uZoom),
-            //              px2 = map.mapsystem.PointToPx(area.pMax, uZoom);
             ProjectedGeoArea invalidarea = ProjectedGeoArea.Intersection(this.VisibleArea, area);
             PxCoordinates px1 = map.mapsystem.PointToPx(invalidarea.pMin, uZoom),
                           px2 = map.mapsystem.PointToPx(invalidarea.pMax, uZoom);  // CONTROLLARE è compreso nell'area da invalidare ????
@@ -134,7 +131,6 @@ namespace MapsLibrary
                 if (uZoom != value)
                 {
                     uZoom = value;
-                    //map.PrepareMap(VisibleArea, Zoom);
                     Invalidate();
                     if (ZoomChanged != null) ZoomChanged(this); // evento
                 }
@@ -152,7 +148,6 @@ namespace MapsLibrary
                 if (pgpCenter != value)
                 {
                     pgpCenter = value;
-                    //map.PrepareMap(VisibleArea, Zoom);
                     Invalidate();
                     if (PositionChanged != null) 
                         PositionChanged(this); // evento
@@ -174,27 +169,7 @@ namespace MapsLibrary
                 return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
             }
         }
-        /*
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            //base.OnPaint(e);
-            if (map != null)
-            {
-                if (PrePaint != null) PrePaint(this);  // genera l'evento PrePaint
-                if (buffer == null) buffer = new Bitmap(this.Size.Width, this.Size.Height);
-                using (Graphics goff = Graphics.FromImage(buffer))
-                    this.map.drawImageMapAt(goff, new Point(0, 0), this.VisibleArea, this.Zoom);
-                //this.map.drawImageMapAt(goff, this.Center, this.Zoom, this.Size);
-                e.Graphics.DrawImage(buffer, 0, 0);
-            }
-            else
-            {
-                // Nessuna mappa. Colora tutto di rosso.
-                using (Brush b = new SolidBrush(Color.Red))
-                    e.Graphics.FillRectangle(b, e.ClipRectangle);
-            }
-        }
-        */
+
         protected override void OnPaint(PaintEventArgs e)
         {
 
@@ -226,7 +201,6 @@ namespace MapsLibrary
                     // disegna nel buffer le parti mancanti
                     foreach (ProjectedGeoArea pr_area in zones)
                     {
-                        //PxCoordinates pxccorn = map.mapsystem.PointToPx(pr_area.pMin, Zoom);
                         PxCoordinates pxcCorner = map.mapsystem.PointToPx(pr_area.pMin, Zoom) - pxcWinCorner;
 
                         this.map.drawImageMapAt(this.Center, this.Zoom, pr_area, outg, (Point) pxcCorner);

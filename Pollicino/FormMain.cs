@@ -28,7 +28,7 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
-using System.Runtime.InteropServices;
+//using System.Runtime.InteropServices;
 
 
 
@@ -38,8 +38,8 @@ namespace MapperTool
     {
         OpenNETCF.Windows.Forms.NotifyIcon notify_icon;
 
-        [DllImport("coredll")]
-        extern static void SystemIdleTimerReset();
+//        [DllImport("coredll")]
+//        extern static void SystemIdleTimerReset();
 
         SoundPlayer wpt_sound;
         AudioRecorder wpt_recorder;
@@ -106,21 +106,16 @@ namespace MapperTool
             this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            //gmap = new SparseImagesMap(new SparseImagesMapSystem(), options.Maps.GMaps.CachePath, new Point(mapcontrol.Size.Width / 2, mapcontrol.Size.Height / 2));
             gmap = new SparseImagesMap(new GoogleMapsSystem(ApplicationResources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
-            //gmap.autodownload = options.Maps.OSM.AutoDownload;  // uso l'opzione anche per le mappe di gmaps
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
-            //trackpoints = new LayerBufferedPoints(map.mapsystem);
             trackpoints = new LayerPoints(map.mapsystem);
             idx_layer_trkpnt = lmap.addLayerOnTop(trackpoints);
             // Waypoints
             waypoints = new LayerPoints(map.mapsystem);
             waypoints.SetDrawPointFunction(LayerPoints.DrawEmptySquare, new Pen(Color.Red));
             idx_layer_waypnt = lmap.addLayerOnTop(waypoints);
-            // Croce centrale
-            //lmap.addLayerOnTop(new LayerCrossCenter(20));
 
 
             mapcontrol.Map = lmap;
@@ -279,8 +274,6 @@ namespace MapperTool
 
         private void menuItem_downloadmaps_Click(object sender, EventArgs e)
         {
-            //System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
-
             ProjectedGeoArea area = mapcontrol.VisibleArea;
             for (uint i = 0; i <= options.Maps.OSM.DownloadDepth; i++)
             {
@@ -288,21 +281,6 @@ namespace MapperTool
                 downloader.addDownloadArea(map, area, z);
                 downloader.addDownloadArea(gmap, area, z);
             }
-
-
-            /*
-            // scarica le mappe di google maps
-            gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom, false);
-            gmap.downloadAt(mapcontrol.Center, mapcontrol.Zoom + 1, false);
-            Int32 delta = gmap.mapsystem.PxToPoint(new PxCoordinates(200, 0), mapcontrol.Zoom + 2).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-            ProjectedGeoPoint p = mapcontrol.Center;
-            gmap.downloadAt(new ProjectedGeoPoint(p.nLat - delta, p.nLon - delta), mapcontrol.Zoom + 2, false);
-            gmap.downloadAt(new ProjectedGeoPoint(p.nLat - delta, p.nLon + delta), mapcontrol.Zoom + 2, false);
-            gmap.downloadAt(new ProjectedGeoPoint(p.nLat + delta, p.nLon - delta), mapcontrol.Zoom + 2, false);
-            gmap.downloadAt(new ProjectedGeoPoint(p.nLat + delta, p.nLon + delta), mapcontrol.Zoom + 2, false);
-
-            System.Windows.Forms.Cursor.Current = Cursors.Default;
-            */
         }
 
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
@@ -354,7 +332,6 @@ namespace MapperTool
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
-                //gmap.autodownload = newopt.Maps.OSM.AutoDownload;  // uso l'opzione autodownload anche per le mappe di google
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -404,21 +381,6 @@ namespace MapperTool
                     wpt_recorder.start(recfilename, options.Application.WaypointRecordAudioSeconds);
                 }
             }
-        }
-
-        // Calculates the checksum for a sentence
-        private static string getNMEAChecksum(string sentence)
-        {
-            //start with first Item
-            int checksum = Convert.ToByte(sentence[sentence.IndexOf('$') + 1]);
-            // Loop through all chars to get a checksum
-            for (int i = sentence.IndexOf('$') + 2; i < sentence.IndexOf('*'); i++)
-            {
-                // No. XOR the checksum with this character's value
-                checksum ^= Convert.ToByte(sentence[i]);
-            }
-            // Return the checksum formatted as a two-character hexadecimal
-            return checksum.ToString("X2");
         }
 
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)

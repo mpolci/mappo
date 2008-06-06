@@ -75,83 +75,6 @@ namespace MapsLibrary
         }
     }
 
-    /*
-    public class TileCoordinates
-    {
-        //protected double dLat, dLon;
-        protected GeoPoint gp;
-        protected double dTileFracX, dTileFracY;  // frazione del tile indicante il punto preciso corrispondente alla lat. e long.
-        protected TileNum tn;
-
-        public TileCoordinates(GeoPoint gp, uint zoom)
-        {
-            tn.uZoom = zoom;
-            this.setLatLon(gp.dLat, gp.dLon);
-        }
-
-        public TileCoordinates()
-        {
-
-        }
-
-        /// <summary>
-        /// Costruisce l'oggetto con dei dati precalcolati
-        /// </summary>
-        protected internal TileCoordinates(GeoPoint gpData, TileNum tnData, double tfxData, double tfyData)
-        {
-            gp = gpData;
-            tn = tnData;
-            dTileFracX = tfxData;
-            dTileFracY = tfyData;
-        }
-
-        public GeoPoint geopoint
-        {
-            get
-            {
-                return gp;
-            }
-        }
-
-        public TileNum tilenum
-        {
-            get
-            {
-                return tn;
-            }
-        }
-
-        protected void setLatLon(double lat, double lon)
-        {
-            double X, Y, tileX, tileY;
-            //X = (lon + 180) / 360 * Math.Pow(2, tn.uZoom);
-            //Y = (1 - Math.Log(Math.Tan(lat * Math.PI / 180) + 1 / Math.Cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.Pow(2, tn.uZoom);
-            Int32 pow = (Int32)1 << (Int32)tn.uZoom;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
-            X = (lon + 180) / 360 * pow;
-            Y = (1 - Math.Log(Math.Tan(lat * Math.PI / 180) + 1 / Math.Cos(lat * Math.PI / 180)) / Math.PI) / 2 * (double) pow;
-            tileX = Math.Floor(X);
-            tileY = Math.Floor( Y );
-       
-            tn.lX = (long) tileX;
-            tn.lY = (long) tileY;
-            this.dTileFracX = X - tileX; 
-            this.dTileFracY = Y - tileY; 
-
-            gp.dLat = lat;
-            gp.dLon = lon;
-        }
-
-        public double getIntDX() { return dTileFracX; } // restituisce lo scarto all'interno del tile 
-        public double getIntDY() { return dTileFracY; } // restituisce lo scarto all'interno del tile 
-
-        public override string ToString()
-        {
-            return this.gp.ToString();
-        }
-
-    }
-    */
-
     public abstract class TilesMap : IMap, IDownloadableMap
     {
         protected string strTileCachePath;
@@ -212,7 +135,6 @@ namespace MapsLibrary
                 file.Directory.Create();
 
             try {
-                //if (!File.Exists(path) || overwrite)
                 if (!file.Exists || overwrite)
                 {
                     // può lanciare l'eccezzione System.Net.WebException
@@ -263,26 +185,6 @@ namespace MapsLibrary
             downloadTile(tn, overwrite);
         }
 
-        /*
-        /// <summary>
-        /// Restituisce il bitmap del tile contenente le coordinate indicate
-        /// </summary>
-        public Bitmap getImageTileAt(TileCoordinates tc)
-        {
-            return this.getImageTile(tc.tilenum);
-        }
-        */
-
-        /*
-        /// <summary>
-        /// Restituisce il bitmap del tile indicato
-        /// </summary>
-        public virtual Bitmap getImageTile(TileNum tn)
-        {
-            throw new NotImplementedException("Abstract method");
-        }
-         */ 
-        
         public class TileNotFoundException: Exception 
         {
             private TileNum tn;
@@ -411,152 +313,6 @@ namespace MapsLibrary
             return "Lat: " + dLat.ToString("F7") + " Lon: " + dLon.ToString("F7");
         }
     }
-
-    /*
-    public class BufferedMapTS: MapTS
-    {
-        TileNum tnBufferCorner;
-        Bitmap[,] buffer = new Bitmap[2,2];
-
-        public BufferedMapTS(string tileCachePath, TileMapSystem ms)
-            : base(tileCachePath, ms)
-        {
-            tnBufferCorner.lX = -2; tnBufferCorner.lY = -2; // dato impossibile che obbliga Y ricaricare il primo blocco
-        }
-
-        public override Bitmap getImageTile(TileNum tn)
-        {
-            long dX = tn.lX - tnBufferCorner.lX,
-                 dY = tn.lY - tnBufferCorner.lY;
-            if (tn.uZoom != tnBufferCorner.uZoom || dX < -1 || dX > 2 || dY < -1 || dY > 2)
-            {
-                bufferFullRefresh(tn);
-                return buffer[0, 0];
-            } 
-            else if ((dX == 0 || dX == 1) && (dY == 0 || dY == 1))
-            {
-                return buffer[dX, dY];
-            }
-            else
-            {
-                bufferTranslate(dX, dY);
-                // ricalcola dX e dY;
-                dX = tn.lX - tnBufferCorner.lX;
-                dY = tn.lY - tnBufferCorner.lY;
-                return buffer[dX, dY];
-            }
-        }
-
-
-        /// <summary>
-        /// reinquadra il buffer
-        /// </summary>
-        /// <remarks>i valori dei parametri devono essere fra -1 e 2</remarks>
-        private void bufferTranslate(long dX, long dY) 
-        {
-            int tX, tY; // spostamento
-            tX = (dX == -1) ? -1 : dX == 2 ? 1 : 0;
-            tY = (dY == -1) ? -1 : dY == 2 ? 1 : 0;
-            
-            //int startX = dX < 0 ? 1 : 0, 
-            //    startY = dY < 0 ? 1 : 0, // angolo dal quale partire
-            
-
-            Bitmap[,] newcache = new Bitmap[2, 2],
-                      oldcache = this.buffer;
-            long newCornX = tnBufferCorner.lX + tX,
-                 newCornY = tnBufferCorner.lY + tY;
-            int iX, iY;
-            TileNum tnSrc = new TileNum(); 
-            tnSrc.uZoom = tnBufferCorner.uZoom;
-            for (tnSrc.lX = newCornX, iX = 0; iX <= 1; iX++, tnSrc.lX++)
-            {
-                for (tnSrc.lY = newCornY, iY = 0; iY <= 1; iY++, tnSrc.lY++)
-                {
-                    int srcX = tX + iX,
-                        srcY = tY + iY;
-                    if (srcX < 0 || srcX > 1 || srcY < 0 || srcY > 1)
-                        newcache[iX, iY] = createImageTile(tnSrc);  // potrebbe lanciare un'eccezione
-                    else
-                    {
-                        newcache[iX, iY] = oldcache[srcX, srcY];
-                        oldcache[srcX, srcY] = null;
-                    }
-                }
-            }
-            // nuova cachelen costruita. Imposto i dati della classe solo ora perché potevo avere delle 
-            // eccezioni che avrebbero interrotto il lavoro Y metà
-            this.tnBufferCorner = new TileNum(newCornX, newCornY, tnBufferCorner.uZoom);
-            this.buffer = newcache;
-            // elimina i bitmap non più utilizzati
-            freeArray(ref oldcache);
-        }
-
-        static private void freeArray(ref Bitmap[,] a)
-        {
-            if (a == null) return;
-            for (int iX = 0; iX <= 1; iX++)
-                for (int iY = 0; iY <= 1; iY++)
-                    if (a[iX, iY] != null)
-                        a[iX, iY].Dispose();
-        }
-        protected void bufferFullRefresh(TileNum tn)
-        {
-            Bitmap [,] newcache= new Bitmap[2,2];
-            try
-            {
-                newcache[0, 0] = createImageTile(tn);
-                newcache[1, 0] = createImageTile(new TileNum(tn.lX + 1, tn.lY, tn.uZoom));
-                newcache[0, 1] = createImageTile(new TileNum(tn.lX, tn.lY + 1, tn.uZoom));
-                newcache[1, 1] = createImageTile(new TileNum(tn.lX + 1, tn.lY + 1, tn.uZoom));
-                freeArray(ref this.buffer);
-                this.tnBufferCorner = tn;
-                this.buffer = newcache;
-            }
-            catch (Exception e)
-            {
-                freeArray(ref newcache);
-                throw e;
-            }
-        }
-
-    }
-    */
-
-    /*
-    public class LayerCrossCenter : IMap
-    {
-        private int halflinelen;
-
-        public LayerCrossCenter(uint size)
-        {
-            halflinelen = (int) size / 2;
-        }
-
-        public MercatorProjectionMapSystem mapsystem
-        {
-            get {
-                return null;
-            }
-        }
-
-        #region ILayer Members
-
-        public event MapChangedEventHandler MapChanged;
-
-        public void drawImageMapAt(Graphics dst, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            int x = size.Width / 2,
-                y = size.Height / 2;
-            using (Pen pen = new Pen(Color.Black)) {
-            dst.DrawLine(pen, x - halflinelen, y, x + halflinelen, y);
-            dst.DrawLine(pen, x, y - halflinelen, x, y + halflinelen);
-            }
-        }
-
-        #endregion
-    }
-    */
 
     public class LayeredMap : IMap
     {
@@ -1072,15 +828,6 @@ namespace MapsLibrary
             px.ypx = (long)(Y * tilesize);
             return px;
         }
-        /*
-        public PxCoordinates TileCooToPx(TileCoordinates tc)
-        {
-            PxCoordinates px;
-            px.xpx = (long)((tc.tilenum.lX + tc.getIntDX()) * tilesize);
-            px.ypx = (long)((tc.tilenum.lY + tc.getIntDY()) * tilesize);
-            return px;
-        }
-        */
 
         // coordinate in pixel dell'angolo superiore sinistro del tile
         public PxCoordinates TileNumToPx(TileNum tn)
@@ -1121,42 +868,6 @@ namespace MapsLibrary
             return p;
         }
 
-        /*
-        public TileCoordinates PxToTileCoo(PxCoordinates px, uint zoom)
-        {
-            GeoPoint gp;
-            TileNum tn;
-            double X, Y, tileX, tileY;
-
-            X = ((double)px.xpx ) / (double)this.tilesize;
-            Y = ((double)px.ypx ) / (double)this.tilesize;
-            //gp.dLon = X * 360 / Math.Pow(2, Zoom) - 180;
-            //double v = Math.PI * (1 - (Y * 2 / Math.Pow(2, Zoom)));
-            Int32 pow = (Int32)1 << (Int32)zoom;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
-            gp.dLon = X * 360 / pow - 180;
-            double v = Math.PI * (1 - (Y * 2 / pow));
-            gp.dLat = Math.Atan(Math.Sinh(v)) * 180 / Math.PI;
-            tileX = Math.Floor(X);
-            tileY = Math.Floor(Y);
-            tn.lX = (long)tileX;
-            tn.lY = (long)tileY;
-            tn.uZoom = zoom;
-
-            return new TileCoordinates(gp, tn, X - tileX, Y - tileY);
-        }
-        */
-        /*
-        /// <summary>
-        /// Calcola lo scarto interno al tile in pixel
-        /// </summary>
-        public PxCoordinates InternalPx(TileCoordinates tc)
-        {
-            PxCoordinates delta;
-            delta.xpx = (long)(tc.getIntDX() * this.tilesize);
-            delta.ypx = (long)(tc.getIntDY() * this.tilesize);
-            return delta;
-        }
-        */
         public virtual string TileUrl(TileNum tn)
         {
             return sTileServer + TileFile(tn);
@@ -1166,13 +877,6 @@ namespace MapsLibrary
         /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile. 
         /// </summary>
         public abstract string TileFile(TileNum tn);
-        /*
-        public TileCoordinates PointToTileCoo(ProjectedGeoPoint p, uint zoom)
-        {
-            // NON EFFICIENTE! DA RISCRIVERE
-            return new TileCoordinates(CalcInverseProjection(p), zoom);
-        }
-        */
     }
 
     public class OSMTileMapSystem : TileMapSystem
@@ -1492,9 +1196,6 @@ namespace MapsLibrary
 
         }
 
-        //public abstract PxCoordinates PointToPx(ProjectedGeoPoint pgp, uint zoom);
-        //public abstract ProjectedGeoPoint PxToPoint(PxCoordinates px, uint zoom);
-
     }
 
     public abstract class SparseImagesMapSystem : MercatorProjectionMapSystem
@@ -1640,41 +1341,6 @@ namespace MapsLibrary
             } // altrimenti si suppone che il file sia già stato caricato
         }
 
-        /*
-                public override void downloadAt(ProjectedGeoPoint point, uint zoom, bool overwrite)
-                {
-                    GeoPoint gp = msys.CalcInverseProjection(point);
-                    System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-us");
-                    string url = "http://maps.google.com/staticmap?center="
-                                 + gp.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + gp.dLon.ToString("F6", ci)
-                                 + "&size=500x500&key=" + APIKey
-                                 + "&zoom=" + zoom.ToString();
-                    string filename = cachedir + msys.ImageFile(point, zoom);
-                    FileInfo fileinfo = new FileInfo(filename);
-                    if (!fileinfo.Exists || overwrite)
-                    {
-                        if (!fileinfo.Directory.Exists)
-                            fileinfo.Directory.Create();
-                        // bisognerebbe controllare che non ci sia una mappa troppo vicina
-                        try
-                        {
-                            Int32 mindist = msys.PxToPoint(new PxCoordinates(180, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                            findNearest(point, zoom, mindist);
-                            // mappa trovata, non c'è altro da fare
-                        }
-                        catch (Exception)
-                        {
-                            // mappa non trovata, bisogna scaricarla
-                            Tools.downloadHttpToFile(url, filename, false);
-                            images.Add(new ImgID(point, zoom), filename);
-                            ProjectedGeoArea imgarea = ImgArea(new Size(512, 512), point, zoom);   // dipende dalla dimensione di un'immagine di mappa
-                            if (MapChanged != null)
-                                MapChanged(this, imgarea);
-                        }
-                    } // altrimenti si suppone che il file sia già stato caricato
-                }
-        */
-
         public class ImageMapNotFoundException : Exception
         {
             public ImageMapNotFoundException(string msg) : base(msg) { }
@@ -1750,12 +1416,6 @@ namespace MapsLibrary
             {
                 try
                 {
-                    //Int32 maxdist = msys.PxToPoint(new PxCoordinates(512, 0), zoom).nLon;  // dipende dalla dimensione massima di un'immagine di mappa
-                    //ImgID imgid = findNearest(area.center, zoom, maxdist);
-                    //Bitmap bmp = getMap(imgid);
-                    //ImgID imgid = currentID;
-                    //Bitmap bmp = currentImg;
-
                     PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),           // CONTROLLARE: forse va incrementato di 1, specialmente per il calcolo di pxareasize
                                   pxareamin = msys.PointToPx(area.pMin, zoom);
                                   //pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
@@ -1942,9 +1602,5 @@ namespace MapsLibrary
 
             Tools.downloadHttpToFile(url, outfilename, false);
         }
-
-
     }
-
-
 }

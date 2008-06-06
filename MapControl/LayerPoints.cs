@@ -251,9 +251,6 @@ namespace MapsLibrary
         {
             if (root == null)
             {
-                // ATTENZIONE nelle vecchie versioni c'era un errore!
-//                GeoPoint min = new GeoPoint(tc.dLat - 0.005, tc.dLon - 0.005),
-//                         max = new GeoPoint(tc.dLat + 0.014, tc.dLon + 0.014);
                 ProjectedGeoPoint min, max;
 
                 min = point;
@@ -281,8 +278,6 @@ namespace MapsLibrary
     public class LayerPoints : IMap
     {
         protected PointsCollection points;
-        //System.Drawing.Pen pen;
-        //protected System.Drawing.Brush brush;
         protected MercatorProjectionMapSystem mapsys;
         protected static readonly double ln2 = Math.Log(2);
         
@@ -323,9 +318,6 @@ namespace MapsLibrary
             /// </summary>
             PxCoordinates pxCorner;  
             uint zoom;
-            //System.Drawing.Size szSize;
-            //Pen pen;
-            //Brush brush;
             CustomDrawPointFn drawfn;
             object drawfnarg;
             private MercatorProjectionMapSystem mapsys;
@@ -362,8 +354,6 @@ namespace MapsLibrary
         {
             mapsys = mapsystem;
             points = new PointsCollection();
-            //pen = new Pen(Color.Blue);
-            //brush = new System.Drawing.SolidBrush(Color.Blue);
         }
 
         public virtual void addPoint(ProjectedGeoPoint point)
@@ -395,29 +385,6 @@ namespace MapsLibrary
             }
         }
 
-        /*
-        public virtual void drawImageMapAt(Graphics dst, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            PxCoordinates pxCorner; 
-            pxCorner = mapsys.PointToPx(center, zoom);
-            pxCorner.xpx -= size.Width / 2;
-            pxCorner.ypx -= size.Height / 2;   
-            // calcola la profondità massima per la visita dell'albero            
-            ProjectedGeoArea area = calcArea(center, zoom, size);
-            int depth = calcMaxDepth(area, size);
-
-            if (this.customdrawfn != null)
-            {
-                DrawPointIterator pi = new DrawPointIterator(dst, customdrawfn, customdrawarg, pxCorner, zoom, this.mapsys);
-                points.Iterate(area, pi, depth);
-            }
-            else using (Brush brush = new SolidBrush(Color.Blue))
-            {
-                DrawPointIterator pi = new DrawPointIterator(dst, DrawFilledSquare, brush, pxCorner, zoom, this.mapsys);
-                points.Iterate(area, pi, depth);
-            }            
-        }
-        */
         #endregion
 
         protected int calcMaxDepth(ProjectedGeoArea drawarea, Size wsize)
@@ -445,139 +412,4 @@ namespace MapsLibrary
 
     }
 
-    /*
-    public class LayerBufferedPoints : LayerPoints
-    {
-        protected Bitmap buffer;
-        protected uint buffer_zoom;
-        protected ProjectedGeoArea buffer_area;
-
-        public LayerBufferedPoints(MercatorProjectionMapSystem mapsystem)
-            : base(mapsystem)
-        {
-        }
-
-        // forse questa classe posso eliminarla quindi non è necessario reimplementare questo metodo
-        public virtual void drawImageMapAt(Graphics dst, Point delta, ProjectedGeoArea area, uint zoom)
-        {
-            throw new NotImplementedException();
-        }
-
-        // forse questa classe posso eliminarla quindi non è necessario reimplementare questo metodo
-        public override void drawImageMapAt(Graphics dst, ProjectedGeoPoint center, uint zoom, Size size)
-        {
-            PxCoordinates corner = mapsystem.PointToPx(center, zoom);
-            corner.xpx -= size.Width / 2;
-            corner.ypx -= size.Height / 2;   // la coordinata y sale al decrescere della latitudine
-            ProjectedGeoArea drawarea = calcArea(center, zoom, size);
-            int maxdepth = calcMaxDepth(drawarea, size);
-            ProjectedGeoArea[] zones;
-
-            CustomDrawPointFn fn;
-            object arg;
-            if (customdrawfn != null) {
-                fn = customdrawfn;
-                arg = customdrawarg;
-            } else {
-                fn = DrawFilledSquare;
-                arg = new SolidBrush(Color.Blue);
-            }
-            try
-            {
-
-                Bitmap newbuffer;
-                Graphics outg;
-                PxCoordinates bufpxpos = mapsystem.PointToPx(buffer_area.pMin, zoom);
-                Point bufpos = new Point((int)(bufpxpos.xpx - corner.xpx), (int)(bufpxpos.ypx - corner.ypx));
-                int movecx = Math.Abs(bufpos.X) + Math.Abs(bufpos.Y); //è una valutazione dello spostamento
-                if (zoom == buffer_zoom && movecx < 50) // questo è un valore empirico
-                {
-                    // per piccoli spostamenti non rimpiazzo il buffer
-
-                    System.Drawing.Imaging.ImageAttributes attr = new System.Drawing.Imaging.ImageAttributes();
-                    // determina la parte effettiva della cache da copiare in output (in pratica serve quando l'area coperta dalla collezione di punti non copre tutto il buffer)
-                    PxCoordinates cont_px1 = mapsystem.PointToPx(points.ContainigArea.pMin, zoom),
-                                  cont_px2 = mapsystem.PointToPx(points.ContainigArea.pMax, zoom);
-                    int cont_sx = (int)(cont_px2.xpx - cont_px1.xpx),
-                        cont_sy = (int)(cont_px2.ypx - cont_px1.ypx);
-                    cont_px1.xpx -= corner.xpx; cont_px1.ypx -= corner.ypx;
-                    int effx = Math.Max(bufpos.X, (int)cont_px1.xpx),
-                        effy = Math.Max(bufpos.Y, (int)cont_px1.ypx),
-                        sx = Math.Min(size.Width - (effx - bufpos.X), cont_sx),
-                        sy = Math.Min(size.Height - (effy - bufpos.Y), cont_sy);
-                    Rectangle dstRect = new Rectangle(effx, effy, sx, sy);
-                    // imposta la trasparenza
-                    attr.SetColorKey(Color.Black, Color.Black);
-                    dst.DrawImage(buffer, dstRect, effx - bufpos.X, effy - bufpos.Y, sx, sy, GraphicsUnit.Pixel, attr);
-                    zones = drawarea.difference(this.buffer_area);
-                    DrawPointIterator pit = new DrawPointIterator(dst, fn, arg, corner, zoom, this.mapsys);
-                    foreach (ProjectedGeoArea pr_area in zones)
-                        points.Iterate(pr_area, pit, maxdepth);
-                }
-                else
-                {
-                    newbuffer = new Bitmap(size.Width, size.Height);
-                    using (outg = Graphics.FromImage(newbuffer))
-                    {
-                        if (zoom != buffer_zoom)
-                            zones = new ProjectedGeoArea[] { drawarea };
-                        else
-                        {
-                            outg.DrawImage(buffer, bufpos.X, bufpos.Y);
-                            zones = drawarea.difference(this.buffer_area);
-                        }
-                        DrawPointIterator pit = new DrawPointIterator(outg, fn, arg, corner, zoom, this.mapsys);
-                        foreach (ProjectedGeoArea pr_area in zones)
-                            points.Iterate(pr_area, pit, maxdepth);
-                    }
-                    if (buffer != null) buffer.Dispose();
-                    buffer = newbuffer;
-                    buffer_area = drawarea;
-                    buffer_zoom = zoom;
-
-                    // determina la parte effettiva della cache da copiare in output (in pratica serve quando l'area coperta dalla collezione di punti non copre tutto il buffer)
-                    PxCoordinates cont_px1 = mapsystem.PointToPx(points.ContainigArea.pMin, zoom),
-                                  cont_px2 = mapsystem.PointToPx(points.ContainigArea.pMax, zoom);
-                    int cont_sx = (int)(cont_px2.xpx - cont_px1.xpx),
-                        cont_sy = (int)(cont_px2.ypx - cont_px1.ypx);
-                    cont_px1.xpx -= corner.xpx; cont_px1.ypx -= corner.ypx;
-                    int effx = (cont_px1.xpx > 0) ? (int)cont_px1.xpx : 0,
-                        effy = (cont_px1.ypx > 0) ? (int)cont_px1.ypx : 0,
-                        sx = Math.Min(size.Width - effx, cont_sx),
-                        sy = Math.Min(size.Height - effy, cont_sy);
-                    Rectangle dstRect = new Rectangle(effx, effy, sx, sy);
-                    // imposta la trasparenza
-                    System.Drawing.Imaging.ImageAttributes attr = new System.Drawing.Imaging.ImageAttributes();
-                    attr.SetColorKey(Color.Black, Color.Black);
-                    // output definitivo del layer
-                    dst.DrawImage(buffer, dstRect, effx, effy, sx, sy, GraphicsUnit.Pixel, attr);
-                }
-            }
-            finally
-            {
-                if (customdrawfn == null)
-                    ((Brush)arg).Dispose();
-            }
-        }
-
-        public override void addPoint(ProjectedGeoPoint point)
-        {
-            base.addPoint(point);
-            if (buffer_area.contains(point))
-            {
-                // devo disegnare il punto nel buffer
-                Point pos = (Point) (mapsys.PointToPx(point, buffer_zoom) -
-                                     mapsys.PointToPx(buffer_area.pMin, buffer_zoom));
-                using (Graphics gDst = Graphics.FromImage(buffer))
-                {
-                    if (customdrawfn != null)
-                        customdrawfn(gDst, pos, customdrawarg);
-                    else using (Brush b = new SolidBrush(Color.Blue))
-                        DrawFilledSquare(gDst, pos, b);
-                }
-            }
-        }
-
-    }
-    */
 }

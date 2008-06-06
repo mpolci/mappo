@@ -44,8 +44,6 @@ namespace NMEA2GPX
                 int count = 0;
                 // Read and display lines from the file until the end of 
                 // the file is reached.
-                //DateTime lastTime = DateTime.Now; 
-                //double lastLat, lastLon;
                 while ((line = sr.ReadLine()) != null)
                 {
                     switch (line.Substring(0, 6))
@@ -142,23 +140,6 @@ namespace NMEA2GPX
             [XmlArrayItem(ElementName = "trkpt")]
             public List<waypoint> trkseg;
         }
-
-        /*
-        public struct trkpt
-        {
-            [XmlAttribute]
-            public double lat;
-            [XmlAttribute]
-            public double lon;
-
-            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento
-            [XmlElement(typeof(DateTime))]
-            public object time;
-
-            [XmlElement(typeof(double))]
-            public object ele;
-        }
-        */
 
     }
 }
