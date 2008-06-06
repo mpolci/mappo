@@ -27,6 +27,9 @@ using System.Drawing;
 
 namespace MapsLibrary
 {
+    using PxType = Int32;
+    using TileIdxType = Int32;
+
     public delegate void MapChangedEventHandler(IMap map, ProjectedGeoArea area);
 
     public interface IMap
@@ -56,17 +59,17 @@ namespace MapsLibrary
 
     public struct TileNum
     {
-        public long lX, lY;
+        public TileIdxType X, Y;
         public uint uZoom;
 
-        public TileNum(long x, long y, uint zoom)
+        public TileNum(TileIdxType x, TileIdxType y, uint zoom)
         {
-            lX = x; lY = y; uZoom = zoom;
+            X = x; Y = y; uZoom = zoom;
         }
 
         public string ToString(char separator)
         {
-            return uZoom.ToString() + separator + lX.ToString() + separator + lY.ToString();
+            return uZoom.ToString() + separator + X.ToString() + separator + Y.ToString();
         }
 
         public override string ToString()
@@ -112,7 +115,8 @@ namespace MapsLibrary
 
         public abstract void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta);
 
-        protected static string TileNumToString(long x, long y, uint zoom, string separator) {
+        protected static string TileNumToString(TileIdxType x, TileIdxType y, uint zoom, string separator)
+        {
             return zoom.ToString() + separator + x.ToString() + separator + y.ToString();
         }
 
@@ -168,10 +172,10 @@ namespace MapsLibrary
             downloadTile(tn, overwrite);
             if (depth > 0) 
             {
-                downloadTileDepth(new TileNum(tn.lX * 2, tn.lY * 2, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.lX * 2 + 1, tn.lY * 2, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.lX * 2, tn.lY * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.lX * 2 + 1, tn.lY * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
+                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2, tn.uZoom+1), depth - 1, overwrite);
+                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2, tn.uZoom+1), depth - 1, overwrite);
+                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
+                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
             }
         }
 
@@ -256,14 +260,14 @@ namespace MapsLibrary
         {
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
-            long x1 = Math.Min(tn1.lX, tn2.lX),
-                 x2 = Math.Max(tn1.lX, tn2.lX),
-                 y1 = Math.Min(tn1.lY, tn2.lY),
-                 y2 = Math.Max(tn1.lY, tn2.lY);
+            TileIdxType x1 = Math.Min(tn1.X, tn2.X),
+                        x2 = Math.Max(tn1.X, tn2.X),
+                        y1 = Math.Min(tn1.Y, tn2.Y),
+                        y2 = Math.Max(tn1.Y, tn2.Y);
             TileNum i = new TileNum();
             i.uZoom = zoom;
-            for (i.lX = x1; i.lX <= x2; i.lX++)
-                for (i.lY = y1; i.lY <= y2; i.lY++)
+            for (i.X = x1; i.X <= x2; i.X++)
+                for (i.Y = y1; i.Y <= y2; i.Y++)
                     downloadTile(i, overwrite);
         }
 
@@ -277,14 +281,14 @@ namespace MapsLibrary
         {
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
-            long x1 = Math.Min(tn1.lX, tn2.lX),
-                 x2 = Math.Max(tn1.lX, tn2.lX),
-                 y1 = Math.Min(tn1.lY, tn2.lY),
-                 y2 = Math.Max(tn1.lY, tn2.lY);
+            TileIdxType x1 = Math.Min(tn1.X, tn2.X),
+                        x2 = Math.Max(tn1.X, tn2.X),
+                        y1 = Math.Min(tn1.Y, tn2.Y),
+                        y2 = Math.Max(tn1.Y, tn2.Y);
             TileNum i = new TileNum();
             i.uZoom = zoom;
-            for (i.lX = x1; i.lX <= x2; i.lX++)
-                for (i.lY = y1; i.lY <= y2; i.lY++)
+            for (i.X = x1; i.X <= x2; i.X++)
+                for (i.Y = y1; i.Y <= y2; i.Y++)
                     if (tileInCache(i))
                         downloadTile(i, true);
         }
@@ -755,12 +759,13 @@ namespace MapsLibrary
         }
     }
 
+
     public struct PxCoordinates
     {
-        public long xpx;
-        public long ypx;
+        public PxType xpx;
+        public PxType ypx;
 
-        public PxCoordinates(long x, long y)
+        public PxCoordinates(PxType x, PxType y)
         {
             xpx = x;
             ypx = y;
@@ -824,30 +829,37 @@ namespace MapsLibrary
             Int32 pow = (Int32)1 << (Int32)zoom;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
             X = (gp.dLon + 180) / 360 * pow;
             Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * pow;
-            px.xpx = (long)(X * tilesize);
-            px.ypx = (long)(Y * tilesize);
+            px.xpx = (PxType)(X * tilesize);
+            px.ypx = (PxType)(Y * tilesize);
             return px;
         }
 
         // coordinate in pixel dell'angolo superiore sinistro del tile
         public PxCoordinates TileNumToPx(TileNum tn)
         {
-            PxCoordinates px;
-            px.xpx = (long)(tn.lX * tilesize);
-            px.ypx = (long)(tn.lY * tilesize);
-            return px;
+            //PxCoordinates px;
+            //px.xpx = (PxType)(tn.X * tilesize);
+            //px.ypx = (PxType)(tn.Y * tilesize);
+            //return px;
+            return new PxCoordinates((PxType)(tn.X << (int)PixelZoomFactor),
+                                     (PxType)(tn.Y << (int)PixelZoomFactor));
         }
 
         public TileNum PxToTileNum(PxCoordinates px, uint zoom)
         {
-            // REIMPLEMENTARE con uno shift
-            return new TileNum(px.xpx / tilesize, px.ypx / tilesize, zoom);
+            //return new TileNum(px.xpx / tilesize, px.ypx / tilesize, zoom);
+            return new TileNum((TileIdxType) (px.xpx >> (int)PixelZoomFactor), 
+                               (TileIdxType) (px.ypx >> (int)PixelZoomFactor), 
+                               zoom); 
         }
 
         public TileNum PointToTileNum(ProjectedGeoPoint p, uint zoom)
         {
             // REIMPLEMENTARE
-            return PxToTileNum(PointToPx(p, zoom), zoom);
+            //return PxToTileNum(PointToPx(p, zoom), zoom);
+
+            int factor = 30 - (int)zoom;
+            return new TileNum(p.nLon >> factor, p.nLat >> factor, zoom);
         }
 
 
@@ -896,7 +908,7 @@ namespace MapsLibrary
         /// </summary>
         public override string TileFile(TileNum tn)
         {
-            return tn.uZoom.ToString() + '/' + tn.lX.ToString() + '/' + tn.lY.ToString() + ".png";
+            return tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
         }
 
         public override uint MaxZoom
@@ -1006,9 +1018,9 @@ namespace MapsLibrary
 
             TileNum tn;
             tn.uZoom = zoom;
-            for (tn.lX = tnMin.lX; tn.lX <= tnMax.lX; tn.lX++)
+            for (tn.X = tnMin.X; tn.X <= tnMax.X; tn.X++)
             {
-                for (tn.lY = tnMin.lY; tn.lY <= tnMax.lY; tn.lY++)
+                for (tn.Y = tnMin.Y; tn.Y <= tnMax.Y; tn.Y++)
                 {
                     PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
                                   tileareaoffset = pxcTileCorner - pxcMin;
@@ -1027,7 +1039,7 @@ namespace MapsLibrary
                         outx = (int)(delta.X + tileareaoffset.xpx);
                         srcx = 0;
                     }
-                    long pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
+                    PxType pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
 
                     srcsx = mapsys.tilesize - srcx;
                     // se il tile va oltre l'area d disegnare
@@ -1048,7 +1060,7 @@ namespace MapsLibrary
                         outy = (int)(delta.Y + tileareaoffset.ypx);
                         srcy = 0;
                     }
-                    long pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
+                    PxType pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
 
                     srcsy = mapsys.tilesize - srcy;
                     // se il tile va oltre l'area d disegnare
@@ -1179,20 +1191,22 @@ namespace MapsLibrary
 
         public PxCoordinates PointToPx(ProjectedGeoPoint pgp, uint zoom)
         {
-            PxCoordinates px;
-            Int32 factor = (1 << (30 - (int)zoom));
-            //px.xpx = (long)pgp.nLon * (long)tilesize / factor;
-            px.xpx = (long)pgp.nLon * (1 << (int) PixelZoomFactor) / factor;
-            //px.ypx = (long)pgp.nLat * (long)tilesize / factor;
-            px.ypx = (long)pgp.nLat * (1 << (int) PixelZoomFactor) / factor;
-            return px;
+            // Equivalente a: 
+            //Int32 factor = (1 << (30 - (int)zoom));
+            ////px.xpx = (long)pgp.nLon * (long)tilesize / factor;
+            ////px.ypx = (long)pgp.nLat * (long)tilesize / factor;
+            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
+            return new PxCoordinates(pgp.nLon >> factor, pgp.nLat >> factor);
+
         }
 
         public ProjectedGeoPoint PxToPoint(PxCoordinates px, uint zoom)
         {
-            //Int32 factor = (1 << (30 - (int)zoom)) / 256;
-            Int32 factor = (1 << (30 - (int)zoom)) >> (int) PixelZoomFactor;
-            return new ProjectedGeoPoint((Int32)px.ypx * factor, (Int32)px.xpx * factor);
+            // Equivalente a:
+            //Int32 factor = (1 << (30 - (int)zoom)) >> (int) PixelZoomFactor;
+            //return new ProjectedGeoPoint((Int32)px.ypx * factor, (Int32)px.xpx * factor);
+            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
+            return new ProjectedGeoPoint((Int32)px.ypx << factor, (Int32)px.xpx << factor);
 
         }
 
