@@ -326,11 +326,8 @@ namespace MapsLibrary
             {
                 mapsys = mapsystem;
                 this.gDst = dst;
-                //pDestDelta = delta;
                 pxCorner = corner;
                 this.zoom = z;
-                //pen = p;
-                //brush = b;
                 drawfn = fn;
                 drawfnarg = fnarg;
             }

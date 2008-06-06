@@ -33,7 +33,6 @@ namespace MapsLibrary
         private IMap map;
         private ProjectedGeoPoint pgpCenter;
         private uint uZoom;
-        //private Bitmap buffer;
 
         protected Bitmap buffer;
         protected uint buffer_zoom;
