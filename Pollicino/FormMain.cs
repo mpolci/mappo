@@ -53,11 +53,20 @@ namespace MapperTool
         protected LayerPoints trackpoints;
         protected LayerPoints waypoints;
         protected int idx_layer_gmaps, idx_layer_osm, idx_layer_trkpnt, idx_layer_waypnt;
-        protected bool autocenter;
         protected string logname;
         protected Downloader downloader;
 
         protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
+
+        private bool autocenter
+        {
+            get { return options.Application.AutoCentreMap; }
+            set
+            {
+                options.Application.AutoCentreMap = value;
+                menuItem_followGPS.Checked = value;
+            }
+        }
 
         public Form_MapperToolMain()
         {
@@ -121,10 +130,10 @@ namespace MapperTool
             mapcontrol.Map = lmap;
             this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.prepara_mappe);
 
-            GeoPoint gp = new GeoPoint(44.1429, 12.2618);
             mapcontrol.Zoom = 12;
-            mapcontrol.Center = map.mapsystem.CalcProjection(gp);
+            mapcontrol.Center = map.mapsystem.CalcProjection(options.Application.InitialMapPosition);
 
+            autocenter = options.Application.AutoCentreMap;
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
         
         }
@@ -137,41 +146,27 @@ namespace MapperTool
             this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
             this.label_lat.Text = gpsdata.position.dLat.ToString("F7");
             this.label_lon.Text = gpsdata.position.dLon.ToString("F7");
-            if (this.autocenter)
+            if (autocenter)
                 mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
 
         }
 
-        private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
+        private void action_CentreMap()
         {
-            this.label_zoom.Text = sender.Zoom.ToString();
+            mapcontrol.Center = map.mapsystem.CalcProjection(this.gpsControl.PositionData.position);
         }
 
-        private void menuItem_zoomin_Click(object sender, EventArgs e)
+        private void action_CiclesVisibleMap()
         {
-            this.mapcontrol.Zoom++;
-        }
-
-        private void menuItem_zoomout_Click(object sender, EventArgs e)
-        {
-            this.mapcontrol.Zoom--;
-        }
-
-        private void menuItem_map_osm_Click(object sender, EventArgs e)
-        {
-            if (!lmap.isVisible(idx_layer_osm))
+            if (lmap.isVisible(idx_layer_gmaps))
             {
                 lmap.setVisibility(idx_layer_osm, true);
                 lmap.setVisibility(idx_layer_gmaps, false);
-                mapcontrol.Invalidate();   
+                mapcontrol.Invalidate();
                 this.menuItem_map_gmaps.Enabled = true;
                 this.menuItem_map_osm.Enabled = false;
             }
-        }
-
-        private void menuItem_map_gmaps_Click(object sender, EventArgs e)
-        {
-            if (!lmap.isVisible(idx_layer_gmaps))
+            else
             {
                 lmap.setVisibility(idx_layer_osm, false);
                 lmap.setVisibility(idx_layer_gmaps, true);
@@ -181,7 +176,7 @@ namespace MapperTool
             }
         }
 
-        private void menuItem_loadtrack_Click(object sender, EventArgs e)
+        private void action_loadtrack()
         {
             string opendir = options.GPS.LogsDir,
                    file;
@@ -240,10 +235,39 @@ namespace MapperTool
             
         }
 
+        private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
+        {
+            this.label_zoom.Text = sender.Zoom.ToString();
+        }
+
+        private void menuItem_zoomin_Click(object sender, EventArgs e)
+        {
+            this.mapcontrol.Zoom++;
+        }
+
+        private void menuItem_zoomout_Click(object sender, EventArgs e)
+        {
+            this.mapcontrol.Zoom--;
+        }
+
+        private void menuItem_map_osm_Click(object sender, EventArgs e)
+        {
+            action_CiclesVisibleMap();
+        }
+
+        private void menuItem_map_gmaps_Click(object sender, EventArgs e)
+        {
+            action_CiclesVisibleMap();
+        }
+
+        private void menuItem_loadtrack_Click(object sender, EventArgs e)
+        {
+            action_loadtrack();
+        }
+
         private void menuItem_followGPS_Click(object sender, EventArgs e)
         {
             autocenter = !autocenter;
-            this.menuItem_followGPS.Text = autocenter ? "Don't follow GPS" : "Follow GPS";
         }
 
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
@@ -309,16 +333,6 @@ namespace MapperTool
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
-
-        private void prepara_mappe(MapControl sender)
-        {
-            if (options.Maps.OSM.AutoDownload)
-            {
-                IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
-                downloader.addDownloadArea(vm, mapcontrol.VisibleArea, mapcontrol.Zoom);
-            }
-        }
-
         private void menuItem_config_Click(object sender, EventArgs e)
         {
             using (FormOptions opt = new FormOptions())
@@ -326,7 +340,7 @@ namespace MapperTool
                 opt.data = this.options;
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
-                if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer) 
+                if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
                     MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
@@ -334,6 +348,31 @@ namespace MapperTool
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
                 options = newopt;
                 options.SaveToFile(this.configfile);
+            }
+        }
+
+        private void menuItem_waypoint_Click(object sender, EventArgs e)
+        {
+            action_CreateWaypoint();
+        }
+
+        private void menuItem_exit_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                this.Close();
+        }
+
+        private void menuItem_savegpx_Click(object sender, EventArgs e)
+        {
+            action_SaveGPX();
+        }
+
+        private void prepara_mappe(MapControl sender)
+        {
+            if (options.Maps.OSM.AutoDownload)
+            {
+                IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
+                downloader.addDownloadArea(vm, mapcontrol.VisibleArea, mapcontrol.Zoom);
             }
         }
 
@@ -357,15 +396,12 @@ namespace MapperTool
             opt.Application.WaypointRecordAudio = true;
             opt.Application.RecordAudioDevice = 0;
             opt.Application.RecordAudioFormat = OpenNETCF.Media.WaveAudio.SoundFormats.Mono16bit11kHz;
+            opt.Application.AutoCentreMap = true;
+            opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             return opt;
         }
 
-        private void menuItem_waypoint_Click(object sender, EventArgs e)
-        {
-            create_waypoint();
-        }
-
-        private void create_waypoint()
+        private void action_CreateWaypoint()
         {
             if (gpsControl.Started) {
                 GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
@@ -388,36 +424,32 @@ namespace MapperTool
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
                 // Up
+                mapcontrol.Zoom++;
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Down))
             {
                 // Down
+                mapcontrol.Zoom--;
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Left))
             {
                 // Left
+                action_CentreMap();
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Right))
             {
                 // Right
+                action_CiclesVisibleMap();
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
             {
                 // Enter
-                create_waypoint();
+                action_CreateWaypoint();
             }
 
         }
 
-        private void menuItem_exit_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                //Application.Exit();
-                this.Close();
-
-        }
-
-        private void menuItem_savegpx_Click(object sender, EventArgs e)
+        private void action_SaveGPX()
         {
             string opendir = options.GPS.LogsDir,
                    file, outfile;
@@ -457,8 +489,13 @@ namespace MapperTool
 
         private void Form_MapperToolMain_Closing(object sender, CancelEventArgs e)
         {
-            this.downloader.stopThread();
-            this.notify_icon.Dispose();
+            if (gpsControl.Started)
+                gpsControl.stop();
+            downloader.stopThread();
+            notify_icon.Dispose();
+
+            options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
+            options.SaveToFile(this.configfile);
         }
 
     }
