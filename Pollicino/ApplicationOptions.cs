@@ -42,7 +42,6 @@ namespace MapperTool
                 public string OSMTileServer;
                 public string TileCachePath;
                 public int DownloadDepth;
-                public bool AutoDownload;
             }
             public struct GMAPSOptions {
                 public string CachePath;
@@ -50,6 +49,7 @@ namespace MapperTool
 
             public OSMOptions OSM;
             public GMAPSOptions GMaps;
+            public bool AutoDownload;
         }
         public struct InterfaceOptions
         {

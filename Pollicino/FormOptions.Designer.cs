@@ -61,10 +61,10 @@ namespace MapperTool
             this.label1 = new System.Windows.Forms.Label();
             this.tb_GPSPort = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.combo_TileServer = new System.Windows.Forms.ComboBox();
             this.button_emptytilescache = new System.Windows.Forms.Button();
             this.button_GMapsCacheDir = new System.Windows.Forms.Button();
             this.button_TileCacheDir = new System.Windows.Forms.Button();
-            this.cb_autodownload = new System.Windows.Forms.CheckBox();
             this.num_DownloadDepth = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -84,7 +84,6 @@ namespace MapperTool
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.combo_TileServer = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -208,7 +207,6 @@ namespace MapperTool
             this.tabPage2.Controls.Add(this.button_emptytilescache);
             this.tabPage2.Controls.Add(this.button_GMapsCacheDir);
             this.tabPage2.Controls.Add(this.button_TileCacheDir);
-            this.tabPage2.Controls.Add(this.cb_autodownload);
             this.tabPage2.Controls.Add(this.num_DownloadDepth);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label6);
@@ -220,6 +218,16 @@ namespace MapperTool
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(240, 245);
             this.tabPage2.Text = "Maps";
+            // 
+            // combo_TileServer
+            // 
+            this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
+            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile.php/");
+            this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
+            this.combo_TileServer.Name = "combo_TileServer";
+            this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
+            this.combo_TileServer.TabIndex = 28;
             // 
             // button_emptytilescache
             // 
@@ -247,14 +255,6 @@ namespace MapperTool
             this.button_TileCacheDir.TabIndex = 17;
             this.button_TileCacheDir.Text = "...";
             this.button_TileCacheDir.Click += new System.EventHandler(this.button_TileCacheDir_Click);
-            // 
-            // cb_autodownload
-            // 
-            this.cb_autodownload.Location = new System.Drawing.Point(7, 126);
-            this.cb_autodownload.Name = "cb_autodownload";
-            this.cb_autodownload.Size = new System.Drawing.Size(226, 20);
-            this.cb_autodownload.TabIndex = 11;
-            this.cb_autodownload.Text = "Automatic tiles download";
             // 
             // num_DownloadDepth
             // 
@@ -430,16 +430,6 @@ namespace MapperTool
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // combo_TileServer
-            // 
-            this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
-            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile.php/");
-            this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
-            this.combo_TileServer.Name = "combo_TileServer";
-            this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
-            this.combo_TileServer.TabIndex = 28;
-            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -478,7 +468,6 @@ namespace MapperTool
         private System.Windows.Forms.TextBox tb_TileCacheDir;
         private System.Windows.Forms.NumericUpDown num_DownloadDepth;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox cb_autodownload;
         private System.Windows.Forms.TextBox tb_GPSLogPath;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.MainMenu mainMenu1;

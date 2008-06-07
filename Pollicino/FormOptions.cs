@@ -67,7 +67,6 @@ namespace MapperTool
                 _data.GPS.LogsDir = tb_GPSLogPath.Text;
                 _data.Maps.OSM.OSMTileServer = combo_TileServer.Text;
                 _data.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
-                _data.Maps.OSM.AutoDownload = cb_autodownload.Checked;
                 _data.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
                 _data.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
                 _data.Application.WaypointSoundPlay = cb_waypointsound.Checked;
@@ -88,7 +87,6 @@ namespace MapperTool
                 tb_GPSLogPath.Text = value.GPS.LogsDir;
                 combo_TileServer.Text = value.Maps.OSM.OSMTileServer;
                 tb_TileCacheDir.Text = value.Maps.OSM.TileCachePath;
-                cb_autodownload.Checked = value.Maps.OSM.AutoDownload;
                 try {
                     num_DownloadDepth.Value = value.Maps.OSM.DownloadDepth;
                 } catch (Exception) { }

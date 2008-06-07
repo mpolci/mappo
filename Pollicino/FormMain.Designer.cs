@@ -76,6 +76,7 @@ namespace MapperTool
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTool.GPSControl();
+            this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -155,6 +156,7 @@ namespace MapperTool
             // 
             this.menuItem2.MenuItems.Add(this.menuItem3);
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
+            this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.Text = "Options";
             // 
@@ -258,6 +260,11 @@ namespace MapperTool
             this.gpsControl.Size = new System.Drawing.Size(12, 12);
             this.gpsControl.TabIndex = 7;
             // 
+            // menuItem_autodownload
+            // 
+            this.menuItem_autodownload.Text = "Autodownload maps";
+            this.menuItem_autodownload.Click += new System.EventHandler(this.menuItem_autodownload_Click);
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -310,6 +317,7 @@ namespace MapperTool
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
         private System.Windows.Forms.MenuItem menuItem_savegpx;
+        private System.Windows.Forms.MenuItem menuItem_autodownload;
 
 
 

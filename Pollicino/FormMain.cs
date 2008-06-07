@@ -108,6 +108,8 @@ namespace MapperTool
             // thread per il download automatico delle mappe
             downloader = new Downloader();
             downloader.startThread();
+            // autodownload flag
+            menuItem_autodownload.Checked = options.Maps.AutoDownload;
 
             // mappe
             this.lmap = new LayeredMap();
@@ -270,6 +272,12 @@ namespace MapperTool
             autocenter = !autocenter;
         }
 
+        private void menuItem_autodownload_Click(object sender, EventArgs e)
+        {
+            options.Maps.AutoDownload = !options.Maps.AutoDownload;
+            menuItem_autodownload.Checked = options.Maps.AutoDownload;
+        }
+
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
             if (!this.gpsControl.Started)
@@ -370,7 +378,7 @@ namespace MapperTool
 
         private void prepara_mappe(MapControl sender)
         {
-            if (options.Maps.OSM.AutoDownload)
+            if (options.Maps.AutoDownload)
             {
                 IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
                 downloader.addDownloadArea(vm, mapcontrol.VisibleArea, mapcontrol.Zoom);
@@ -389,7 +397,7 @@ namespace MapperTool
             opt.Maps.OSM.OSMTileServer = "http://tile.openstreetmap.org/";
             opt.Maps.OSM.TileCachePath = programpath + "\\tiles";
             opt.Maps.OSM.DownloadDepth = 3;
-            opt.Maps.OSM.AutoDownload = true;
+            opt.Maps.AutoDownload = false;
             opt.Maps.GMaps.CachePath = programpath + "\\gmaps";
             opt.Application.WaypointSoundPlay = true;
             opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
@@ -494,6 +502,7 @@ namespace MapperTool
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
             options.SaveToFile(this.configfile);
         }
+
 
     }
 }
