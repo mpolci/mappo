@@ -275,7 +275,6 @@ namespace MapperTool
             this.Menu = this.mainMenu;
             this.Name = "Form_MapperToolMain";
             this.Text = "Pollicino";
-            this.Deactivate += new System.EventHandler(this.Form_MapperToolMain_Deactivate);
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form_MapperToolMain_Closing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
             this.ResumeLayout(false);

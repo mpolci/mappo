@@ -24,6 +24,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace MapsLibrary
 {
@@ -205,17 +206,25 @@ namespace MapsLibrary
         /// </summary>
         public Bitmap createImageTile(TileNum tn) 
         {
-            //Bitmap img;
+            Bitmap img = null;
             string file = strTileCachePath + tn.ToString('\\') + ".png";
             do {
                 if (File.Exists(file)) {
                     try
                     {
-                        return new Bitmap(file);
+                        img = new Bitmap(file);
                     }
-                    catch (Exception e)
+                    catch (Exception) { }
+
+                    if (img != null)
+                        return img;
+                    else
                     {
-                        File.Delete(file);  // file non valido
+                        try
+                        {
+                            File.Delete(file);  // file non valido, lo cancello
+                        }
+                        catch (Exception e) { System.Diagnostics.Trace.WriteLine("----\n" + e.ToString() + "\n----"); }
                     }
                 }
                 // lancia l'evento TileNotFound e, se questo lo indica, tenta nuovamente di caricare il tile
@@ -960,13 +969,17 @@ namespace MapsLibrary
         /// </summary>
         public Bitmap getImageTile(TileNum tn)
         {
+            Debug.Assert(cache != null);
+            Debug.Assert(lru != null);
             if (cache.Contains(tn))
             {
                 LinkedListNode<TileNum> node = lru.Find(tn);
+                Debug.Assert(node != null);
                 lru.Remove(node);
                 lru.AddFirst(node);
 
                 Bitmap bmp = (System.Drawing.Bitmap)cache[tn];
+                Debug.Assert(bmp != null);
                 return bmp;
             }
             else
@@ -974,14 +987,10 @@ namespace MapsLibrary
                 if (cache.Count >= maxitems)
                 {
                     // rimuove un elemento dalla coda
-                    //TileNum oldertn = q.Dequeue();
-                    //Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
-                    //olderbmp.Dispose();
-                    //cache.Remove(oldertn);
-                    // rimuove un elemento dalla coda
                     TileNum oldertn = lru.Last.Value;
                     lru.RemoveLast();
                     Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
+                    Debug.Assert(olderbmp != null);
                     olderbmp.Dispose();
                     cache.Remove(oldertn);
                 }
@@ -993,10 +1002,11 @@ namespace MapsLibrary
                     //q.Enqueue(tn);
                     lru.AddFirst(tn);
                 }
-                catch (Exception e)
+                catch (TileNotFoundException)
                 {
                     bmp = ImgTileNotFound;
                 }
+                Debug.Assert(bmp != null);
                 return bmp;
             }
         }
@@ -1302,7 +1312,8 @@ namespace MapsLibrary
                     catch (Exception e) 
                     {
                         System.Windows.Forms.MessageBox.Show("GMaps cache error", e.Message);
-                        //cf.Delete();  // cancello il file non valido
+                        System.Diagnostics.Trace.WriteLine("GMaps cache error - Not valid file: " + cf.FullName);
+                        //cf.Delete();  // cancello il file non valido --> NO! perché non so che file sia.
                     }
                 }
             }
@@ -1396,6 +1407,7 @@ namespace MapsLibrary
                 bool currentimgpresent = currentImg != null;
                 string filename = (string)images[id];
                 Bitmap newimg = new Bitmap(filename);
+                System.Diagnostics.Debug.Assert(newimg != null);
                 
                 ProjectedGeoArea newarea = ImgArea(newimg.Size, id.point, id.zoom), 
                                  oldarea = currentImgArea;
@@ -1432,13 +1444,13 @@ namespace MapsLibrary
                 {
                     PxCoordinates pxareamax = msys.PointToPx(area.pMax, zoom),           // CONTROLLARE: forse va incrementato di 1, specialmente per il calcolo di pxareasize
                                   pxareamin = msys.PointToPx(area.pMin, zoom);
-                                  //pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
+                    //pxwincenter = pxareamin - delta + this.center_offset;  // coordinate supposte del centro del Graphics dst
                     Size pxareasize = new Size((int)pxareamax.xpx - (int)pxareamin.xpx, (int)pxareamax.ypx - (int)pxareamin.ypx);
 
                     //ImgID oldId = currentID;
                     // seleziona l'immagine da utilizzare
                     //ProjectedGeoPoint center = msys.PxToPoint(pxwincenter, zoom);
-                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(msys.imagemapsize, 0), zoom).nLon;  
+                    Int32 maxdist = msys.PxToPoint(new PxCoordinates(msys.imagemapsize, 0), zoom).nLon;
                     ImgID imgid = findNearest(map_center, zoom, maxdist);
                     Bitmap bmp = getMap(imgid);
 
@@ -1449,15 +1461,19 @@ namespace MapsLibrary
                     int outx, outy,
                         srcx, srcy, srcsx, srcsy;
                     // l'immagine inizia prima dell'area
-                    if (pximgcorner.xpx < pxareamin.xpx) {
+                    if (pximgcorner.xpx < pxareamin.xpx)
+                    {
                         srcx = (int)pxareamin.xpx - (int)pximgcorner.xpx;
                         outx = 0;
-                    } else {
+                    }
+                    else
+                    {
                         srcx = 0;
                         outx = (int)pximgcorner.xpx - (int)pxareamin.xpx;
                     }
                     srcsx = bmp.Width - srcx;
-                    if (pximgsup.xpx > pxareamax.xpx + 1) {
+                    if (pximgsup.xpx > pxareamax.xpx + 1)
+                    {
                         // considero pxareamax facente parte dell'area da disegnare
                         srcsx -= (int)pximgsup.xpx - (int)pxareamax.xpx;
                     }
@@ -1500,13 +1516,23 @@ namespace MapsLibrary
                 }
                 catch (ImageMapNotFoundException)
                 {
-                    //dst.FillRectangle(blackbrush, 0, 0, size.Width, size.Height);
-                    dst.FillRegion(blackbrush, dst.Clip);
-                    using (Font drawFont = new Font("Arial", 12, FontStyle.Regular))
-                    using (SolidBrush drawBrush = new SolidBrush(Color.White))
-                        dst.DrawString("mappa non disponibile", drawFont, drawBrush, 5, 5);
+                    DrawNoMap(dst, blackbrush);
+                }
+                catch (Exception generic)
+                {
+                    DrawNoMap(dst, blackbrush);
+                    System.Diagnostics.Trace.WriteLine("-- Unespected exception: ");
+                    System.Diagnostics.Trace.WriteLine(generic.ToString());
                 }
             }
+        }
+
+        private static void DrawNoMap(Graphics dst, Brush bckgnd_brush)
+        {
+            dst.FillRegion(bckgnd_brush, dst.Clip);
+            using (Font drawFont = new Font("Arial", 12, FontStyle.Regular))
+            using (SolidBrush drawBrush = new SolidBrush(Color.White))
+                dst.DrawString("mappa non disponibile", drawFont, drawBrush, 5, 5);
         }
 
         #endregion

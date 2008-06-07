@@ -323,6 +323,7 @@ namespace MapperTool
                 try {
                     map.updateTilesInArea(area, i); 
                 } catch (Exception ex) {
+                    System.Diagnostics.Trace.WriteLine("----\n" + ex.ToString() + "\n----");
                     if (++errors >= 10) break;
                 }
             }
@@ -472,7 +473,8 @@ namespace MapperTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error!");
+                System.Diagnostics.Trace.WriteLine("----\n" + ex.ToString() + "\n----");
+                MessageBox.Show("Loading error!");
             }
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
@@ -480,11 +482,6 @@ namespace MapperTool
         private void notify_icon_click(object obj, EventArgs args)
         {
             this.Activate();
-        }
-
-        private void Form_MapperToolMain_Deactivate(object sender, EventArgs e)
-        {
-            int i = 0;
         }
 
         private void Form_MapperToolMain_Closing(object sender, CancelEventArgs e)
