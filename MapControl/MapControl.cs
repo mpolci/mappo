@@ -229,12 +229,14 @@ namespace MapsLibrary
                     GeoPoint gpCenter = map.mapsystem.CalcInverseProjection(this.Center);
                     using (Pen pen = new Pen(Color.Black))
                     using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
-                    using (SolidBrush drawBrush = new SolidBrush(Color.Black))
+                    using (SolidBrush blackBrush = new SolidBrush(Color.Black))
+                    using (SolidBrush whiteBrush = new SolidBrush(Color.White))
                     {
                         e.Graphics.DrawImage(buffer, 0, 0);
                         e.Graphics.DrawLine(pen, x - halflinelen, y, x + halflinelen, y);
                         e.Graphics.DrawLine(pen, x, y - halflinelen, x, y + halflinelen);
-                        e.Graphics.DrawString(gpCenter.ToString(), drawFont, drawBrush, 0, 0);
+                        e.Graphics.DrawString(gpCenter.ToString(), drawFont, whiteBrush, 1, 1);
+                        e.Graphics.DrawString(gpCenter.ToString(), drawFont, blackBrush, 0, 0);
                     }
                 }
                 else
