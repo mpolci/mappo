@@ -224,7 +224,7 @@ namespace MapsLibrary
                         {
                             File.Delete(file);  // file non valido, lo cancello
                         }
-                        catch (Exception e) { System.Diagnostics.Trace.WriteLine("----\n" + e.ToString() + "\n----"); }
+                        catch (Exception e) { System.Diagnostics.Trace.WriteLine("\n----\n" + e.ToString() + "\n----\n"); }
                     }
                 }
                 // lancia l'evento TileNotFound e, se questo lo indica, tenta nuovamente di caricare il tile
@@ -969,17 +969,17 @@ namespace MapsLibrary
         /// </summary>
         public Bitmap getImageTile(TileNum tn)
         {
-            Debug.Assert(cache != null);
-            Debug.Assert(lru != null);
+            Trace.Assert(cache != null, "null cache");
+            Trace.Assert(lru != null, "null lru");
             if (cache.Contains(tn))
             {
                 LinkedListNode<TileNum> node = lru.Find(tn);
-                Debug.Assert(node != null);
+                Trace.Assert(node != null, "lru.Find returns null");
                 lru.Remove(node);
                 lru.AddFirst(node);
 
                 Bitmap bmp = (System.Drawing.Bitmap)cache[tn];
-                Debug.Assert(bmp != null);
+                Trace.Assert(bmp != null, "cache contains null bitmap");
                 return bmp;
             }
             else
@@ -988,9 +988,10 @@ namespace MapsLibrary
                 {
                     // rimuove un elemento dalla coda
                     TileNum oldertn = lru.Last.Value;
+                    Trace.Assert(cache.Contains(oldertn), "cache doesn't contain lru.Last.Value");
                     lru.RemoveLast();
                     Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
-                    Debug.Assert(olderbmp != null);
+                    Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                     olderbmp.Dispose();
                     cache.Remove(oldertn);
                 }
@@ -998,15 +999,15 @@ namespace MapsLibrary
                 try
                 {
                     bmp = base.createImageTile(tn);
+                    Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
                     cache.Add(tn, bmp);
-                    //q.Enqueue(tn);
                     lru.AddFirst(tn);
                 }
                 catch (TileNotFoundException)
                 {
                     bmp = ImgTileNotFound;
                 }
-                Debug.Assert(bmp != null);
+                Trace.Assert(bmp != null, "getImageTile will returns null");
                 return bmp;
             }
         }
@@ -1407,7 +1408,7 @@ namespace MapsLibrary
                 bool currentimgpresent = currentImg != null;
                 string filename = (string)images[id];
                 Bitmap newimg = new Bitmap(filename);
-                System.Diagnostics.Debug.Assert(newimg != null);
+                System.Diagnostics.Trace.Assert(newimg != null, "getMap(): new Bitmap() returns null");
                 
                 ProjectedGeoArea newarea = ImgArea(newimg.Size, id.point, id.zoom), 
                                  oldarea = currentImgArea;
@@ -1437,7 +1438,6 @@ namespace MapsLibrary
         /// <remarks>Attenzione: questo metodo può generare uno o più eventi MapChanged in modo sincrono. Può essere un errore elaborare questi eventi causando delle nuove chiamate a drawImageMapAt prima che la chiamata iniziale sia terminata.</remarks>
         public virtual void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics dst, Point delta)
         {
-            //if (zoom != currentID.zoom) throw new Exception("Area non preparata");
             using (Brush blackbrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black))
             {
                 try
@@ -1521,8 +1521,7 @@ namespace MapsLibrary
                 catch (Exception generic)
                 {
                     DrawNoMap(dst, blackbrush);
-                    System.Diagnostics.Trace.WriteLine("-- Unespected exception: ");
-                    System.Diagnostics.Trace.WriteLine(generic.ToString());
+                    System.Diagnostics.Trace.WriteLine("-- SparseImagesMap.DrawImageMapAt() - Unexpected exception: \n" + generic.ToString());
                 }
             }
         }

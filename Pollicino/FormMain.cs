@@ -155,7 +155,8 @@ namespace MapperTool
 
         private void action_CentreMap()
         {
-            mapcontrol.Center = map.mapsystem.CalcProjection(this.gpsControl.PositionData.position);
+            if (gpsControl.Started) 
+                mapcontrol.Center = map.mapsystem.CalcProjection(this.gpsControl.PositionData.position);
         }
 
         private void action_CiclesVisibleMap()
@@ -311,8 +312,10 @@ namespace MapperTool
             {
                 uint z = mapcontrol.Zoom + i;
                 downloader.addDownloadArea(map, area, z);
-                downloader.addDownloadArea(gmap, area, z);
+                if (i <= 2)
+                    downloader.addDownloadArea(gmap, area, z);
             }
+
         }
 
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)

@@ -24,8 +24,10 @@ using System.Windows.Forms;
 using System.IO;
 
 
+
 namespace MapperTool
 {
+
     static class Program
     {
         /// <summary>
@@ -34,19 +36,22 @@ namespace MapperTool
         [MTAThread]
         static void Main()
         {
-            #if DEBUG
+   
+#if TRACE
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             System.Diagnostics.TextWriterTraceListener outtw = new System.Diagnostics.TextWriterTraceListener(path + "\\pollicino_log.txt");
             System.Diagnostics.Trace.Listeners.Add(outtw);
+            //System.Diagnostics.Debug.Listeners.Clear();
+            //System.Diagnostics.Debug.Listeners.Add(outtw);
             //System.Diagnostics.Trace.WriteLine(DateTime.Now.ToString() + " - Starting");
-            #endif
+#endif
             try
             {
                 Application.Run(new Form_MapperToolMain());
             }
             catch (Exception e)
             {
-#if DEBUG
+#if TRACE
                 System.Diagnostics.Trace.Write("------------------------" + DateTime.Now.ToString());
                 System.Diagnostics.Trace.Write(e.ToString());
 #endif
@@ -54,7 +59,7 @@ namespace MapperTool
             }
             finally
             {
-#if DEBUG
+#if TRACE
                 System.Diagnostics.Trace.Close();
                 outtw.Dispose();
 #endif
