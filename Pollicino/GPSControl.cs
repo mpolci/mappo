@@ -58,6 +58,7 @@ namespace MapperTool
         private GPSPosition _gpsdata;
         private GPSHandler gpshandler;
         private StreamWriter swGPSLog;
+        private string lastlogname;
         private bool started;
 
         public delegate void PositionUpdateHandler(GPSControl sender, GPSPosition newpos);
@@ -136,7 +137,8 @@ namespace MapperTool
                 FileInfo logfile = new FileInfo(logfilename);
                 if (!logfile.Directory.Exists)
                     logfile.Directory.Create();
-                swGPSLog = new StreamWriter(logfile.FullName);
+                lastlogname = logfile.FullName;
+                swGPSLog = new StreamWriter(lastlogname);
                 swGPSLog.AutoFlush = true;
             }
             gpshandler.Start(port, speed);
@@ -146,18 +148,22 @@ namespace MapperTool
         /// <summary>
         /// Disattiva il GPS
         /// </summary>
-        public void stop()
+        /// <returns>nome del file di log salvato</returns>
+        public string stop()
         {
             if (!started)
                 throw new Exception("GPS not started");
             gpshandler.Stop();
+            string logname = null;
             if (swGPSLog != null)
             {
+                logname = lastlogname;
                 swGPSLog.Close();
                 swGPSLog.Dispose();
                 swGPSLog = null;
             }
             this.started = false;
+            return logname;
         }
 
 

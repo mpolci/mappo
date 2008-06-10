@@ -66,6 +66,7 @@ namespace MapperTool
             this.menuItem_map_osm = new System.Windows.Forms.MenuItem();
             this.menuItem_map_gmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_followGPS = new System.Windows.Forms.MenuItem();
+            this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
@@ -76,7 +77,7 @@ namespace MapperTool
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTool.GPSControl();
-            this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
+            this.gpxControl1 = new MapperTool.GPXControl();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -182,6 +183,11 @@ namespace MapperTool
             this.menuItem_followGPS.Text = "Follow GPS";
             this.menuItem_followGPS.Click += new System.EventHandler(this.menuItem_followGPS_Click);
             // 
+            // menuItem_autodownload
+            // 
+            this.menuItem_autodownload.Text = "Autodownload maps";
+            this.menuItem_autodownload.Click += new System.EventHandler(this.menuItem_autodownload_Click);
+            // 
             // menuItem_config
             // 
             this.menuItem_config.Text = "Configuration...";
@@ -208,7 +214,7 @@ namespace MapperTool
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label3.Location = new System.Drawing.Point(79, 256);
+            this.label3.Location = new System.Drawing.Point(64, 256);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(22, 12);
             this.label3.Text = "Lon:";
@@ -216,9 +222,9 @@ namespace MapperTool
             // label_lon
             // 
             this.label_lon.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label_lon.Location = new System.Drawing.Point(101, 256);
+            this.label_lon.Location = new System.Drawing.Point(86, 256);
             this.label_lon.Name = "label_lon";
-            this.label_lon.Size = new System.Drawing.Size(57, 12);
+            this.label_lon.Size = new System.Drawing.Size(54, 12);
             this.label_lon.Text = "12,3456789";
             // 
             // label2
@@ -234,7 +240,7 @@ namespace MapperTool
             this.label_lat.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
             this.label_lat.Location = new System.Drawing.Point(22, 256);
             this.label_lat.Name = "label_lat";
-            this.label_lat.Size = new System.Drawing.Size(60, 12);
+            this.label_lat.Size = new System.Drawing.Size(51, 12);
             this.label_lat.Text = "42,1234567";
             // 
             // mapcontrol
@@ -255,21 +261,26 @@ namespace MapperTool
             // gpsControl
             // 
             this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.gpsControl.Location = new System.Drawing.Point(161, 256);
+            this.gpsControl.Location = new System.Drawing.Point(138, 256);
             this.gpsControl.Name = "gpsControl";
             this.gpsControl.Size = new System.Drawing.Size(12, 12);
             this.gpsControl.TabIndex = 7;
             // 
-            // menuItem_autodownload
+            // gpxControl1
             // 
-            this.menuItem_autodownload.Text = "Autodownload maps";
-            this.menuItem_autodownload.Click += new System.EventHandler(this.menuItem_autodownload_Click);
+            this.gpxControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.gpxControl1.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
+            this.gpxControl1.Location = new System.Drawing.Point(158, 256);
+            this.gpxControl1.Name = "gpxControl1";
+            this.gpxControl1.Size = new System.Drawing.Size(30, 12);
+            this.gpxControl1.TabIndex = 14;
             // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.gpxControl1);
             this.Controls.Add(this.gpsControl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
@@ -318,6 +329,7 @@ namespace MapperTool
         private GPSControl gpsControl;
         private System.Windows.Forms.MenuItem menuItem_savegpx;
         private System.Windows.Forms.MenuItem menuItem_autodownload;
+        private GPXControl gpxControl1;
 
 
 

@@ -95,6 +95,12 @@
     <Compile Include="GPSControl.Designer.cs">
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="GPXControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GPXControl.Designer.cs">
+      <DependentUpon>GPXControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Waypoint.cs" />
     <Compile Include="NmeaToGpx.cs" />
     <Compile Include="Program.cs" />
@@ -118,6 +124,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GPSControl.resx">
       <DependentUpon>GPSControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GPXControl.resx">
+      <DependentUpon>GPXControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

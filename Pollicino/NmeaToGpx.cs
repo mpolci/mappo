@@ -37,6 +37,7 @@ namespace NMEA2GPX
             {
                 // questa parte di generazione dei nomi sarebbe da inserire in una classe apposita
                 FileInfo fi_in = new FileInfo(nmea_input);
+                System.Diagnostics.Trace.Assert(fi_in.Name.EndsWith(".txt"), "NMEAToGPX() - Invalid log file name: " + nmea_input);
                 String basedir = fi_in.DirectoryName,
                        audiodir = fi_in.Name.Substring(0, fi_in.Name.Length - 4);
                 // buffer
@@ -46,6 +47,12 @@ namespace NMEA2GPX
                 // the file is reached.
                 while ((line = sr.ReadLine()) != null)
                 {
+                    count++;
+                    if (line.Length < 6)
+                    {
+                        System.Diagnostics.Debug.WriteLine("NMEAToGPX() - Invalid NMEA sentence (line " + count.ToString() + "): " + line);
+                        continue;
+                    }
                     switch (line.Substring(0, 6))
                     {
                         case "$GPRMC":
@@ -54,7 +61,6 @@ namespace NMEA2GPX
                             tp.lat = gpmrc.Position.Latitude;
                             tp.lon = gpmrc.Position.Longitude;
                             tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
-                            count++;
                             gpxdata.trk.trkseg.Add(tp);
                             break;
                         case "$GPWPL":

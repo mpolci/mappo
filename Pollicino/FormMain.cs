@@ -137,6 +137,10 @@ namespace MapperTool
 
             autocenter = options.Application.AutoCentreMap;
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
+
+            // processa eventuali file di log che non sono ancora stati convertiti in GPX
+            if (Directory.Exists(options.GPS.LogsDir)) 
+                gpxControl1.ParseLogsDir(options.GPS.LogsDir);
         
         }
 
@@ -300,7 +304,8 @@ namespace MapperTool
             }
             else
             {
-                gpsControl.stop();
+                string logfile = gpsControl.stop();
+                gpxControl1.SaveGPX(logfile);
                 this.menuItem_gpsactivity.Text = "start GPS";
             }
         }
@@ -463,6 +468,19 @@ namespace MapperTool
 
         private void action_SaveGPX()
         {
+            string opendir = options.GPS.LogsDir;
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+            {
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    gpxControl1.SaveGPX(openfiledlg.openfile);
+            }
+        }
+
+/*
+        private void action_SaveGPX()
+        {
             string opendir = options.GPS.LogsDir,
                    file, outfile;
             if (!Directory.Exists(opendir))
@@ -489,7 +507,7 @@ namespace MapperTool
             }
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
-
+*/
         private void notify_icon_click(object obj, EventArgs args)
         {
             this.Activate();
