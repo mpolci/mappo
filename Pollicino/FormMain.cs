@@ -152,8 +152,6 @@ namespace MapperTool
         protected void GPSEventHandler(GPSControl sender, GPSControl.GPSPosition gpsdata)
         {
             this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
-            this.label_lat.Text = gpsdata.position.dLat.ToString("F7");
-            this.label_lon.Text = gpsdata.position.dLon.ToString("F7");
             if (autocenter)
                 mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
 
@@ -381,11 +379,6 @@ namespace MapperTool
                 this.Close();
         }
 
-        private void menuItem_savegpx_Click(object sender, EventArgs e)
-        {
-            action_SaveGPX();
-        }
-
         private void prepara_mappe(MapControl sender)
         {
             if (options.Maps.AutoDownload)
@@ -468,48 +461,6 @@ namespace MapperTool
 
         }
 
-        private void action_SaveGPX()
-        {
-            string opendir = options.GPS.LogsDir;
-            if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
-            {
-                if (openfiledlg.ShowDialog() == DialogResult.OK)
-                    gpxControl1.SaveGPX(openfiledlg.openfile);
-            }
-        }
-
-/*
-        private void action_SaveGPX()
-        {
-            string opendir = options.GPS.LogsDir,
-                   file, outfile;
-            if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
-            {
-                if (openfiledlg.ShowDialog() == DialogResult.OK)
-                    file = openfiledlg.openfile;
-                else
-                    return;
-            }
-
-            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
-            outfile = (file.EndsWith(".txt")) ? file.Substring(0, file.Length - 4) : file;
-            outfile += ".gpx";
-            try
-            {
-                NMEA2GPX.GPXGenerator.NMEAToGPX(file, outfile);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine("----\n" + ex.ToString() + "\n----");
-                MessageBox.Show("Loading error!");
-            }
-            System.Windows.Forms.Cursor.Current = Cursors.Default;
-        }
-*/
         private void notify_icon_click(object obj, EventArgs args)
         {
             this.Activate();

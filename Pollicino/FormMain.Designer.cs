@@ -59,7 +59,6 @@ namespace MapperTool
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
-            this.menuItem_savegpx = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -71,10 +70,6 @@ namespace MapperTool
             this.menuItem_config = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label_lon = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label_lat = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTool.GPSControl();
@@ -126,7 +121,6 @@ namespace MapperTool
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
             this.menuItem4.MenuItems.Add(this.menuItem_refreshTileCache);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
-            this.menuItem4.MenuItems.Add(this.menuItem_savegpx);
             this.menuItem4.Text = "Other";
             // 
             // menuItem_downloadmaps
@@ -143,11 +137,6 @@ namespace MapperTool
             // 
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
-            // 
-            // menuItem_savegpx
-            // 
-            this.menuItem_savegpx.Text = "Log to GPX...";
-            this.menuItem_savegpx.Click += new System.EventHandler(this.menuItem_savegpx_Click);
             // 
             // menuItem_exit
             // 
@@ -218,38 +207,6 @@ namespace MapperTool
             this.label_zoom.Size = new System.Drawing.Size(17, 12);
             this.label_zoom.Text = "14";
             // 
-            // label3
-            // 
-            this.label3.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label3.Location = new System.Drawing.Point(64, 256);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(22, 12);
-            this.label3.Text = "Lon:";
-            // 
-            // label_lon
-            // 
-            this.label_lon.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label_lon.Location = new System.Drawing.Point(86, 256);
-            this.label_lon.Name = "label_lon";
-            this.label_lon.Size = new System.Drawing.Size(54, 12);
-            this.label_lon.Text = "12,3456789";
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label2.Location = new System.Drawing.Point(0, 256);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 12);
-            this.label2.Text = "Lat:";
-            // 
-            // label_lat
-            // 
-            this.label_lat.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label_lat.Location = new System.Drawing.Point(22, 256);
-            this.label_lat.Name = "label_lat";
-            this.label_lat.Size = new System.Drawing.Size(51, 12);
-            this.label_lat.Text = "42,1234567";
-            // 
             // mapcontrol
             // 
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
@@ -292,10 +249,6 @@ namespace MapperTool
             this.Controls.Add(this.gpsControl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label_lon);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label_lat);
             this.Controls.Add(this.mapcontrol);
             this.KeyPreview = true;
             this.Menu = this.mainMenu;
@@ -312,10 +265,6 @@ namespace MapperTool
         private MapsLibrary.MapControl mapcontrol;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_zoom;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label_lon;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label_lat;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem_gpsactivity;
         private System.Windows.Forms.MenuItem menuItem2;
@@ -335,7 +284,6 @@ namespace MapperTool
         private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
-        private System.Windows.Forms.MenuItem menuItem_savegpx;
         private System.Windows.Forms.MenuItem menuItem_autodownload;
         private GPXControl gpxControl1;
         private System.Windows.Forms.MenuItem menuItem_showpos;
