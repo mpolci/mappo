@@ -42,6 +42,8 @@ namespace MapsLibrary
         private int drag_lastx, drag_lasty;
         private bool dragging;
 
+        private bool _showcross;
+
         public delegate void MapControlEventHandler(MapControl sender);
         public event MapControlEventHandler PrePaint;
         public event MapControlEventHandler PositionChanged;
@@ -53,6 +55,7 @@ namespace MapsLibrary
             uZoom = 0;
             pgpCenter = new ProjectedGeoPoint();
             dragging = false;
+            _showcross = false;
         }
 
 
@@ -181,10 +184,10 @@ namespace MapsLibrary
                 PxCoordinates pxcWinCorner = map.mapsystem.PointToPx(drawarea.pMin, this.Zoom);
 
                 Bitmap newbuffer = new Bitmap(this.Size.Width, this.Size.Height);
-                // CODICE DI DEBUG
+#if DEBUG
                 System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
                 watch.Start();
-                // FINE CODICE DI DEBUG
+#endif
                 using (Graphics outg = Graphics.FromImage(newbuffer))
                 {
                     if (this.Zoom != buffer_zoom || buffer == null)
@@ -205,21 +208,49 @@ namespace MapsLibrary
                         this.map.drawImageMapAt(this.Center, this.Zoom, pr_area, outg, (Point) pxcCorner);
                     }
                 }
-                // CODICE DI DEBUG
+#if DEBUG
                 watch.Stop();
-                // FINE CODICE DI DEBUG
+#endif
                 if (buffer != null) buffer.Dispose();
                 buffer = newbuffer;
                 buffer_area = drawarea;
                 buffer_zoom = Zoom;
 
-                e.Graphics.DrawImage(buffer, 0, 0);
-                // CODICE DI DEBUG
+                // Il buffer viene disegnato il più vicino possibile alla croce e alle coordinate per minimizzare il flickering
+                //e.Graphics.DrawImage(buffer, 0, 0);
+
+                // croce centrale con coordinate
+                if (this.ShowPosition)
+                {
+                    int x = this.Size.Width / 2,
+                        y = this.Size.Height / 2;
+                    const int halflinelen = 8;
+
+                    GeoPoint gpCenter = map.mapsystem.CalcInverseProjection(this.Center);
+                    using (Pen pen = new Pen(Color.Black))
+                    using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+                    using (SolidBrush drawBrush = new SolidBrush(Color.Black))
+                    {
+                        e.Graphics.DrawImage(buffer, 0, 0);
+                        e.Graphics.DrawLine(pen, x - halflinelen, y, x + halflinelen, y);
+                        e.Graphics.DrawLine(pen, x, y - halflinelen, x, y + halflinelen);
+                        e.Graphics.DrawString(gpCenter.ToString(), drawFont, drawBrush, 0, 0);
+                    }
+                }
+                else
+                {
+                    e.Graphics.DrawImage(buffer, 0, 0);
+                }
+
+
+
+
+#if DEBUG
                 string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
                 using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
                 using (SolidBrush drawBrush = new SolidBrush(Color.Black))
-                    e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 0);
-                // FINE CODICE DI DEBUG
+                    e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 12);
+#endif
             }
             else
             {
@@ -262,6 +293,25 @@ namespace MapsLibrary
                 this.drag_lasty = e.Y;
 
                 this.Center = map.mapsystem.PxToPoint(pxc, this.Zoom);
+            }
+        }
+
+        /// <summary>
+        /// Indica/imposta la visualizzazione di una croce centrale e le corrispondenti coordinate geografiche
+        /// </summary>
+        public bool ShowPosition
+        {
+            get
+            {
+                return _showcross;
+            }
+            set
+            {
+                if (_showcross != value)
+                {
+                    _showcross = value;
+                    Invalidate();
+                }
             }
         }
 

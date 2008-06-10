@@ -110,6 +110,8 @@ namespace MapperTool
             downloader.startThread();
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
+            // show position flag
+            menuItem_showpos.Checked = mapcontrol.ShowPosition;
 
             // mappe
             this.lmap = new LayeredMap();
@@ -522,6 +524,12 @@ namespace MapperTool
 
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
             options.SaveToFile(this.configfile);
+        }
+
+        private void menuItem_showpos_Click(object sender, EventArgs e)
+        {
+            mapcontrol.ShowPosition = !mapcontrol.ShowPosition;
+            menuItem_showpos.Checked = mapcontrol.ShowPosition;
         }
 
 

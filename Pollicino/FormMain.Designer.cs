@@ -65,6 +65,7 @@ namespace MapperTool
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem_map_osm = new System.Windows.Forms.MenuItem();
             this.menuItem_map_gmaps = new System.Windows.Forms.MenuItem();
+            this.menuItem_showpos = new System.Windows.Forms.MenuItem();
             this.menuItem_followGPS = new System.Windows.Forms.MenuItem();
             this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
@@ -156,6 +157,7 @@ namespace MapperTool
             // menuItem2
             // 
             this.menuItem2.MenuItems.Add(this.menuItem3);
+            this.menuItem2.MenuItems.Add(this.menuItem_showpos);
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
@@ -177,6 +179,11 @@ namespace MapperTool
             // 
             this.menuItem_map_gmaps.Text = "GMaps";
             this.menuItem_map_gmaps.Click += new System.EventHandler(this.menuItem_map_gmaps_Click);
+            // 
+            // menuItem_showpos
+            // 
+            this.menuItem_showpos.Text = "Show position";
+            this.menuItem_showpos.Click += new System.EventHandler(this.menuItem_showpos_Click);
             // 
             // menuItem_followGPS
             // 
@@ -248,6 +255,7 @@ namespace MapperTool
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
             this.mapcontrol.Name = "mapcontrol";
+            this.mapcontrol.ShowPosition = false;
             this.mapcontrol.Size = new System.Drawing.Size(240, 256);
             this.mapcontrol.TabIndex = 0;
             this.mapcontrol.Zoom = ((uint)(0u));
@@ -330,6 +338,7 @@ namespace MapperTool
         private System.Windows.Forms.MenuItem menuItem_savegpx;
         private System.Windows.Forms.MenuItem menuItem_autodownload;
         private GPXControl gpxControl1;
+        private System.Windows.Forms.MenuItem menuItem_showpos;
 
 
 
