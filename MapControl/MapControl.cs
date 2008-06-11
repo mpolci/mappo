@@ -51,6 +51,7 @@ namespace MapsLibrary
 
         public MapControl()
         {
+            map = null;
             InitializeComponent();
             uZoom = 0;
             pgpCenter = new ProjectedGeoPoint();
@@ -161,14 +162,22 @@ namespace MapsLibrary
         {
             get
             {
-                PxCoordinates c1, c2;
-                c1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom);
-                c1.xpx -= this.Size.Width / 2;
-                c1.ypx -= this.Size.Height / 2;
-                c2 = c1;
-                c2.xpx += this.Size.Width;
-                c2.ypx += this.Size.Height;
-                return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
+                if (map == null)
+                {
+                    ProjectedGeoPoint zero = new ProjectedGeoPoint(0, 0);
+                    return new ProjectedGeoArea(zero, zero);
+                }
+                else
+                {
+                    PxCoordinates c1, c2;
+                    c1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom);
+                    c1.xpx -= this.Size.Width / 2;
+                    c1.ypx -= this.Size.Height / 2;
+                    c2 = c1;
+                    c2.xpx += this.Size.Width;
+                    c2.ypx += this.Size.Height;
+                    return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
+                }
             }
         }
 

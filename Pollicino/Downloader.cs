@@ -41,7 +41,9 @@ namespace MapperTool
         bool runthread;
         Thread thr;
 
-        public Downloader()
+        WorkNotifier notifier;
+
+        public Downloader(WorkNotifier wnotifier)
         {
             q = new Queue<AreaMapItem>();
             thr = new Thread(new ThreadStart(this.threadproc));
@@ -49,6 +51,7 @@ namespace MapperTool
             thr.Name = "Map Downloader Thread";
             runthread = false;
             mre = new ManualResetEvent(false);
+            notifier = wnotifier;
         }
 
         public void startThread()
@@ -76,6 +79,7 @@ namespace MapperTool
             while (runthread)
             {
                 mre.WaitOne();
+                notifier.WorkBegin();
                 while (q.Count > 0 && runthread)
                 {
                     #if DEBUG
@@ -96,6 +100,7 @@ namespace MapperTool
                         #endif
                     }
                 }
+                notifier.WorkEnd();
                 mre.Reset();
             }
         }

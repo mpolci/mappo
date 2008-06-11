@@ -16,12 +16,12 @@
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Struct Name="NMEA2GPX.GPXGenerator.track" Collapsed="true">
+      <Class Name="NMEA2GPX.GPXGenerator.Link" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
-      </Struct>
-      <Struct Name="NMEA2GPX.GPXGenerator.trkpt" Collapsed="true">
+      </Class>
+      <Struct Name="NMEA2GPX.GPXGenerator.track" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -62,13 +62,13 @@
   <Class Name="MapperTool.ApplicationResources" Collapsed="true">
     <Position X="7" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAQAAAAAAAAAAAABEAAAAQAAAAAAAAQAIAAAAIA=</HashCode>
+      <HashCode>AAAAAAQAABAAAAAAAAABEAAAAQAAAAAAAAQAIAAAAIA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="MapperTool.Form_MapperToolMain">
     <Position X="11.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>CMACGC8wKCwAADKCKQCQggACAQbEGEkAgCoAAIFAIAI=</HashCode>
+      <HashCode>KMACGC8QISwABJKGQQCQgwACAYbGWEkEwCoAAIBBACI=</HashCode>
       <FileName>FormMain.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -82,7 +82,7 @@
   <Class Name="MapperTool.FormOptions">
     <Position X="9" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>MACACGgEUiAAYhAAIACAwAQCAKAAEQAoABIUAAACBAA=</HashCode>
+      <HashCode>MACASGgEViAAUhAAICCAkAQCAKAAUQAoABAUAAgCBUA=</HashCode>
       <FileName>FormOptions.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -101,7 +101,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAhEAACBIAAggIACAAgISAAIgAAECAAEQAAAAAAA=</HashCode>
+      <HashCode>AAAAAhEAACBIAAggIACAAgISAAIgAAECAAEQAAAAAAQ=</HashCode>
       <FileName>GPSControl.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -123,6 +123,27 @@
     <Position X="7" Y="1.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAEAAAAAEAAAAQAAAAAgAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.Downloader">
+    <Position X="7" Y="2.75" Width="1.75" />
+    <NestedTypes>
+      <Struct Name="MapperTool.Downloader.AreaMapItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Downloader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAIABAAAAAAAAAAAAgAEAQAACAAAAgAAAA=</HashCode>
+      <FileName>Downloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTool.BlinkingImageControl">
+    <Position X="4.5" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAKgAAAAAAACBAgACAAAAABAAAAAAAEAEAAA=</HashCode>
+      <FileName>BlinkingImageControl.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Tahoma" Size="8.25" />

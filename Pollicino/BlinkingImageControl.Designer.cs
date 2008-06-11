@@ -1,6 +1,6 @@
 ﻿namespace MapperTool
 {
-    partial class GPXControl
+    partial class BlinkingImageControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,38 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label_gpx = new System.Windows.Forms.Label();
+            this.picture = new System.Windows.Forms.PictureBox();
             this.timerBlinking = new System.Windows.Forms.Timer();
             this.SuspendLayout();
             // 
-            // label_gpx
+            // picture
             // 
-            this.label_gpx.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label_gpx.Location = new System.Drawing.Point(0, 0);
-            this.label_gpx.Name = "label_gpx";
-            this.label_gpx.Size = new System.Drawing.Size(32, 17);
-            this.label_gpx.Text = "GPX";
+            this.picture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picture.Location = new System.Drawing.Point(0, 0);
+            this.picture.Name = "picture";
+            this.picture.Size = new System.Drawing.Size(150, 150);
             // 
             // timerBlinking
             // 
-            this.timerBlinking.Interval = 400;
             this.timerBlinking.Tick += new System.EventHandler(this.timerBlinking_Tick);
             // 
-            // GPXControl
+            // BlinkingImageControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.label_gpx);
-            this.Name = "GPXControl";
-            this.Size = new System.Drawing.Size(46, 27);
+            this.Controls.Add(this.picture);
+            this.Name = "BlinkingImageControl";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label_gpx;
+        private System.Windows.Forms.PictureBox picture;
         private System.Windows.Forms.Timer timerBlinking;
     }
 }

@@ -28,6 +28,7 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
+using OpenNETCF.Windows.Forms;
 //using System.Runtime.InteropServices;
 
 
@@ -106,7 +107,7 @@ namespace MapperTool
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
             // thread per il download automatico delle mappe
-            downloader = new Downloader();
+            downloader = new Downloader(new BlinkingImageNotifier(this.blinkimg_download));
             downloader.startThread();
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
@@ -431,8 +432,17 @@ namespace MapperTool
             }
         }
 
+        static DateTime lastkeytime = DateTime.MinValue;
+
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
         {
+            // deve passare un tempo minimo fra un tasto e l'altro, altrimenti ignora il tasto
+            DateTime now = DateTime.Now;
+            TimeSpan intervalFromLast = now - lastkeytime;
+            lastkeytime = now;
+            if (intervalFromLast.TotalMilliseconds < 250)
+                return;
+ 
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
                 // Up

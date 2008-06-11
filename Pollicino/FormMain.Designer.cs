@@ -48,6 +48,7 @@ namespace MapperTool
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_MapperToolMain));
             this.mainMenu = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomin = new System.Windows.Forms.MenuItem();
@@ -74,6 +75,9 @@ namespace MapperTool
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTool.GPSControl();
             this.gpxControl1 = new MapperTool.GPXControl();
+            this.blinkimg_download = new MapperTool.BlinkingImageControl();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -192,19 +196,19 @@ namespace MapperTool
             // label1
             // 
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label1.Location = new System.Drawing.Point(193, 256);
+            this.label1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label1.Location = new System.Drawing.Point(187, 252);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 12);
+            this.label1.Size = new System.Drawing.Size(36, 16);
             this.label1.Text = "Zoom:";
             // 
             // label_zoom
             // 
             this.label_zoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label_zoom.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.label_zoom.Location = new System.Drawing.Point(224, 256);
+            this.label_zoom.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label_zoom.Location = new System.Drawing.Point(223, 252);
             this.label_zoom.Name = "label_zoom";
-            this.label_zoom.Size = new System.Drawing.Size(17, 12);
+            this.label_zoom.Size = new System.Drawing.Size(17, 16);
             this.label_zoom.Text = "14";
             // 
             // mapcontrol
@@ -213,7 +217,7 @@ namespace MapperTool
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
             this.mapcontrol.Name = "mapcontrol";
             this.mapcontrol.ShowPosition = false;
-            this.mapcontrol.Size = new System.Drawing.Size(240, 256);
+            this.mapcontrol.Size = new System.Drawing.Size(240, 268);
             this.mapcontrol.TabIndex = 0;
             this.mapcontrol.Zoom = ((uint)(0u));
             this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
@@ -226,27 +230,48 @@ namespace MapperTool
             // gpsControl
             // 
             this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.gpsControl.Location = new System.Drawing.Point(138, 256);
+            this.gpsControl.Location = new System.Drawing.Point(22, 0);
             this.gpsControl.Name = "gpsControl";
             this.gpsControl.Size = new System.Drawing.Size(12, 12);
             this.gpsControl.TabIndex = 7;
             // 
             // gpxControl1
             // 
-            this.gpxControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.gpxControl1.BackColor = System.Drawing.Color.White;
             this.gpxControl1.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.gpxControl1.Location = new System.Drawing.Point(158, 256);
+            this.gpxControl1.Location = new System.Drawing.Point(40, 0);
             this.gpxControl1.Name = "gpxControl1";
             this.gpxControl1.Size = new System.Drawing.Size(30, 12);
             this.gpxControl1.TabIndex = 14;
+            this.gpxControl1.Visible = false;
+            // 
+            // blinkimg_download
+            // 
+            this.blinkimg_download.BackColor = System.Drawing.Color.White;
+            this.blinkimg_download.Blink = false;
+            this.blinkimg_download.BlinkingInterval = 400;
+            this.blinkimg_download.Image = ((System.Drawing.Image)(resources.GetObject("blinkimg_download.Image")));
+            this.blinkimg_download.Location = new System.Drawing.Point(0, 0);
+            this.blinkimg_download.Name = "blinkimg_download";
+            this.blinkimg_download.Size = new System.Drawing.Size(16, 16);
+            this.blinkimg_download.TabIndex = 17;
+            this.blinkimg_download.VisibleOnStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.blinkimg_download);
+            this.panel1.Controls.Add(this.gpxControl1);
+            this.panel1.Controls.Add(this.gpsControl);
+            this.panel1.Location = new System.Drawing.Point(112, 252);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(75, 16);
             // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
-            this.Controls.Add(this.gpxControl1);
-            this.Controls.Add(this.gpsControl);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
             this.Controls.Add(this.mapcontrol);
@@ -256,6 +281,7 @@ namespace MapperTool
             this.Text = "Pollicino";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form_MapperToolMain_Closing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -287,6 +313,8 @@ namespace MapperTool
         private System.Windows.Forms.MenuItem menuItem_autodownload;
         private GPXControl gpxControl1;
         private System.Windows.Forms.MenuItem menuItem_showpos;
+        private BlinkingImageControl blinkimg_download;
+        private System.Windows.Forms.Panel panel1;
 
 
 
