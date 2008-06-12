@@ -71,11 +71,11 @@
       <DependentUpon>ApplicationResources.resx</DependentUpon>
     </Compile>
     <Compile Include="AudioRecorder.cs" />
-    <Compile Include="BlinkingImageControl.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="BlinkingControlNotifier.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="BlinkingImageControl.Designer.cs">
-      <DependentUpon>BlinkingImageControl.cs</DependentUpon>
+    <Compile Include="BlinkingControlNotifier.Designer.cs">
+      <DependentUpon>BlinkingControlNotifier.cs</DependentUpon>
     </Compile>
     <Compile Include="Downloader.cs" />
     <Compile Include="FormMain.cs">
@@ -103,12 +103,13 @@
     <Compile Include="GPSControl.Designer.cs">
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPXControl.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="GPXSaver.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GPXControl.Designer.cs">
-      <DependentUpon>GPXControl.cs</DependentUpon>
+    <Compile Include="GPXSaver.Designer.cs">
+      <DependentUpon>GPXSaver.cs</DependentUpon>
     </Compile>
+    <Compile Include="interfaces.cs" />
     <Compile Include="Waypoint.cs" />
     <Compile Include="NmeaToGpx.cs" />
     <Compile Include="Program.cs" />
@@ -118,8 +119,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ApplicationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="BlinkingImageControl.resx">
-      <DependentUpon>BlinkingImageControl.cs</DependentUpon>
+    <EmbeddedResource Include="BlinkingControlNotifier.resx">
+      <DependentUpon>BlinkingControlNotifier.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
@@ -136,10 +137,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GPSControl.resx">
       <DependentUpon>GPSControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GPXControl.resx">
-      <DependentUpon>GPXControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

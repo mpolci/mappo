@@ -1,27 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
 using System.IO;
-using NMEA2GPX;
 
 namespace MapperTool
 {
-    public partial class GPXControl : UserControl
+    public partial class GPXSaver : Component
     {
+        public GPXSaver()
+        {
+            InitializeComponent();
+        }
+
+        public GPXSaver(IContainer container)
+        {
+            container.Add(this);
+
+            InitializeComponent();
+        }
+
+        IWorkNotifier _notifier;
+        public IWorkNotifier Notifier
+        {
+            get { return _notifier; }
+            set { _notifier = value; }  // cambiare in esecuzione è un problema, CORREGGERE!
+        }
+
         private class ConvertWork
         {
-            private delegate void InvokeDelegate();
-            GPXControl gpxcontrol_owner;
+            //private delegate void InvokeDelegate();
+            IWorkNotifier notifier;
             string logfilename;
 
-            public ConvertWork(GPXControl owner, string log)
+            public ConvertWork(IWorkNotifier worknotifier, string log)
             {
-                gpxcontrol_owner = owner;
+                notifier = worknotifier;
                 logfilename = log;
             }
 
@@ -36,7 +52,8 @@ namespace MapperTool
                     return;
                 }
 
-                gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_begin));
+                //gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_begin));
+                if (notifier != null) notifier.WorkBegin();
 
                 // la directory di output si chiama come file di log tolta l'estensione ".txt"
                 outdir = (logfilename.EndsWith(".txt")) ? logfilename.Substring(0, logfilename.Length - 4) : logfilename;
@@ -54,25 +71,15 @@ namespace MapperTool
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.WriteLine("\n---- GPXJob(" + logfilename + ")\n" + ex.ToString() + "\n----\n");
-                    MessageBox.Show("Error converting log to GPX: " + Path.GetFileName(logfilename));
+                    System.Windows.Forms.MessageBox.Show("Error converting log to GPX: " + Path.GetFileName(logfilename));
                 }
 
-                gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_end));
+                //gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_end));
+                if (notifier != null) notifier.WorkEnd();
             }
 
         }
         
-        private object lockBlink;
-        private int blink;
-
-        public GPXControl()
-        {
-            InitializeComponent();
-            lockBlink = new object();
-            blink = 0;
-            label_gpx.Visible = false;
-        }
-
         public void ParseLogsDir(string dir)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(this.parsedirJob), dir);
@@ -96,45 +103,11 @@ namespace MapperTool
         public void SaveGPX(string logfilename)
         {
             //ThreadPool.QueueUserWorkItem(new WaitCallback(this.GPXJob), logfilename);
-            ConvertWork work = new ConvertWork(this, logfilename);
+            ConvertWork work = new ConvertWork(_notifier, logfilename);
             Thread gpxthr = new Thread(new ThreadStart(work.GPXJob));
             gpxthr.Priority = ThreadPriority.Lowest;
             gpxthr.Name = "GPX Converter Thread";
             gpxthr.Start();
         }
-
-
-        #region Gestione dell'etichetta lampeggiante...
-
-        public void job_begin()
-        {
-            lock (lockBlink)
-            {
-                if (blink == 0)
-                    this.timerBlinking.Enabled = true;
-                blink++;
-            }
-        }
-
-        public void job_end()
-        {
-            lock (lockBlink)
-            {
-                System.Diagnostics.Trace.Assert(blink > 0, "job_end(): blink is not greather than 0");
-                blink--;
-                if (blink == 0)
-                {
-                    this.timerBlinking.Enabled = false;
-                    this.label_gpx.Visible = false;
-                }
-            }
-        }
-
-        private void timerBlinking_Tick(object sender, EventArgs e)
-        {
-            this.label_gpx.Visible = !this.label_gpx.Visible;
-        }
-
-        #endregion
     }
 }

@@ -41,9 +41,9 @@ namespace MapperTool
         bool runthread;
         Thread thr;
 
-        WorkNotifier notifier;
+        IWorkNotifier notifier;
 
-        public Downloader(WorkNotifier wnotifier)
+        public Downloader(IWorkNotifier wnotifier)
         {
             q = new Queue<AreaMapItem>();
             thr = new Thread(new ThreadStart(this.threadproc));

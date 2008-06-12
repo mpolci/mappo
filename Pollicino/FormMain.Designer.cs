@@ -48,6 +48,7 @@ namespace MapperTool
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_MapperToolMain));
             this.mainMenu = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -74,9 +75,13 @@ namespace MapperTool
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTool.GPSControl();
-            this.gpxControl1 = new MapperTool.GPXControl();
-            this.blinkimg_download = new MapperTool.BlinkingImageControl();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label_gpx = new System.Windows.Forms.Label();
+            this.pb_DownloaderActivity = new System.Windows.Forms.PictureBox();
+            this.blinkcnDownloader = new MapperTool.BlinkingControlNotifier(this.components);
+            this.blinkcnGPX = new MapperTool.BlinkingControlNotifier(this.components);
+            this.gpx_saver = new MapperTool.GPXSaver(this.components);
+            this.gpxSaver1 = new MapperTool.GPXSaver(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -230,41 +235,46 @@ namespace MapperTool
             // gpsControl
             // 
             this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.gpsControl.Location = new System.Drawing.Point(22, 0);
+            this.gpsControl.Location = new System.Drawing.Point(4, 3);
             this.gpsControl.Name = "gpsControl";
             this.gpsControl.Size = new System.Drawing.Size(12, 12);
             this.gpsControl.TabIndex = 7;
             // 
-            // gpxControl1
-            // 
-            this.gpxControl1.BackColor = System.Drawing.Color.White;
-            this.gpxControl1.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular);
-            this.gpxControl1.Location = new System.Drawing.Point(40, 0);
-            this.gpxControl1.Name = "gpxControl1";
-            this.gpxControl1.Size = new System.Drawing.Size(30, 12);
-            this.gpxControl1.TabIndex = 14;
-            this.gpxControl1.Visible = false;
-            // 
-            // blinkimg_download
-            // 
-            this.blinkimg_download.BackColor = System.Drawing.Color.White;
-            this.blinkimg_download.Blink = false;
-            this.blinkimg_download.BlinkingInterval = 400;
-            this.blinkimg_download.Image = ((System.Drawing.Image)(resources.GetObject("blinkimg_download.Image")));
-            this.blinkimg_download.Location = new System.Drawing.Point(0, 0);
-            this.blinkimg_download.Name = "blinkimg_download";
-            this.blinkimg_download.Size = new System.Drawing.Size(16, 16);
-            this.blinkimg_download.TabIndex = 17;
-            this.blinkimg_download.VisibleOnStop = false;
-            // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.blinkimg_download);
-            this.panel1.Controls.Add(this.gpxControl1);
+            this.panel1.Controls.Add(this.label_gpx);
+            this.panel1.Controls.Add(this.pb_DownloaderActivity);
             this.panel1.Controls.Add(this.gpsControl);
-            this.panel1.Location = new System.Drawing.Point(112, 252);
+            this.panel1.Location = new System.Drawing.Point(118, 252);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(75, 16);
+            this.panel1.Size = new System.Drawing.Size(69, 16);
+            // 
+            // label_gpx
+            // 
+            this.label_gpx.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label_gpx.Location = new System.Drawing.Point(36, 0);
+            this.label_gpx.Name = "label_gpx";
+            this.label_gpx.Size = new System.Drawing.Size(32, 16);
+            this.label_gpx.Text = "GPX";
+            this.label_gpx.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pb_DownloaderActivity
+            // 
+            this.pb_DownloaderActivity.Image = ((System.Drawing.Image)(resources.GetObject("pb_DownloaderActivity.Image")));
+            this.pb_DownloaderActivity.Location = new System.Drawing.Point(19, 0);
+            this.pb_DownloaderActivity.Name = "pb_DownloaderActivity";
+            this.pb_DownloaderActivity.Size = new System.Drawing.Size(16, 16);
+            // 
+            // blinkcnDownloader
+            // 
+            this.blinkcnDownloader.BlinkingControl = this.pb_DownloaderActivity;
+            this.blinkcnDownloader.BlinkingInterval = 400;
+            // 
+            // blinkcnGPX
+            // 
+            this.blinkcnGPX.BlinkingControl = this.label_gpx;
+            this.blinkcnGPX.BlinkingInterval = 500;
+            this.blinkcnGPX.VisibleOnStop = false;
             // 
             // Form_MapperToolMain
             // 
@@ -311,10 +321,14 @@ namespace MapperTool
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
         private System.Windows.Forms.MenuItem menuItem_autodownload;
-        private GPXControl gpxControl1;
         private System.Windows.Forms.MenuItem menuItem_showpos;
-        private BlinkingImageControl blinkimg_download;
         private System.Windows.Forms.Panel panel1;
+        private BlinkingControlNotifier blinkcnDownloader;
+        private System.Windows.Forms.PictureBox pb_DownloaderActivity;
+        private System.Windows.Forms.Label label_gpx;
+        private BlinkingControlNotifier blinkcnGPX;
+        private GPXSaver gpx_saver;
+        private GPXSaver gpxSaver1;
 
 
 

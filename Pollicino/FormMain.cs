@@ -77,6 +77,8 @@ namespace MapperTool
             notify_icon.Icon = ApplicationResources.Map;
             notify_icon.Visible = true;
             notify_icon.Click += new EventHandler(this.notify_icon_click);
+
+            gpx_saver.Notifier = blinkcnGPX;
             
             // carica le opzioni dal file di configurazione
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
@@ -107,7 +109,7 @@ namespace MapperTool
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
             // thread per il download automatico delle mappe
-            downloader = new Downloader(new BlinkingImageNotifier(this.blinkimg_download));
+            downloader = new Downloader(this.blinkcnDownloader);
             downloader.startThread();
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
@@ -143,7 +145,7 @@ namespace MapperTool
 
             // processa eventuali file di log che non sono ancora stati convertiti in GPX
             if (Directory.Exists(options.GPS.LogsDir)) 
-                gpxControl1.ParseLogsDir(options.GPS.LogsDir);
+                gpx_saver.ParseLogsDir(options.GPS.LogsDir);
         
         }
 
@@ -306,7 +308,7 @@ namespace MapperTool
             else
             {
                 string logfile = gpsControl.stop();
-                gpxControl1.SaveGPX(logfile);
+                gpx_saver.SaveGPX(logfile);
                 this.menuItem_gpsactivity.Text = "start GPS";
             }
         }
