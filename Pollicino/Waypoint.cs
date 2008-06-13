@@ -50,7 +50,12 @@ namespace MapperTool
 
         public static string AudioRecFile(string nmea_log_name, DateTime wptime)
         {
-            return AudioRecDir(nmea_log_name) + wptime.ToString(DateOnFilenameFormat) + ".wav";
+            return DataDir(nmea_log_name) + wptime.ToString(DateOnFilenameFormat) + ".wav";
+        }
+
+        public static string PictureFile(string nmea_log_name, DateTime wptime)
+        {
+            return DataDir(nmea_log_name) + wptime.ToString(DateOnFilenameFormat) + ".jpg";
         }
 
         public static string AudioRecFileLink(string nmea_log_name, DateTime wptime)
@@ -60,7 +65,14 @@ namespace MapperTool
             return AudioRecFile(logname, wptime);
         }
 
-        public static string AudioRecDir(string nmea_log_name)
+        public static string PictureFileLink(string nmea_log_name, DateTime wptime)
+        {
+            // rimuove il path dal nome del log
+            string logname = (new System.IO.FileInfo(nmea_log_name)).Name;
+            return PictureFile(logname, wptime);
+        }
+
+        public static string DataDir(string nmea_log_name)
         {
             return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')) + '\\';
         }

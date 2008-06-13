@@ -72,16 +72,24 @@ namespace NMEA2GPX
                             // time & audio
                             try
                             {
-                                DateTime wptime = WaypointNames.DecodeWPName(w.name);
+                                DateTime wptime = WaypointNames.DecodeWPName(w.name); // può lanciare un'eccezione
                                 // check for audio record
                                 string recname = WaypointNames.AudioRecFile(nmea_input, wptime);
                                 if (File.Exists(recname))
                                     w.link = new Link(WaypointNames.AudioRecFileLink(nmea_input, wptime));
-                                else // because of a josm bug, insert time only if an audio link doesn't exists
+                                else
+                                {
+                                    // because of a josm bug, time is inserted only if an audio link doesn't exists
                                     w.time = wptime;
-
+                                    string imagename = WaypointNames.PictureFile(nmea_input, wptime);
+                                    if (File.Exists(imagename))
+                                        w.link = new Link(WaypointNames.PictureFileLink(nmea_input, wptime));
+                                }
                             }
-                            catch (Exception) { }
+                            catch (Exception)
+                            {
+                                System.Diagnostics.Trace.WriteLine("Invalid waypoint name: " + w.name);
+                            }
 
                             gpxdata.wpt.Add(w);
                             break;

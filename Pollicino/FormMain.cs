@@ -29,6 +29,8 @@ using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
 using OpenNETCF.Windows.Forms;
+using Microsoft.WindowsMobile.Forms;
+using Microsoft.WindowsCE.Forms;
 //using System.Runtime.InteropServices;
 
 
@@ -41,6 +43,8 @@ namespace MapperTool
 
 //        [DllImport("coredll")]
 //        extern static void SystemIdleTimerReset();
+
+        private DateTime activatedTime = DateTime.MinValue;
 
         SoundPlayer wpt_sound;
         AudioRecorder wpt_recorder;
@@ -286,6 +290,18 @@ namespace MapperTool
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
         }
 
+        private void menuItem_showpos_Click(object sender, EventArgs e)
+        {
+            mapcontrol.ShowPosition = !mapcontrol.ShowPosition;
+            menuItem_showpos.Checked = mapcontrol.ShowPosition;
+        }
+
+        private void menuItem_photo_Click(object sender, EventArgs e)
+        {
+            action_takephoto();
+        }
+
+
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
             if (!this.gpsControl.Started)
@@ -425,7 +441,7 @@ namespace MapperTool
                 waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
                 if (options.Application.WaypointRecordAudio)
                 {
-                    string recdir = WaypointNames.AudioRecDir(logname),
+                    string recdir = WaypointNames.DataDir(logname),
                            recfilename = WaypointNames.AudioRecFile(logname, gpsdata.fixtime);
                     if (!Directory.Exists(recdir))
                         Directory.CreateDirectory(recdir);
@@ -434,7 +450,33 @@ namespace MapperTool
             }
         }
 
-        static DateTime lastkeytime = DateTime.MinValue;
+        private void action_takephoto()
+        {
+            if (gpsControl.Started)
+            {
+                System.Diagnostics.Debug.Assert(logname != null, "action_takephoto() - No log file");
+                string outdir = WaypointNames.DataDir(this.logname);
+                if (!Directory.Exists(outdir))
+                    Directory.CreateDirectory(outdir);
+
+                using (CameraCaptureDialog cameraCapture = new CameraCaptureDialog())
+                {
+                    cameraCapture.Owner = this;
+                    cameraCapture.InitialDirectory = outdir;
+                    cameraCapture.DefaultFileName = "temp.jpg";
+                    cameraCapture.Title = "Waypoint photo";
+                    //cameraCapture.Resolution = new Size(176, 144);
+                    cameraCapture.Mode = CameraCaptureMode.Still;
+                    if (cameraCapture.ShowDialog() == DialogResult.OK) {
+                        GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
+                        File.Move(cameraCapture.FileName, WaypointNames.PictureFile(this.logname, gpsdata.fixtime));
+                    }
+                }
+            }
+        }
+
+
+        DateTime lastkeytime = DateTime.MinValue;
 
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
         {
@@ -442,7 +484,7 @@ namespace MapperTool
             DateTime now = DateTime.Now;
             TimeSpan intervalFromLast = now - lastkeytime;
             lastkeytime = now;
-            if (intervalFromLast.TotalMilliseconds < 250)
+            if (intervalFromLast.TotalMilliseconds < 150)
                 return;
  
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
@@ -470,7 +512,15 @@ namespace MapperTool
                 // Enter
                 action_CreateWaypoint();
             }
-
+            if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
+            {
+                // se il tasto è stato premuto a meno di 1 secondo dall'attivazione probabilmente è stato
+                // la causa stessa dell'attivazione quindi non scatto la foto
+                TimeSpan timefromactivation = DateTime.Now - activatedTime;
+                System.Diagnostics.Debug.WriteLine("--- HardwareKey pressed - activation time: " + timefromactivation);
+                if (timefromactivation.TotalSeconds > 1) 
+                    action_takephoto();
+            }
         }
 
         private void notify_icon_click(object obj, EventArgs args)
@@ -489,12 +539,10 @@ namespace MapperTool
             options.SaveToFile(this.configfile);
         }
 
-        private void menuItem_showpos_Click(object sender, EventArgs e)
+        private void Form_MapperToolMain_Activated(object sender, EventArgs e)
         {
-            mapcontrol.ShowPosition = !mapcontrol.ShowPosition;
-            menuItem_showpos.Checked = mapcontrol.ShowPosition;
+            activatedTime = DateTime.Now;
         }
-
 
     }
 }

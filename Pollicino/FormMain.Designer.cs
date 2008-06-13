@@ -56,6 +56,7 @@ namespace MapperTool
             this.menuItem_zoomout = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
+            this.menuItem_photo = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
@@ -82,6 +83,7 @@ namespace MapperTool
             this.blinkcnGPX = new MapperTool.BlinkingControlNotifier(this.components);
             this.gpx_saver = new MapperTool.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTool.GPXSaver(this.components);
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,6 +98,7 @@ namespace MapperTool
             this.menuItem1.MenuItems.Add(this.menuItem_zoomout);
             this.menuItem1.MenuItems.Add(this.menuItem5);
             this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
+            this.menuItem1.MenuItems.Add(this.menuItem_photo);
             this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
             this.menuItem1.MenuItems.Add(this.menuItem4);
             this.menuItem1.MenuItems.Add(this.menuItem_exit);
@@ -119,6 +122,11 @@ namespace MapperTool
             // 
             this.menuItem_waypoint.Text = "Mark waypoint";
             this.menuItem_waypoint.Click += new System.EventHandler(this.menuItem_waypoint_Click);
+            // 
+            // menuItem_photo
+            // 
+            this.menuItem_photo.Text = "Take photo...";
+            this.menuItem_photo.Click += new System.EventHandler(this.menuItem_photo_Click);
             // 
             // menuItem_gpsactivity
             // 
@@ -276,6 +284,10 @@ namespace MapperTool
             this.blinkcnGPX.BlinkingInterval = 500;
             this.blinkcnGPX.VisibleOnStop = false;
             // 
+            // menuItem6
+            // 
+            this.menuItem6.Text = "Take photo...";
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -289,6 +301,7 @@ namespace MapperTool
             this.Menu = this.mainMenu;
             this.Name = "Form_MapperToolMain";
             this.Text = "Pollicino";
+            this.Activated += new System.EventHandler(this.Form_MapperToolMain_Activated);
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form_MapperToolMain_Closing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
             this.panel1.ResumeLayout(false);
@@ -329,6 +342,8 @@ namespace MapperTool
         private BlinkingControlNotifier blinkcnGPX;
         private GPXSaver gpx_saver;
         private GPXSaver gpxSaver1;
+        private System.Windows.Forms.MenuItem menuItem_photo;
+        private System.Windows.Forms.MenuItem menuItem6;
 
 
 
