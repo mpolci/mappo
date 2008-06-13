@@ -71,6 +71,7 @@ namespace MapperTool
             this.menuItem_followGPS = new System.Windows.Forms.MenuItem();
             this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
+            this.menuItem_fullscreen = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
@@ -84,6 +85,7 @@ namespace MapperTool
             this.gpx_saver = new MapperTool.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTool.GPXSaver(this.components);
             this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -167,6 +169,7 @@ namespace MapperTool
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
+            this.menuItem2.MenuItems.Add(this.menuItem_fullscreen);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -206,8 +209,14 @@ namespace MapperTool
             this.menuItem_config.Text = "Configuration...";
             this.menuItem_config.Click += new System.EventHandler(this.menuItem_config_Click);
             // 
+            // menuItem_fullscreen
+            // 
+            this.menuItem_fullscreen.Text = "Full screen";
+            this.menuItem_fullscreen.Click += new System.EventHandler(this.menuItem_fullscreen_Click);
+            // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.label1.Location = new System.Drawing.Point(187, 252);
@@ -217,6 +226,7 @@ namespace MapperTool
             // 
             // label_zoom
             // 
+            this.label_zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label_zoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label_zoom.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.label_zoom.Location = new System.Drawing.Point(223, 252);
@@ -227,6 +237,7 @@ namespace MapperTool
             // mapcontrol
             // 
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
             this.mapcontrol.Name = "mapcontrol";
             this.mapcontrol.ShowPosition = false;
@@ -250,6 +261,7 @@ namespace MapperTool
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.label_gpx);
             this.panel1.Controls.Add(this.pb_DownloaderActivity);
             this.panel1.Controls.Add(this.gpsControl);
@@ -287,6 +299,10 @@ namespace MapperTool
             // menuItem6
             // 
             this.menuItem6.Text = "Take photo...";
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Text = "Full screen";
             // 
             // Form_MapperToolMain
             // 
@@ -344,6 +360,8 @@ namespace MapperTool
         private GPXSaver gpxSaver1;
         private System.Windows.Forms.MenuItem menuItem_photo;
         private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem_fullscreen;
+        private System.Windows.Forms.MenuItem menuItem7;
 
 
 

@@ -61,16 +61,23 @@ namespace MapperTool
             // 
             // tb_Dir
             // 
+            this.tb_Dir.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tb_Dir.Location = new System.Drawing.Point(3, 3);
             this.tb_Dir.Name = "tb_Dir";
             this.tb_Dir.ReadOnly = true;
             this.tb_Dir.Size = new System.Drawing.Size(234, 21);
-            this.tb_Dir.TabIndex = 1;
+            this.tb_Dir.TabIndex = 2;
+            this.tb_Dir.TabStop = false;
             this.tb_Dir.Text = "\\";
             // 
             // lw_dircontent
             // 
             this.lw_dircontent.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.lw_dircontent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             listViewItem1.ImageIndex = 0;
             listViewItem1.Text = "pippo";
             listViewItem1.SubItems.Add("sub1");
@@ -88,7 +95,7 @@ namespace MapperTool
             this.lw_dircontent.Name = "lw_dircontent";
             this.lw_dircontent.Size = new System.Drawing.Size(234, 235);
             this.lw_dircontent.SmallImageList = this.imglist_Icons;
-            this.lw_dircontent.TabIndex = 2;
+            this.lw_dircontent.TabIndex = 1;
             this.lw_dircontent.View = System.Windows.Forms.View.List;
             this.lw_dircontent.ItemActivate += new System.EventHandler(this.lw_dircontent_ItemActivate);
             this.imglist_Icons.Images.Clear();

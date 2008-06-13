@@ -544,5 +544,16 @@ namespace MapperTool
             activatedTime = DateTime.Now;
         }
 
+        private void menuItem_fullscreen_Click(object sender, EventArgs e)
+        {
+            action_fullscreenswitch();
+        }
+
+        private void action_fullscreenswitch()
+        {
+            menuItem_fullscreen.Checked = !menuItem_fullscreen.Checked;
+            this.WindowState = menuItem_fullscreen.Checked ? FormWindowState.Maximized : FormWindowState.Normal;
+        }
+
     }
 }

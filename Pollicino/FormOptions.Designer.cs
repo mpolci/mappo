@@ -95,6 +95,7 @@ namespace MapperTool
             this.tabControl1.Controls.Add(this.tabPage_GPS);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -103,6 +104,7 @@ namespace MapperTool
             // 
             // tabPage_GPS
             // 
+            this.tabPage_GPS.AutoScroll = true;
             this.tabPage_GPS.Controls.Add(this.button_gpslogpath);
             this.tabPage_GPS.Controls.Add(this.tb_GPSLogPath);
             this.tabPage_GPS.Controls.Add(this.label8);
@@ -203,6 +205,7 @@ namespace MapperTool
             // 
             // tabPage2
             // 
+            this.tabPage2.AutoScroll = true;
             this.tabPage2.Controls.Add(this.combo_TileServer);
             this.tabPage2.Controls.Add(this.button_emptytilescache);
             this.tabPage2.Controls.Add(this.button_GMapsCacheDir);
@@ -322,6 +325,7 @@ namespace MapperTool
             // 
             // tabPage3
             // 
+            this.tabPage3.AutoScroll = true;
             this.tabPage3.Controls.Add(this.combo_RecFormat);
             this.tabPage3.Controls.Add(this.label11);
             this.tabPage3.Controls.Add(this.num_RecDeviceId);
@@ -334,7 +338,7 @@ namespace MapperTool
             this.tabPage3.Controls.Add(this.cb_waypointsound);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 242);
+            this.tabPage3.Size = new System.Drawing.Size(240, 245);
             this.tabPage3.Text = "Interface";
             // 
             // combo_RecFormat
