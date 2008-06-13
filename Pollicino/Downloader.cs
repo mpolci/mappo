@@ -88,8 +88,9 @@ namespace MapperTool
                     count++;
                     #endif
                     AreaMapItem item;
-                    lock (q) 
-                        item = q.Dequeue();
+                    lock (q)
+                        //item = q.Dequeue();
+                        item = q.Pop();
                     try
                     {
                         item.map.DownloadMapArea(item.area, item.zoom);
