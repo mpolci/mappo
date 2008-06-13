@@ -35,7 +35,8 @@ namespace MapperTool
             public AreaMapItem(IDownloadableMap m, ProjectedGeoArea a, uint z) { map = m; area = a; zoom = z; }
         }
 
-        private Queue<AreaMapItem> q;
+        //private Queue<AreaMapItem> q;
+        private Stack<AreaMapItem> q;
         ManualResetEvent mre;
 
         bool runthread;
@@ -45,7 +46,8 @@ namespace MapperTool
 
         public Downloader(IWorkNotifier wnotifier)
         {
-            q = new Queue<AreaMapItem>();
+            //q = new Queue<AreaMapItem>();
+            q = new Stack<AreaMapItem>();
             thr = new Thread(new ThreadStart(this.threadproc));
             thr.Priority = ThreadPriority.BelowNormal;
             thr.Name = "Map Downloader Thread";
@@ -110,7 +112,8 @@ namespace MapperTool
             if (runthread)
             {
                 lock (q)
-                    q.Enqueue(new AreaMapItem(map, area, zoom));
+                    q.Push(new AreaMapItem(map, area, zoom));
+                    //q.Enqueue(new AreaMapItem(map, area, zoom));
                 mre.Set();
             }
         }
