@@ -11,7 +11,7 @@ namespace MapsLibrary
         private LinkedList<TKey> keys = new LinkedList<TKey>();
         private object accesslock = new object();
 
-        public void Add(TKey k, TData v)
+        public bool Add(TKey k, TData v)
         {
             lock (accesslock)
             {
@@ -19,7 +19,9 @@ namespace MapsLibrary
                 {
                     keys.AddFirst(k);
                     data.Add(k, v);
+                    return true;
                 }
+                return false;
             }
         }
 

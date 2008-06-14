@@ -293,7 +293,7 @@ namespace MapperTool
             // blinkcnGPX
             // 
             this.blinkcnGPX.BlinkingControl = this.label_gpx;
-            this.blinkcnGPX.BlinkingInterval = 500;
+            this.blinkcnGPX.BlinkingInterval = 400;
             this.blinkcnGPX.VisibleOnStop = false;
             // 
             // menuItem6

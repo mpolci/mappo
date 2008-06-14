@@ -788,6 +788,14 @@ namespace MapsLibrary
         {
             return new PxCoordinates(a.xpx + b.xpx, a.ypx + b.ypx);
         }
+        public static PxCoordinates operator /(PxCoordinates n, int d)
+        {
+            return new PxCoordinates(n.xpx / d, n.ypx / d);
+        }
+        public static PxCoordinates operator *(PxCoordinates n, int m)
+        {
+            return new PxCoordinates(n.xpx * m, n.ypx * m);
+        }
 
         public static explicit operator System.Drawing.Point(PxCoordinates p)
         {
@@ -937,10 +945,8 @@ namespace MapsLibrary
 
     }
 
-    public class CachedTilesMap : TilesMap
+    public class CachedTilesMap : TilesMap, IDisposable
     {
-        //private Hashtable cache;
-        //private LinkedList<TileNum> lru;
         LRUQueue<TileNum, Bitmap> lruqueue;
         uint maxitems;
         protected Bitmap _imgTileNotFound;
@@ -948,8 +954,6 @@ namespace MapsLibrary
         public CachedTilesMap(string tileCachePath, TileMapSystem ms, uint cachelen)
             : base(tileCachePath, ms)
         {
-            //cache = new Hashtable((int)cachelen);
-            //lru = new LinkedList<TileNum>();
             lruqueue = new LRUQueue<TileNum, Bitmap>();
             maxitems = cachelen;
         }
@@ -969,44 +973,27 @@ namespace MapsLibrary
         /// </summary>
         public Bitmap getImageTile(TileNum tn)
         {
-            //Trace.Assert(cache != null, "null cache");
-            //Trace.Assert(lru != null, "null lru");
             Debug.Assert(lruqueue != null, "null lruqueue");
-            //if (cache.Contains(tn))
             if (lruqueue.Contains(tn))
             {
-                //LinkedListNode<TileNum> node = lru.Find(tn);
-                //Trace.Assert(node != null, "lru.Find returns null");
-                //lru.Remove(node);
-                //lru.AddFirst(node);
-
-                //Bitmap bmp = (System.Drawing.Bitmap)cache[tn];
                 Bitmap bmp = lruqueue[tn];
                 Trace.Assert(bmp != null, "lruqueue contains null bitmap");
                 return bmp;
             }
             else
             {
-                //if (cache.Count >= maxitems)
                 if (lruqueue.Count >= maxitems)
                 {
                     // rimuove un elemento dalla coda
-                    //TileNum oldertn = lru.Last.Value;
-                    //Trace.Assert(cache.Contains(oldertn), "cache doesn't contain lru.Last.Value");
-                    //lru.RemoveLast();
-                    //Bitmap olderbmp = (System.Drawing.Bitmap)cache[oldertn];
                     Bitmap olderbmp = lruqueue.RemoveOlder();
                     Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                     olderbmp.Dispose();
-                    //cache.Remove(oldertn);
                 }
                 Bitmap bmp;
                 try
                 {
                     bmp = base.createImageTile(tn);
                     Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
-                    //cache.Add(tn, bmp);
-                    //lru.AddFirst(tn);
                     lruqueue.Add(tn, bmp);
                 }
                 catch (TileNotFoundException)
@@ -1020,7 +1007,6 @@ namespace MapsLibrary
 
         public override void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
-            //this.cache.Clear();  // errore!!! non rimuove le chiavi
             lruqueue.Clear();
             base.updateTilesInArea(area, zoom);
         }
@@ -1093,6 +1079,15 @@ namespace MapsLibrary
                 }
             }
         }
+
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+            lruqueue.Clear();
+        }
+
+        #endregion
     }
 
     /// <summary>

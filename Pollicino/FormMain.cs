@@ -52,7 +52,7 @@ namespace MapperTool
         protected ApplicationOptions options;
         string configfile;
 
-        protected CachedMapTS map;
+        protected CachedTilesMap map;
         protected SparseImagesMap gmap;
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
@@ -123,7 +123,8 @@ namespace MapperTool
             // mappe
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedMapTS(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
+            //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
+            this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
             gmap = new SparseImagesMap(new GoogleMapsSystem(ApplicationResources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
@@ -534,6 +535,7 @@ namespace MapperTool
                 gpsControl.stop();
             downloader.stopThread();
             notify_icon.Dispose();
+            map.Dispose();
 
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
             options.SaveToFile(this.configfile);

@@ -70,7 +70,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.TileMapSystem">
-    <Position X="0.5" Y="9.75" Width="2.25" />
+    <Position X="0.5" Y="10.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAgAAAAAACAAAgAQCAAQAAAAAAAAIAYAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -83,12 +83,13 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.CachedMapTS">
+  <Class Name="MapsLibrary.CachedTilesMap">
     <Position X="3.25" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>gCAECAAAAIAAAAAAAAAAAAAAABAAAAAAAAAAAAIAgAA=</HashCode>
+      <HashCode>gAAECAAAAKAAAAAAAAABAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
     <Position X="0.5" Y="6.75" Width="2.5" />
@@ -98,7 +99,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3" Y="9.75" Width="2" />
+    <Position X="3" Y="10.5" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -119,7 +120,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gFAABAAQAAABEgABAAAAAAAhEQAAAAAAEACEAAAAgAA=</HashCode>
+      <HashCode>gFAABAAQAAABEgABAAAAAAAhEQAAAAAAEACMAAAAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -146,7 +147,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gQCQEBAgIDAgAAAMEACAAAEDABABAAAIIABAAAAKAAA=</HashCode>
+      <HashCode>gQCQEBAgIDAgAAAMEACABAEDABAFAAAIIABAAAAKAAA=</HashCode>
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -157,10 +158,25 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="MapsLibrary.ReadAheadCachedTilesMap">
+    <Position X="3.25" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
+      <FileName>ReadAheadCachedTilesMap.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MapsLibrary.LRUQueue&lt;TKey, TData&gt;">
+    <Position X="9.75" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAIAQAACAAABAQAAAAAAAAAAAAQAABQAAA=</HashCode>
+      <FileName>LRUQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="MapsLibrary.TileNum" Collapsed="true">
     <Position X="7.75" Y="6" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <HashCode>gAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>
