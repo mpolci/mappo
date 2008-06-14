@@ -38,8 +38,11 @@ namespace MapperTool
 
         public System.Windows.Forms.Control BlinkingControl 
         {
-            get { return control; } 
-            set { control = value; }
+            get { return control; }
+            set { 
+                control = value; 
+                control.Visible = Blink ? true : _visibleonstop; 
+            }
         }
 
         public int BlinkingInterval
@@ -76,10 +79,9 @@ namespace MapperTool
             }
             set
             {
-                timerBlinking.Enabled = value;
-                if (value == false)
-                {
-                    control.Visible = _visibleonstop;
+                if (timerBlinking.Enabled != value) {
+                    timerBlinking.Enabled = value;
+                    control.Visible = value ? true : _visibleonstop;
                 }
             }
         }
