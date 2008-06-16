@@ -123,8 +123,8 @@ namespace MapperTool
             // mappe
             this.lmap = new LayeredMap();
             // OSM
-            //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
-            this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
+            this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
+            //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
             gmap = new SparseImagesMap(new GoogleMapsSystem(ApplicationResources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
