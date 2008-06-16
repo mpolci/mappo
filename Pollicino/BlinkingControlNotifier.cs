@@ -87,13 +87,26 @@ namespace MapperTool
         }
 
         #region IWorkNotifier methods
+        /// <summary>
+        /// Invocato per notificare l'inizio di un lavoro
+        /// </summary>
+        /// <remarks>Questo metodo può essere invocato da un thread diverso da quello che ha creato il controllo di notifica</remarks>
         public void WorkBegin()
         {
+            // dato che il metodo è possibile che sia invocato da un thread diverso da quello del controllo,
+            // verifico che il controllo non sia disposed. Forse sarebbe meglio non fare il controllo e lasciare
+            // che si propaghi l'eccezione che si genererebbe.
+            if (control == null || control.IsDisposed) return;
             control.BeginInvoke(bstart);
         }
 
+        /// <summary>
+        /// Invocato per notificare la fine di un lavoro
+        /// </summary>
+        /// <remarks>Questo metodo può essere invocato da un thread diverso da quello che ha creato il controllo di notifica</remarks>
         public void WorkEnd()
         {
+            if (control == null || control.IsDisposed) return;
             control.BeginInvoke(bstop);
         }
         #endregion
@@ -116,6 +129,12 @@ namespace MapperTool
                 if (workscount == 0)
                     Blink = false;
             }
+        }
+
+        private void timerBlinking_Tick(object sender, EventArgs e)
+        {
+            //if (control == null || control.IsDisposed) return;
+            control.Visible = !control.Visible;
         }
      }
 }

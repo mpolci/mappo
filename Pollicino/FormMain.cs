@@ -433,13 +433,19 @@ namespace MapperTool
             return opt;
         }
 
+        private void waypoint_created(GPSControl.GPSPosition gpsdata)
+        {
+            if (options.Application.WaypointSoundPlay && wpt_sound != null)
+                wpt_sound.Play();
+            waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+        }
+
         private void action_CreateWaypoint()
         {
             if (gpsControl.Started) {
                 GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
-                if (options.Application.WaypointSoundPlay && wpt_sound != null)
-                    wpt_sound.Play();
-                waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+                waypoint_created(gpsdata);
+                //record audio
                 if (options.Application.WaypointRecordAudio)
                 {
                     string recdir = WaypointNames.DataDir(logname),
@@ -449,6 +455,10 @@ namespace MapperTool
                     wpt_recorder.start(recfilename, options.Application.WaypointRecordAudioSeconds);
                 }
             }
+#if DEBUG
+            else
+                System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString() + " --- No waypoint created because GPS is not started" );
+#endif
         }
 
         private void action_takephoto()
@@ -471,23 +481,17 @@ namespace MapperTool
                     if (cameraCapture.ShowDialog() == DialogResult.OK) {
                         GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
                         File.Move(cameraCapture.FileName, WaypointNames.PictureFile(this.logname, gpsdata.fixtime));
+                        waypoint_created(gpsdata);
                     }
                 }
             }
         }
 
 
-        DateTime lastkeytime = DateTime.MinValue;
+        int lastEntertime = int.MinValue;
 
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
-        {
-            // deve passare un tempo minimo fra un tasto e l'altro, altrimenti ignora il tasto
-            DateTime now = DateTime.Now;
-            TimeSpan intervalFromLast = now - lastkeytime;
-            lastkeytime = now;
-            if (intervalFromLast.TotalMilliseconds < 150)
-                return;
- 
+        { 
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
                 // Up
@@ -511,7 +515,17 @@ namespace MapperTool
             if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
             {
                 // Enter
-                action_CreateWaypoint();
+                // deve passare un tempo minimo fra un tasto e l'altro, altrimenti ignora il tasto
+                int now = Environment.TickCount,
+                    intervalFromLast = now - lastEntertime;
+                lastEntertime = now;
+                //System.Diagnostics.Debug.WriteLine("Key " + e.KeyCode + " tick: " + now + "last key tick: " + lastEntertime + " difference: " + intervalFromLast);
+                if (intervalFromLast > 500) 
+                    action_CreateWaypoint();
+                #if DEBUG
+                else 
+                    System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
+                #endif
             }
             if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
             {
@@ -536,6 +550,7 @@ namespace MapperTool
             downloader.stopThread();
             notify_icon.Dispose();
             map.Dispose();
+            gpx_saver.Dispose();
 
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
             options.SaveToFile(this.configfile);

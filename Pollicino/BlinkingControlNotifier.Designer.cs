@@ -33,6 +33,7 @@
             // timerBlinking
             // 
             this.timerBlinking.Interval = 500;
+            this.timerBlinking.Tick += new System.EventHandler(this.timerBlinking_Tick);
 
         }
 
