@@ -61,6 +61,7 @@ namespace MapperTool
             public OpenNETCF.Media.WaveAudio.SoundFormats RecordAudioFormat;
             public bool AutoCentreMap;
             public MapsLibrary.GeoPoint InitialMapPosition;
+            public bool FullScreen;
         }
 
         public GPSOptions GPS;

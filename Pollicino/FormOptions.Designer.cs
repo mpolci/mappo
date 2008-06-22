@@ -84,6 +84,7 @@ namespace MapperTool
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.cb_fullscreen = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -219,7 +220,7 @@ namespace MapperTool
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(240, 245);
+            this.tabPage2.Size = new System.Drawing.Size(232, 242);
             this.tabPage2.Text = "Maps";
             // 
             // combo_TileServer
@@ -326,6 +327,7 @@ namespace MapperTool
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.cb_fullscreen);
             this.tabPage3.Controls.Add(this.combo_RecFormat);
             this.tabPage3.Controls.Add(this.label11);
             this.tabPage3.Controls.Add(this.num_RecDeviceId);
@@ -434,6 +436,14 @@ namespace MapperTool
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
+            // cb_fullscreen
+            // 
+            this.cb_fullscreen.Location = new System.Drawing.Point(3, 166);
+            this.cb_fullscreen.Name = "cb_fullscreen";
+            this.cb_fullscreen.Size = new System.Drawing.Size(230, 20);
+            this.cb_fullscreen.TabIndex = 30;
+            this.cb_fullscreen.Text = "Fullscreen mode";
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -491,5 +501,6 @@ namespace MapperTool
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox combo_RecFormat;
         private System.Windows.Forms.ComboBox combo_TileServer;
+        private System.Windows.Forms.CheckBox cb_fullscreen;
     }
 }

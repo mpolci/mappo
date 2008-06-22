@@ -75,6 +75,7 @@ namespace MapperTool
                 _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
                 _data.Application.RecordAudioDevice = (int)num_RecDeviceId.Value;
                 _data.Application.RecordAudioFormat = (OpenNETCF.Media.WaveAudio.SoundFormats)combo_RecFormat.SelectedItem;
+                _data.Application.FullScreen = cb_fullscreen.Checked;
                 return _data;
             }
             set
@@ -103,6 +104,7 @@ namespace MapperTool
                 try {
                     combo_RecFormat.SelectedItem = value.Application.RecordAudioFormat;
                 } catch (Exception) {}
+                cb_fullscreen.Checked = value.Application.FullScreen;
             }
         }
 

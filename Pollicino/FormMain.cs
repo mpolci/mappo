@@ -98,6 +98,9 @@ namespace MapperTool
                 options = DefaultOptions();
             }
 
+            //modalità full screen
+            this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
+
             // sound per nuovo waypoint
             try
             {
@@ -383,6 +386,8 @@ namespace MapperTool
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
+                //modalità full screen
+                this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -430,6 +435,7 @@ namespace MapperTool
             opt.Application.RecordAudioFormat = OpenNETCF.Media.WaveAudio.SoundFormats.Mono16bit11kHz;
             opt.Application.AutoCentreMap = true;
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
+            opt.Application.FullScreen = false;
             return opt;
         }
 
@@ -560,17 +566,5 @@ namespace MapperTool
         {
             activatedTime = DateTime.Now;
         }
-
-        private void menuItem_fullscreen_Click(object sender, EventArgs e)
-        {
-            action_fullscreenswitch();
-        }
-
-        private void action_fullscreenswitch()
-        {
-            menuItem_fullscreen.Checked = !menuItem_fullscreen.Checked;
-            this.WindowState = menuItem_fullscreen.Checked ? FormWindowState.Maximized : FormWindowState.Normal;
-        }
-
     }
 }

@@ -71,7 +71,6 @@ namespace MapperTool
             this.menuItem_followGPS = new System.Windows.Forms.MenuItem();
             this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
-            this.menuItem_fullscreen = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
@@ -169,7 +168,6 @@ namespace MapperTool
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
-            this.menuItem2.MenuItems.Add(this.menuItem_fullscreen);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -208,11 +206,6 @@ namespace MapperTool
             // 
             this.menuItem_config.Text = "Configuration...";
             this.menuItem_config.Click += new System.EventHandler(this.menuItem_config_Click);
-            // 
-            // menuItem_fullscreen
-            // 
-            this.menuItem_fullscreen.Text = "Full screen";
-            this.menuItem_fullscreen.Click += new System.EventHandler(this.menuItem_fullscreen_Click);
             // 
             // label1
             // 
@@ -360,7 +353,6 @@ namespace MapperTool
         private GPXSaver gpxSaver1;
         private System.Windows.Forms.MenuItem menuItem_photo;
         private System.Windows.Forms.MenuItem menuItem6;
-        private System.Windows.Forms.MenuItem menuItem_fullscreen;
         private System.Windows.Forms.MenuItem menuItem7;
 
 
