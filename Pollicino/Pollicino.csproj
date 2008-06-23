@@ -169,6 +169,7 @@
     <Content Include="log.nmea.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="readme.txt" />
     <Content Include="Resources\IconInternet.ico" />
     <Content Include="Resources\Map.ico" />
     <Content Include="tiles\12\2185\1486.png">
