@@ -26,3 +26,5 @@ Note for GoogleMaps:
 To download GoogleMaps maps you need a Maps API key (see http://code.google.com/apis/maps/signup.html) and write the key into
 the string called GoogleMapsKey in ApplicationResources.resx resource file.
 
+Info and latest release download:
+http://www.marcopolci.net/wiki/informatica:progetti:pollicino_en
