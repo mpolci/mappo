@@ -27,6 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using OpenNETCF.Media.WaveAudio;
+using Microsoft.WindowsCE.Forms;
 
 namespace MapperTool
 {
@@ -47,10 +48,9 @@ namespace MapperTool
             {
                 formats[i] = rec.SupportedRecordingFormats(i);
             }
-
-
             num_RecDeviceId.Value = 0;
             fill_RecFormats();
+
         }
 
         private ApplicationOptions _data;
@@ -76,6 +76,7 @@ namespace MapperTool
                 _data.Application.RecordAudioDevice = (int)num_RecDeviceId.Value;
                 _data.Application.RecordAudioFormat = (OpenNETCF.Media.WaveAudio.SoundFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
+                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 return _data;
             }
             set
@@ -105,6 +106,7 @@ namespace MapperTool
                     combo_RecFormat.SelectedItem = value.Application.RecordAudioFormat;
                 } catch (Exception) {}
                 cb_fullscreen.Checked = value.Application.FullScreen;
+                combo_CameraButton.SelectedItem = value.Application.CameraButton;
             }
         }
 

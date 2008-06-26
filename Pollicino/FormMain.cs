@@ -100,6 +100,8 @@ namespace MapperTool
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
+            // pulsante per la fotocamera
+            this.hardwareButton_app3.HardwareKey = options.Application.CameraButton;
 
             // sound per nuovo waypoint
             try
@@ -388,6 +390,7 @@ namespace MapperTool
                 wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
                 //modalità full screen
                 this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
+                this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -436,6 +439,7 @@ namespace MapperTool
             opt.Application.AutoCentreMap = true;
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
+            opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
             return opt;
         }
 

@@ -62,6 +62,7 @@ namespace MapperTool
             public bool AutoCentreMap;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
+            public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
         }
 
         public GPSOptions GPS;

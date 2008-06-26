@@ -73,6 +73,7 @@ namespace MapperTool
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.cb_fullscreen = new System.Windows.Forms.CheckBox();
             this.combo_RecFormat = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.num_RecDeviceId = new System.Windows.Forms.NumericUpDown();
@@ -84,7 +85,8 @@ namespace MapperTool
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.cb_fullscreen = new System.Windows.Forms.CheckBox();
+            this.combo_CameraButton = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -327,6 +329,8 @@ namespace MapperTool
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.combo_CameraButton);
+            this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.cb_fullscreen);
             this.tabPage3.Controls.Add(this.combo_RecFormat);
             this.tabPage3.Controls.Add(this.label11);
@@ -342,6 +346,14 @@ namespace MapperTool
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(240, 245);
             this.tabPage3.Text = "Interface";
+            // 
+            // cb_fullscreen
+            // 
+            this.cb_fullscreen.Location = new System.Drawing.Point(3, 166);
+            this.cb_fullscreen.Name = "cb_fullscreen";
+            this.cb_fullscreen.Size = new System.Drawing.Size(230, 20);
+            this.cb_fullscreen.TabIndex = 30;
+            this.cb_fullscreen.Text = "Fullscreen mode";
             // 
             // combo_RecFormat
             // 
@@ -436,13 +448,25 @@ namespace MapperTool
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // cb_fullscreen
+            // combo_CameraButton
             // 
-            this.cb_fullscreen.Location = new System.Drawing.Point(3, 166);
-            this.cb_fullscreen.Name = "cb_fullscreen";
-            this.cb_fullscreen.Size = new System.Drawing.Size(230, 20);
-            this.cb_fullscreen.TabIndex = 30;
-            this.cb_fullscreen.Text = "Fullscreen mode";
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
+            this.combo_CameraButton.Location = new System.Drawing.Point(103, 192);
+            this.combo_CameraButton.Name = "combo_CameraButton";
+            this.combo_CameraButton.Size = new System.Drawing.Size(130, 22);
+            this.combo_CameraButton.TabIndex = 35;
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(7, 194);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(90, 20);
+            this.label12.Text = "Camera button";
             // 
             // FormOptions
             // 
@@ -502,5 +526,7 @@ namespace MapperTool
         private System.Windows.Forms.ComboBox combo_RecFormat;
         private System.Windows.Forms.ComboBox combo_TileServer;
         private System.Windows.Forms.CheckBox cb_fullscreen;
+        private System.Windows.Forms.ComboBox combo_CameraButton;
+        private System.Windows.Forms.Label label12;
     }
 }
