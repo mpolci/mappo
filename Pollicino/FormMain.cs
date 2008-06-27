@@ -35,7 +35,7 @@ using Microsoft.WindowsCE.Forms;
 
 
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain : Form
     {

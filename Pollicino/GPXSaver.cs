@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class GPXSaver : Component
     {
@@ -62,7 +62,7 @@ namespace MapperTool
                 outfile = outdir + ".gpx";
                 try
                 {
-                    NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile);
+                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile);
                     // archivia il file di log
                     if (!Directory.Exists(outdir))
                         Directory.CreateDirectory(outdir);

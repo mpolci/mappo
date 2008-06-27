@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     class AudioRecorder
     {

@@ -21,7 +21,7 @@ using System;
 using SharpGis.SharpGps.NMEA;
 using System.Text;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public class InvalidWaypointNameException: Exception 
     {

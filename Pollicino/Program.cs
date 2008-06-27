@@ -25,7 +25,7 @@ using System.IO;
 
 
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
 
     static class Program

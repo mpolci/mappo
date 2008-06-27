@@ -17,7 +17,7 @@
  * 
  ******************************************************************************/
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     partial class Form_MapperToolMain
     {
@@ -75,14 +75,14 @@ namespace MapperTool
             this.label_zoom = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
             this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
-            this.gpsControl = new MapperTool.GPSControl();
+            this.gpsControl = new MapperTools.Pollicino.GPSControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_gpx = new System.Windows.Forms.Label();
             this.pb_DownloaderActivity = new System.Windows.Forms.PictureBox();
-            this.blinkcnDownloader = new MapperTool.BlinkingControlNotifier(this.components);
-            this.blinkcnGPX = new MapperTool.BlinkingControlNotifier(this.components);
-            this.gpx_saver = new MapperTool.GPXSaver(this.components);
-            this.gpxSaver1 = new MapperTool.GPXSaver(this.components);
+            this.blinkcnDownloader = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
+            this.blinkcnGPX = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
+            this.gpx_saver = new MapperTools.Pollicino.GPXSaver(this.components);
+            this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();

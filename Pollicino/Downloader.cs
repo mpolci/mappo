@@ -23,7 +23,7 @@ using System.Text;
 using System.Threading;
 using MapsLibrary;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public class Downloader
     {

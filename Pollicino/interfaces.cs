@@ -1,4 +1,4 @@
-﻿namespace MapperTool
+﻿namespace MapperTools.Pollicino
 {
     public interface IWorkNotifier
     {

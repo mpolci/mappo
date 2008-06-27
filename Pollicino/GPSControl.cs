@@ -31,7 +31,7 @@ using MapsLibrary;
 using System.Runtime.InteropServices;
 
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class GPSControl : UserControl
     {

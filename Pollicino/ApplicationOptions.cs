@@ -24,7 +24,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public class ApplicationOptions
     {

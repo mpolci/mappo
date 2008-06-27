@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class BlinkingControlNotifier : Component, IWorkNotifier
     {

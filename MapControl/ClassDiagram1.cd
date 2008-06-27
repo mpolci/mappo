@@ -99,7 +99,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3" Y="10.5" Width="2" />
+    <Position X="3" Y="11" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -197,7 +197,7 @@
   <Struct Name="MapsLibrary.PxCoordinates">
     <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEQAEAAAAAAMAAAAAAAAAAAGAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEYAUAAAAAAMAAAAAAAAAAAGAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Struct>

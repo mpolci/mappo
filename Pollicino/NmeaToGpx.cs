@@ -23,9 +23,9 @@ using System.Data;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
-using MapperTool;
+using MapperTools.Pollicino;
 
-namespace NMEA2GPX
+namespace MapperTools.NMEA2GPX
 {
     public static class GPXGenerator
     {

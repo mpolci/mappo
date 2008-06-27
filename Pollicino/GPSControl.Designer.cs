@@ -17,7 +17,7 @@
  * 
  ******************************************************************************/
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     partial class GPSControl
     {

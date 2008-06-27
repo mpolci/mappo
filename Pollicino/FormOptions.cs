@@ -29,7 +29,7 @@ using System.IO;
 using OpenNETCF.Media.WaveAudio;
 using Microsoft.WindowsCE.Forms;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class FormOptions : Form
     {

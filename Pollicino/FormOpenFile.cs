@@ -26,7 +26,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     public partial class FormOpenFile : Form
     {

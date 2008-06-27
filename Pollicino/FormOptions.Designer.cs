@@ -17,7 +17,7 @@
  * 
  ******************************************************************************/
 
-namespace MapperTool
+namespace MapperTools.Pollicino
 {
     partial class FormOptions
     {
@@ -73,6 +73,8 @@ namespace MapperTool
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.combo_CameraButton = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.cb_fullscreen = new System.Windows.Forms.CheckBox();
             this.combo_RecFormat = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -85,8 +87,6 @@ namespace MapperTool
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.combo_CameraButton = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -344,8 +344,28 @@ namespace MapperTool
             this.tabPage3.Controls.Add(this.cb_waypointsound);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(240, 245);
+            this.tabPage3.Size = new System.Drawing.Size(232, 242);
             this.tabPage3.Text = "Interface";
+            // 
+            // combo_CameraButton
+            // 
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
+            this.combo_CameraButton.Location = new System.Drawing.Point(103, 192);
+            this.combo_CameraButton.Name = "combo_CameraButton";
+            this.combo_CameraButton.Size = new System.Drawing.Size(130, 22);
+            this.combo_CameraButton.TabIndex = 35;
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(7, 194);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(90, 20);
+            this.label12.Text = "Camera button";
             // 
             // cb_fullscreen
             // 
@@ -448,26 +468,6 @@ namespace MapperTool
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // combo_CameraButton
-            // 
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
-            this.combo_CameraButton.Location = new System.Drawing.Point(103, 192);
-            this.combo_CameraButton.Name = "combo_CameraButton";
-            this.combo_CameraButton.Size = new System.Drawing.Size(130, 22);
-            this.combo_CameraButton.TabIndex = 35;
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(7, 194);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(90, 20);
-            this.label12.Text = "Camera button";
-            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -477,7 +477,7 @@ namespace MapperTool
             this.Controls.Add(this.tabControl1);
             this.Menu = this.mainMenu1;
             this.Name = "FormOptions";
-            this.Text = "MapperTool Options";
+            this.Text = "Options";
             this.tabControl1.ResumeLayout(false);
             this.tabPage_GPS.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
