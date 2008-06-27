@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Pollicino.Properties {
+namespace MapperTools.Pollicino.Properties {
     using System;
     
     
@@ -36,7 +36,7 @@ namespace Pollicino.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Pollicino.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MapperTools.Pollicino.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -54,6 +54,36 @@ namespace Pollicino.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ABQIAAAAh1PZgzRL2L5R0KjFvh5Q8RSpRh2vAE_NR2zRhX5ZJ3rp2ZZDExTpIUr3qM9vMNqCFi7gF1XEEyaRAA.
+        /// </summary>
+        internal static string GoogleMapsKey {
+            get {
+                return ResourceManager.GetString("GoogleMapsKey", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Icon IconGPS {
+            get {
+                object obj = ResourceManager.GetObject("IconGPS", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImgGPS {
+            get {
+                object obj = ResourceManager.GetObject("ImgGPS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon Map {
+            get {
+                object obj = ResourceManager.GetObject("Map", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

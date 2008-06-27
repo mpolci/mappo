@@ -78,7 +78,7 @@ namespace MapperTools.Pollicino
             InitializeComponent();
 
             notify_icon = new OpenNETCF.Windows.Forms.NotifyIcon();
-            notify_icon.Icon = ApplicationResources.Map;
+            notify_icon.Icon = Properties.Resources.Map;
             notify_icon.Visible = true;
             notify_icon.Click += new EventHandler(this.notify_icon_click);
 
@@ -132,7 +132,7 @@ namespace MapperTools.Pollicino
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new GoogleMapsSystem(ApplicationResources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
+            gmap = new SparseImagesMap(new GoogleMapsSystem(Properties.Resources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS

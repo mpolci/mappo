@@ -45,7 +45,7 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
-            this.pb_GPSActvity.Image = ApplicationResources.ImgGPS;
+            this.pb_GPSActvity.Image = Properties.Resources.ImgGPS;
 
             //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
             //gpshandler = new GPSHandler(parent); //Initialize GPS handler
