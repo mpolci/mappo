@@ -18,6 +18,9 @@
     <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
+    <StartupObject>
+    </StartupObject>
+    <ApplicationIcon>Resources\Map.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,7 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OpenNetCF\OpenNETCF.dll</HintPath>
     </Reference>
-    <Reference Include="OpenNETCF.Windows.Forms, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL" />
+    <Reference Include="OpenNETCF.Windows.Forms, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenNetCF\OpenNETCF.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="SharpGps, Version=0.5.3048.18227, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>sharpgps\SharpGps.dll</HintPath>
