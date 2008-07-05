@@ -47,9 +47,14 @@
           <NewMemberFileName>Map.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
+      <Enum Name="MapsLibrary.TilesMap.DownloadMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAEAAIAEAAAAAAAAAAAgAAhAREAAAACUAAAAAAAwAA=</HashCode>
+      <HashCode>iAAEAAAAEAAAAAAAAAAAgAAhAREAAAACUAAAAAAAwAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

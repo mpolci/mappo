@@ -85,6 +85,12 @@ namespace MapsLibrary
         //protected string strTileServerUrl;
         protected TileMapSystem mapsys;
 
+        public enum DownloadMode
+        {
+            NoOverwrite,
+            Overwrite,
+            Refresh
+        }
 
         /// <summary>
         /// Evento chiamato quando non viene trovato un tile nella cache su disco.
@@ -124,13 +130,13 @@ namespace MapsLibrary
         /// <remarks>Può essere utilizzato come Handler per l'evento TileNotFound</remarks>
         public void downloadTile(TileNum tn) 
         {
-            downloadTile(tn, false);
+            downloadTile(tn, DownloadMode.NoOverwrite);
         }
 
         /// <summary>
         /// Scarica il tile indicato
         /// </summary>
-        public void downloadTile(TileNum tn, bool overwrite) 
+        public void downloadTile(TileNum tn, DownloadMode downmode) 
         {
             //string url = strTileServerUrl + tn.ToString('/') + ".png";
             string url = mapsys.TileUrl(tn);
@@ -140,7 +146,10 @@ namespace MapsLibrary
                 file.Directory.Create();
 
             try {
-                if (!file.Exists || overwrite)
+                //Espressione logica: r x + !r (!x + o)
+                //if (!file.Exists || overwrite)
+                if (downmode == DownloadMode.Overwrite ||
+                    file.Exists == (downmode == DownloadMode.Refresh))
                 {
                     // può lanciare l'eccezzione System.Net.WebException
                     Tools.downloadHttpToFile(url, file.FullName, true);
@@ -168,15 +177,15 @@ namespace MapsLibrary
         /// <summary>
         /// Scarica il tile indicato e i tile che coprono la stessa area con Zoom superiore
         /// </summary>
-        public void downloadTileDepth(TileNum tn, uint depth, bool overwrite)
+        public void downloadTileDepth(TileNum tn, uint depth, DownloadMode mode)
         {
-            downloadTile(tn, overwrite);
+            downloadTile(tn, mode);
             if (depth > 0) 
             {
-                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
-                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, overwrite);
+                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2, tn.uZoom+1), depth - 1, mode);
+                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2, tn.uZoom+1), depth - 1, mode);
+                downloadTileDepth(new TileNum(tn.X * 2, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, mode);
+                downloadTileDepth(new TileNum(tn.X * 2 + 1, tn.Y * 2 + 1, tn.uZoom+1), depth - 1, mode);
             }
         }
 
@@ -184,10 +193,10 @@ namespace MapsLibrary
         /// <summary>
         /// Scarica il tile ad una certa coordinata geografica
         /// </summary>
-        public virtual void downloadAt(ProjectedGeoPoint p, uint zoom, bool overwrite)
+        public virtual void downloadAt(ProjectedGeoPoint p, uint zoom, DownloadMode mode)
         {
             TileNum tn = mapsys.PointToTileNum(p, zoom);
-            downloadTile(tn, overwrite);
+            downloadTile(tn, mode);
         }
 
         public class TileNotFoundException: Exception 
@@ -257,7 +266,7 @@ namespace MapsLibrary
         /// </summary>
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
-            downloadArea(area, zoom, false);
+            DownloadMapArea(area, zoom, DownloadMode.NoOverwrite);
         }
         
         /// <summary>
@@ -265,7 +274,7 @@ namespace MapsLibrary
         /// </summary>
         /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
-        public void downloadArea(ProjectedGeoArea area, uint zoom, bool overwrite)
+        public void DownloadMapArea(ProjectedGeoArea area, uint zoom, DownloadMode mode)
         {
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
@@ -277,7 +286,7 @@ namespace MapsLibrary
             i.uZoom = zoom;
             for (i.X = x1; i.X <= x2; i.X++)
                 for (i.Y = y1; i.Y <= y2; i.Y++)
-                    downloadTile(i, overwrite);
+                    downloadTile(i, mode);
         }
 
         /// <summary>
@@ -286,7 +295,7 @@ namespace MapsLibrary
         /// <remarks>L'implementazione attuale è poco efficiente, piuttosto che controllare se esiste ogni possibile file relativo all'area indicata, forse sarebbe meglio partire dai file in cache e vedere se sono relativi all'area indicata.</remarks>
         /// <param name="area">Coordinate geografiche dell'area rettangolare</param>
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
-        public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
+/*        public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
             TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
                     tn2 = mapsys.PointToTileNum(area.pMax, zoom);
@@ -298,10 +307,73 @@ namespace MapsLibrary
             i.uZoom = zoom;
             for (i.X = x1; i.X <= x2; i.X++)
                 for (i.Y = y1; i.Y <= y2; i.Y++)
-                    if (tileInCache(i))
-                        downloadTile(i, true);
+                    downloadTile(i, DownloadMode.Refresh);
+                    //if (tileInCache(i))
+                    //    downloadTile(i, true);
         }
+*/
+        public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
+        {
+            // Struttura directory: zoom/x/y.png
+            string sZoomDir = strTileCachePath + zoom + '\\';
+            if (!Directory.Exists(sZoomDir))
+                return;
 
+            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileIdxType x1 = Math.Min(tn1.X, tn2.X),
+                        x2 = Math.Max(tn1.X, tn2.X),
+                        y1 = Math.Min(tn1.Y, tn2.Y),
+                        y2 = Math.Max(tn1.Y, tn2.Y);
+            TileNum i = new TileNum();
+            i.uZoom = zoom;
+            for (i.X = x1; i.X <= x2; i.X++)
+            {
+                string sXDir = sZoomDir + i.X.ToString() + '\\';
+                if (!Directory.Exists(sXDir)) continue;
+                for (i.Y = y1; i.Y <= y2; i.Y++)
+                    downloadTile(i, DownloadMode.Refresh);
+                    //if (File.Exists(sXDir + i.Y.ToString() + ".png"))
+                    //    downloadTile(i, true);
+                
+            }
+        }
+        /*
+        public virtual void updateTilesInArea2(ProjectedGeoArea area, uint zoom)
+        {
+            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileIdxType x1 = Math.Min(tn1.X, tn2.X),
+                        x2 = Math.Max(tn1.X, tn2.X),
+                        y1 = Math.Min(tn1.Y, tn2.Y),
+                        y2 = Math.Max(tn1.Y, tn2.Y),
+                        ix, iy;
+            // Struttura directory: zoom/x/y.png
+            try {
+                string sZoomDir = strTileCachePath + zoom + '\\';
+                DirectoryInfo diZoom = new DirectoryInfo(sZoomDir);
+                if (!diZoom.Exists) throw new DirectoryNotFoundException();
+                foreach (DirectoryInfo diCurrX in diZoom.GetDirectories())
+                {
+                    try
+                    {
+                        ix = TileIdxType.Parse(diCurrX.Name);
+                        if (ix < x1 || ix > x2) continue;
+
+                        for (iy = y1; iy <= y2; iy++)
+                        {
+                            TileNum i = new TileNum(ix, iy, zoom);
+                            if (tileInCache(i))
+                                downloadTile(i, true);
+                        }
+                        //foreach (FileInfo fiCurrLon in diCurrLat.GetFiles())
+                    }
+                    catch (FormatException) { }
+                }
+                
+            } catch (DirectoryNotFoundException) {}
+        }
+        */
 
     }
 
