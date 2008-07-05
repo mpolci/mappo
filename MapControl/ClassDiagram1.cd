@@ -54,7 +54,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAEAAAAEAAAAAAAAAAAgAAhAREAAAACUAAAAAAAwAA=</HashCode>
+      <HashCode>iAAEAAAAEAAAAAAAAAAAgAAhAREAAAACUAAAIAAAwAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -77,14 +77,14 @@
   <Class Name="MapsLibrary.TileMapSystem">
     <Position X="0.5" Y="10.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAACAAAgAQCAAQAAAAAAAAIAYAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAAAAACAAAgAQCAAQAAAAAAAAIAQAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
     <Position X="0.5" Y="13.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -97,7 +97,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
-    <Position X="0.5" Y="6.75" Width="2.5" />
+    <Position X="0.5" Y="7" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQQAAEAAAAQAAEAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>

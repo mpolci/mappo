@@ -138,10 +138,9 @@ namespace MapsLibrary
         /// </summary>
         public void downloadTile(TileNum tn, DownloadMode downmode) 
         {
-            //string url = strTileServerUrl + tn.ToString('/') + ".png";
             string url = mapsys.TileUrl(tn);
 
-            FileInfo file = new FileInfo(strTileCachePath + mapsys.TileFile(tn));
+            FileInfo file = new FileInfo(this.TileFile(tn));
             if (!file.Directory.Exists) 
                 file.Directory.Create();
 
@@ -171,7 +170,7 @@ namespace MapsLibrary
 
         public bool tileInCache(TileNum tn)
         {
-            return File.Exists(strTileCachePath + mapsys.TileFile(tn));
+            return File.Exists(this.TileFile(tn));
         }
 
         /// <summary>
@@ -338,6 +337,15 @@ namespace MapsLibrary
                 
             }
         }
+
+        /// <summary>
+        /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile
+        /// </summary>
+        protected string TileFile(TileNum tn)
+        {
+            return strTileCachePath + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
+        }
+
         /*
         public virtual void updateTilesInArea2(ProjectedGeoArea area, uint zoom)
         {
@@ -886,18 +894,8 @@ namespace MapsLibrary
 
     public abstract class TileMapSystem : MercatorProjectionMapSystem
     {
-        /// <summary>
-        /// URL di base dove scaricare i tile
-        /// </summary>
-        private string sTileServer;
-        //private uint uTileSize;
+        //public TileMapSystem() {}
 
-        //public TileMapSystem(string server, uint tilesize)
-        public TileMapSystem(string server)
-        {
-            sTileServer = server;
-            //uTileSize = tilesize;
-        }
         /// <summary>
         /// Lunghezza in pixel del lato di un tile
         /// </summary>
@@ -969,35 +967,34 @@ namespace MapsLibrary
             return p;
         }
 
-        public virtual string TileUrl(TileNum tn)
-        {
-            return sTileServer + TileFile(tn);
-        }
+        public abstract string TileUrl(TileNum tn);
 
         /// <summary>
         /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile. 
         /// </summary>
-        public abstract string TileFile(TileNum tn);
+        //public abstract string TileFile(TileNum tn);
     }
 
     public class OSMTileMapSystem : TileMapSystem
     {
-        public OSMTileMapSystem()
-            : base("http://tile.openstreetmap.org/")
-        {
+        /// <summary>
+        /// URL di base dove scaricare i tile
+        /// </summary>
+        protected string sTileServer;
+        
+        public OSMTileMapSystem() : this("http://tile.openstreetmap.org/")
+        {}
 
-        }
         public OSMTileMapSystem(string tileserver)
-            : base(tileserver)
         {
-
+            sTileServer = tileserver;
         }
         /// <summary>
-        /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile
+        /// Restituisce l'URL dell'immagine del tile
         /// </summary>
-        public override string TileFile(TileNum tn)
+        public override string TileUrl(TileNum tn)
         {
-            return tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
+            return sTileServer + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
         }
 
         public override uint MaxZoom
