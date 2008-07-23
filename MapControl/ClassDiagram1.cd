@@ -37,6 +37,11 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
+      <Enum Name="MapsLibrary.TilesMap.DownloadMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
       <Delegate Name="MapsLibrary.TilesMap.TileNotFoundHandler" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Map.cs</NewMemberFileName>
@@ -47,11 +52,6 @@
           <NewMemberFileName>Map.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
-      <Enum Name="MapsLibrary.TilesMap.DownloadMode" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Map.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
     </NestedTypes>
     <TypeIdentifier>
       <HashCode>iAAEAAAAEAAAAAAAAAAAgAAhAREAAAACUAAAIAAAwAA=</HashCode>
@@ -75,21 +75,31 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.TileMapSystem">
-    <Position X="0.5" Y="10.5" Width="2.25" />
+    <Position X="0.5" Y="10.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MapsLibrary.TileMapSystem.TileInfo">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAACAAAgAQCAAQAAAAAAAAIAQAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAgAAAAEACBAAgAQCAAQAAAAAAAAIAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
-    <Position X="0.5" Y="13.75" Width="2.25" />
+    <Position X="0.5" Y="15.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.CachedTilesMap">
-    <Position X="3.25" Y="4.25" Width="2" />
+    <Position X="3.25" Y="4" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAECAAAAKAAAAAAAAABAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -97,7 +107,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.MercatorProjectionMapSystem">
-    <Position X="0.5" Y="7" Width="2.5" />
+    <Position X="0.5" Y="7.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQQAAEAAAAQAAEAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -130,10 +140,20 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MapsLibrary.Tools" Collapsed="true">
-    <Position X="11.5" Y="4" Width="1.5" />
+  <Class Name="MapsLibrary.HTTPFileDownloader">
+    <Position X="5.5" Y="12.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="MapsLibrary.HTTPFileDownloader.FileDownloadInfo" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -164,7 +184,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.ReadAheadCachedTilesMap">
-    <Position X="3.25" Y="7.5" Width="2" />
+    <Position X="3.25" Y="7.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
       <FileName>ReadAheadCachedTilesMap.cs</FileName>
@@ -176,6 +196,20 @@
     <TypeIdentifier>
       <HashCode>AAIAAAAAAAAIAQAACAAABAQAAAAAAAAAAAAQAABQAAA=</HashCode>
       <FileName>LRUQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapsLibrary.MapnikMapSystem">
+    <Position X="0.5" Y="18.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapsLibrary.OsmarenderMapSystem">
+    <Position X="3" Y="18.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="MapsLibrary.TileNum" Collapsed="true">
@@ -231,7 +265,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="MapsLibrary.IDownloadableMap">
-    <Position X="3.25" Y="2.75" Width="2" />
+    <Position X="3.25" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>

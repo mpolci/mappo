@@ -138,7 +138,7 @@ namespace MapsLibrary
         /// </summary>
         public void downloadTile(TileNum tn, DownloadMode downmode) 
         {
-            string url = mapsys.TileUrl(tn);
+            //string url = mapsys.TileUrl(tn);
 
             FileInfo file = new FileInfo(this.TileFile(tn));
             if (!file.Directory.Exists) 
@@ -151,7 +151,8 @@ namespace MapsLibrary
                     file.Exists == (downmode == DownloadMode.Refresh))
                 {
                     // può lanciare l'eccezzione System.Net.WebException
-                    Tools.downloadHttpToFile(url, file.FullName, true);
+                    // HTTPFileDownloader.downloadToFile(url, file.FullName, true);
+                    mapsys.SaveTileToFile(tn, file.FullName);
                     // invalida l'area relativa al tile
                     if (this.MapChanged != null)
                     {
@@ -970,6 +971,107 @@ namespace MapsLibrary
         public abstract string TileUrl(TileNum tn);
 
         /// <summary>
+        /// Salva l'immagine del tile sul file indicato.
+        /// </summary>
+        /// <remarks>Può lanciare l'eccezione WebException.</remarks>
+        /// <returns>true se il file è stato aggiornato.</returns>
+        public bool SaveTileToFile(TileNum tn, string filename)
+        {
+            //HTTPFileDownloader.downloadToFile(this.TileUrl(tn), filename, true);
+
+            bool saved = false;
+            try
+            {
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(this.TileUrl(tn));
+                using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
+                {
+                    TileInfo tileinfonew = getTileInfo(tn, httpResponse),
+                             tileinfosaved = getSavedTileInfo(filename);
+
+                    bool download = tileinfonew.wasUpdated(tileinfosaved);
+
+                    if (download)
+                    {
+                        using (System.IO.Stream dataStream = httpResponse.GetResponseStream())
+                        using (System.IO.FileStream outstream = new FileStream(filename, FileMode.Create))
+                        {
+                            const int BUFFSIZE = 8192;
+                            byte[] buffer = new byte[BUFFSIZE];
+                            int count = dataStream.Read(buffer, 0, BUFFSIZE);
+                            while (count > 0)
+                            {
+                                outstream.Write(buffer, 0, count);
+                                count = dataStream.Read(buffer, 0, BUFFSIZE);
+                            }
+                            outstream.Close();
+                            dataStream.Close();
+                            httpResponse.Close();
+                        }
+                        // salva le informazioni di download
+                        System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(TileInfo));
+                        using (FileStream outs = new FileStream(filename + ".info", FileMode.Create))
+                            ser.Serialize(outs, tileinfonew);
+                        saved = true;
+                    }
+                }
+            }
+            catch (Exception e) 
+            {
+                System.Diagnostics.Debug.WriteLine("Download Error --- " + e.Message);
+            }
+            return saved;
+        }
+
+        private TileInfo getSavedTileInfo(string filename)
+        {
+            TileInfo fdi = null;
+            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(TileInfo));
+            try
+            {
+                using (FileStream ins = new FileStream(filename + ".info", FileMode.Open))
+                    fdi = (TileInfo)ser.Deserialize(ins);
+            }
+            catch (Exception)
+            { }
+            return fdi;
+        }
+
+        /// <summary>
+        /// Restituisce le informazioni (aggiornate) relative ad un tile
+        /// </summary>
+        /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>
+        /// <returns>un oggetto di tipo TileInfo o un suo derivato contenente le informazioni sul tile</returns>
+        protected virtual TileInfo getTileInfo(TileNum tn, HttpWebResponse httpResponse)
+        {
+            return new TileInfo(httpResponse);
+        }
+
+        /// <summary>
+        /// Classe per la memorizzazione delle informazioni relative ad un tile
+        /// </summary>
+        /// <remarks>La classe è pubblica con campi pubblici per poter essere usata con XmlSerializer</remarks>
+        public class TileInfo  
+        {
+            public string uri;
+            public DateTime modifiedtime;
+            public long lenght;
+
+            public TileInfo(HttpWebResponse response)
+            {
+                uri = response.ResponseUri.ToString();
+                modifiedtime = response.LastModified;
+                lenght = response.ContentLength;
+            }
+
+            public virtual bool wasUpdated(TileInfo tileinfosaved)
+            {
+                return tileinfosaved == null 
+                       || this.modifiedtime > tileinfosaved.modifiedtime
+                       || this.lenght != tileinfosaved.lenght;
+            }
+        }
+
+        /// <summary>
         /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile. 
         /// </summary>
         //public abstract string TileFile(TileNum tn);
@@ -1011,7 +1113,26 @@ namespace MapsLibrary
                 return 8;
             }
         }
+    }
 
+    public class MapnikMapSystem : OSMTileMapSystem
+    {
+        /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>
+        /// <returns>un oggetto di tipo TileInfo o un suo derivato contenente le informazioni sul tile</returns>
+        protected override MapsLibrary.TileMapSystem.TileInfo getTileInfo(MapsLibrary.TileNum tn, System.Net.HttpWebResponse httpResponse)
+        {
+            return base.getTileInfo(tn, httpResponse);
+        }
+    }
+
+    public class OsmarenderMapSystem : OSMTileMapSystem
+    {
+        /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>
+        /// <returns>un oggetto di tipo TileInfo o un suo derivato contenente le informazioni sul tile</returns>
+        protected override MapsLibrary.TileMapSystem.TileInfo getTileInfo(MapsLibrary.TileNum tn, System.Net.HttpWebResponse httpResponse)
+        {
+            return base.getTileInfo(tn, httpResponse);
+        }
     }
 
     public class CachedTilesMap : TilesMap, IDisposable
@@ -1610,12 +1731,12 @@ namespace MapsLibrary
 
     }
 
-    internal static class Tools
+    internal static class HTTPFileDownloader
     {
         /// <summary>
         /// Scarica un file da un server http e lo salva su disco
         /// </summary>
-        public static void downloadHttpToFile(string url, string file, bool saveinfo)
+        public static void downloadToFile(string url, string file, bool saveinfo)
         {
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
             using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
@@ -1710,7 +1831,7 @@ namespace MapsLibrary
             if (!fileinfo.Directory.Exists)
                 fileinfo.Directory.Create();
 
-            Tools.downloadHttpToFile(url, outfilename, false);
+            HTTPFileDownloader.downloadToFile(url, outfilename, false);
         }
     }
 }
