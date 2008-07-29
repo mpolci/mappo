@@ -81,9 +81,10 @@ namespace MapsLibrary
 
     public abstract class TilesMap : IMap, IDownloadableMap
     {
-        protected string strTileCachePath;
+        private string mTileCacheBasePath;
+        protected string mTileCachePath;
         //protected string strTileServerUrl;
-        protected TileMapSystem mapsys;
+        protected TileMapSystem mMapsys;
 
         public enum DownloadMode
         {
@@ -103,20 +104,29 @@ namespace MapsLibrary
 
         public TilesMap(string tileCachePath, TileMapSystem ms)
         {
-            this.mapsys = ms;
             if (string.IsNullOrEmpty(tileCachePath))
                 tileCachePath = ".";
             else if (!Directory.Exists(tileCachePath))
             {
                 Directory.CreateDirectory(tileCachePath);
             }
-            this.strTileCachePath = tileCachePath.EndsWith("\\") ? tileCachePath : tileCachePath + "\\";
+            mTileCacheBasePath = tileCachePath.EndsWith("\\") ? tileCachePath : tileCachePath + "\\";
+            mapsystem = ms;
         }
 
         public MercatorProjectionMapSystem mapsystem
         {
             get {
-                return mapsys;
+                return mMapsys;
+            }
+            set
+            {
+                mMapsys = (TileMapSystem) value;
+                mTileCachePath = mTileCacheBasePath + mMapsys.identifier + '\\';
+                if (!Directory.Exists(mTileCachePath))
+                {
+                    Directory.CreateDirectory(mTileCachePath);
+                }
             }
         }
 
@@ -138,7 +148,7 @@ namespace MapsLibrary
         /// </summary>
         public void downloadTile(TileNum tn, DownloadMode downmode) 
         {
-            //string url = mapsys.TileUrl(tn);
+            //string url = mMapsys.TileUrl(tn);
 
             FileInfo file = new FileInfo(this.TileFile(tn));
             if (!file.Directory.Exists) 
@@ -152,13 +162,13 @@ namespace MapsLibrary
                 {
                     // può lanciare l'eccezzione System.Net.WebException
                     // HTTPFileDownloader.downloadToFile(url, file.FullName, true);
-                    mapsys.SaveTileToFile(tn, file.FullName);
+                    mMapsys.SaveTileToFile(tn, file.FullName);
                     // invalida l'area relativa al tile
                     if (this.MapChanged != null)
                     {
-                        PxCoordinates corner = mapsys.TileNumToPx(tn),
-                                      limit = corner + new PxCoordinates(mapsys.tilesize, mapsys.tilesize);
-                        ProjectedGeoArea tilearea = new ProjectedGeoArea(mapsys.PxToPoint(corner, tn.uZoom), mapsys.PxToPoint(limit, tn.uZoom));
+                        PxCoordinates corner = mMapsys.TileNumToPx(tn),
+                                      limit = corner + new PxCoordinates(mMapsys.tilesize, mMapsys.tilesize);
+                        ProjectedGeoArea tilearea = new ProjectedGeoArea(mMapsys.PxToPoint(corner, tn.uZoom), mMapsys.PxToPoint(limit, tn.uZoom));
                         MapChanged(this, tilearea);
                     }
                 }
@@ -189,16 +199,16 @@ namespace MapsLibrary
             }
         }
 
-        
+        /*
         /// <summary>
         /// Scarica il tile ad una certa coordinata geografica
         /// </summary>
         public virtual void downloadAt(ProjectedGeoPoint p, uint zoom, DownloadMode mode)
         {
-            TileNum tn = mapsys.PointToTileNum(p, zoom);
+            TileNum tn = mMapsys.PointToTileNum(p, zoom);
             downloadTile(tn, mode);
         }
-
+        */
         public class TileNotFoundException: Exception 
         {
             private TileNum tn;
@@ -216,7 +226,7 @@ namespace MapsLibrary
         public Bitmap createImageTile(TileNum tn) 
         {
             Bitmap img = null;
-            string file = strTileCachePath + tn.ToString('\\') + ".png";
+            string file = mTileCachePath + tn.ToString('\\') + ".png";
             do {
                 if (File.Exists(file)) {
                     try
@@ -248,14 +258,14 @@ namespace MapsLibrary
         public Bitmap createNotFoundImageTile()
         {
             // crea un bitmap nero
-            Bitmap img = new Bitmap(mapsys.tilesize, mapsys.tilesize);
+            Bitmap img = new Bitmap(mMapsys.tilesize, mMapsys.tilesize);
             using (Graphics g = Graphics.FromImage(img))
             using (Font font = new Font(FontFamily.GenericSerif, 10, FontStyle.Regular))
             using (Brush brush = new SolidBrush(Color.White))
             using (Pen pen = new Pen(Color.White))
             {
                 g.DrawString("Tile Not Available", font, brush, 10, 10);
-                g.DrawRectangle(pen, 0, 0, mapsys.tilesize, mapsys.tilesize);
+                g.DrawRectangle(pen, 0, 0, mMapsys.tilesize, mMapsys.tilesize);
             }
             return img;
         }
@@ -276,8 +286,8 @@ namespace MapsLibrary
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom, DownloadMode mode)
         {
-            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
-                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
             TileIdxType x1 = Math.Min(tn1.X, tn2.X),
                         x2 = Math.Max(tn1.X, tn2.X),
                         y1 = Math.Min(tn1.Y, tn2.Y),
@@ -297,8 +307,8 @@ namespace MapsLibrary
         /// <param name="Zoom">livello di Zoom dei tile da scaricare</param>
 /*        public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
-            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
-                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
             TileIdxType x1 = Math.Min(tn1.X, tn2.X),
                         x2 = Math.Max(tn1.X, tn2.X),
                         y1 = Math.Min(tn1.Y, tn2.Y),
@@ -315,12 +325,12 @@ namespace MapsLibrary
         public virtual void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
             // Struttura directory: zoom/x/y.png
-            string sZoomDir = strTileCachePath + zoom + '\\';
+            string sZoomDir = mTileCachePath + zoom + '\\';
             if (!Directory.Exists(sZoomDir))
                 return;
 
-            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
-                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
             TileIdxType x1 = Math.Min(tn1.X, tn2.X),
                         x2 = Math.Max(tn1.X, tn2.X),
                         y1 = Math.Min(tn1.Y, tn2.Y),
@@ -344,14 +354,14 @@ namespace MapsLibrary
         /// </summary>
         protected string TileFile(TileNum tn)
         {
-            return strTileCachePath + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
+            return mTileCachePath + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
         }
 
         /*
         public virtual void updateTilesInArea2(ProjectedGeoArea area, uint zoom)
         {
-            TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
-                    tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+            TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
             TileIdxType x1 = Math.Min(tn1.X, tn2.X),
                         x2 = Math.Max(tn1.X, tn2.X),
                         y1 = Math.Min(tn1.Y, tn2.Y),
@@ -359,7 +369,7 @@ namespace MapsLibrary
                         ix, iy;
             // Struttura directory: zoom/x/y.png
             try {
-                string sZoomDir = strTileCachePath + zoom + '\\';
+                string sZoomDir = mTileCacheBasePath + zoom + '\\';
                 DirectoryInfo diZoom = new DirectoryInfo(sZoomDir);
                 if (!diZoom.Exists) throw new DirectoryNotFoundException();
                 foreach (DirectoryInfo diCurrX in diZoom.GetDirectories())
@@ -908,6 +918,18 @@ namespace MapsLibrary
             }
         }
 
+        /// <summary>
+        /// Stringa che identifica il Tile Map System
+        /// </summary>
+        /// <remarks>
+        /// I differenti Tile Map System, solitamente sono distinti e identificati attraverso il server che ospita i tile, questo rappresenta un identificatore più leggibile e sintetico.
+        /// Può essere utile anche per associare fra di loro diversi server che ospitano gli stessi tile (mirror).
+        /// </remarks>
+        public abstract string identifier
+        {
+            get;
+        }
+
         public PxCoordinates GeoToPx(GeoPoint gp, uint zoom)
         {
             PxCoordinates px;
@@ -1096,6 +1118,7 @@ namespace MapsLibrary
         /// </summary>
         public override string TileUrl(TileNum tn)
         {
+            //TODO: sistemare l'utilizzo di sTileServer in modo che non includa i path per i comamdi delle query
             return sTileServer + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
         }
 
@@ -1113,6 +1136,15 @@ namespace MapsLibrary
                 return 8;
             }
         }
+
+        public override string identifier
+        {
+            get
+            {
+                Uri srvuri = new Uri(sTileServer);
+                return srvuri.Host + '_' + sTileServer.GetHashCode().ToString("X8");
+            }
+        }
     }
 
     public class MapnikMapSystem : OSMTileMapSystem
@@ -1127,13 +1159,67 @@ namespace MapsLibrary
 
     public class OsmarenderMapSystem : OSMTileMapSystem
     {
+        public override uint MaxZoom
+        {
+            get
+            {
+                return 18;
+            }
+        }
         /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>
         /// <returns>un oggetto di tipo TileInfo o un suo derivato contenente le informazioni sul tile</returns>
         protected override MapsLibrary.TileMapSystem.TileInfo getTileInfo(MapsLibrary.TileNum tn, System.Net.HttpWebResponse httpResponse)
         {
-            return base.getTileInfo(tn, httpResponse);
+            TileInfo tinfo = base.getTileInfo(tn, httpResponse);
+
+            Uri uriserver = new Uri(this.sTileServer);
+            //TODO: una volta che sTileServer contiene solo la base e non il path dei comandi posso evitare l'estrazione dell'host qui sotto
+            string tileinfourl = uriserver.Scheme + "://" + uriserver.Host + "/Browse/details/tile/" 
+                                 + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + '/';
+            try
+            {
+                string htmlpage;
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(tileinfourl);
+                using (HttpWebResponse httpResp = (HttpWebResponse)httpRequest.GetResponse())
+                using (System.IO.Stream dataStream = httpResp.GetResponseStream())
+                using (StreamReader reader = new StreamReader(dataStream))
+                    htmlpage = reader.ReadToEnd();
+
+                //TODO: estrarre le informazioni sul tile da htmlpage e salvarle in tinfo
+            }
+            catch (WebException) 
+            {
+                System.Diagnostics.Debug.WriteLine("Impossibile scaricare le informazioni del tile - " + tileinfourl);
+            }
+
+            return tinfo;
         }
     }
+
+    public class NoNameMapSystem : OSMTileMapSystem
+    {
+        public NoNameMapSystem()
+            : base("http://dev.openstreetmap.org/~random/no-names/")
+        { }
+
+        public override string identifier
+        {
+            get
+            {
+                return "noname_" + sTileServer.GetHashCode().ToString("X8");
+            }
+        }
+
+        /// <summary>
+        /// Restituisce l'URL dell'immagine del tile
+        /// </summary>
+        public override string TileUrl(TileNum tn)
+        {
+            return sTileServer + "?zoom=" + tn.uZoom.ToString() + "&lat=" + tn.X.ToString() + "&lon=" + tn.Y.ToString() + "&layers=0B000";
+        }
+
+    }
+
 
     public class CachedTilesMap : TilesMap, IDisposable
     {
@@ -1203,11 +1289,11 @@ namespace MapsLibrary
 
         public override void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta)
         {
-            PxCoordinates pxcMin = mapsys.PointToPx(area.pMin, zoom),
-                          pxcMax = mapsys.PointToPx(area.pMax, zoom);
+            PxCoordinates pxcMin = mMapsys.PointToPx(area.pMin, zoom),
+                          pxcMax = mMapsys.PointToPx(area.pMax, zoom);
             //PxCoordinates pxAreaSize = pxcMax - pxcMin + new PxCoordinates(1, 1);
-            TileNum tnMin = mapsys.PxToTileNum(pxcMin, zoom),
-                    tnMax = mapsys.PxToTileNum(pxcMax, zoom);
+            TileNum tnMin = mMapsys.PxToTileNum(pxcMin, zoom),
+                    tnMax = mMapsys.PxToTileNum(pxcMax, zoom);
             pxcMax += new PxCoordinates(1, 1);  // credo vada bene giusto per l'utilizzo che ne faccio dopo
 
             TileNum tn;
@@ -1216,7 +1302,7 @@ namespace MapsLibrary
             {
                 for (tn.Y = tnMin.Y; tn.Y <= tnMax.Y; tn.Y++)
                 {
-                    PxCoordinates pxcTileCorner = mapsys.TileNumToPx(tn),
+                    PxCoordinates pxcTileCorner = mMapsys.TileNumToPx(tn),
                                   tileareaoffset = pxcTileCorner - pxcMin;
 
                     //------------------------- X ------------------
@@ -1233,9 +1319,9 @@ namespace MapsLibrary
                         outx = (int)(delta.X + tileareaoffset.xpx);
                         srcx = 0;
                     }
-                    PxType pxTileMaxX = pxcTileCorner.xpx + mapsys.tilesize;
+                    PxType pxTileMaxX = pxcTileCorner.xpx + mMapsys.tilesize;
 
-                    srcsx = mapsys.tilesize - srcx;
+                    srcsx = mMapsys.tilesize - srcx;
                     // se il tile va oltre l'area d disegnare
                     if (pxTileMaxX > pxcMax.xpx)
                         srcsx -= (int)(pxTileMaxX - pxcMax.xpx);
@@ -1254,9 +1340,9 @@ namespace MapsLibrary
                         outy = (int)(delta.Y + tileareaoffset.ypx);
                         srcy = 0;
                     }
-                    PxType pxTileMaxY = pxcTileCorner.ypx + mapsys.tilesize;
+                    PxType pxTileMaxY = pxcTileCorner.ypx + mMapsys.tilesize;
 
-                    srcsy = mapsys.tilesize - srcy;
+                    srcsy = mMapsys.tilesize - srcy;
                     // se il tile va oltre l'area d disegnare
                     if (pxTileMaxY > pxcMax.ypx)
                         srcsy -= (int)(pxTileMaxY - pxcMax.ypx);

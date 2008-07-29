@@ -1,7 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="MapsLibrary.PointsCollection" Collapsed="true">
+  <Class Name="MapsLibrary.PointsCollection">
     <Position X="11.5" Y="3.25" Width="1.5" />
+    <NestedTypes>
+      <Interface Name="MapsLibrary.PointsCollection.Iterator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>LayerPoints.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Class Name="MapsLibrary.PointsCollection.QTreeNode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>LayerPoints.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAAAgAAAIAAAAAAAAAAAAAAAAEAA=</HashCode>
       <FileName>LayerPoints.cs</FileName>
@@ -54,7 +66,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAEAAAAEAAAAAAAAAAAgAAhAREAAAACUAAAIAAAwAA=</HashCode>
+      <HashCode>iAAEAAAAAAACAAAAAAAAgEAhAREAAAACQAAAIAAAhAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -75,7 +87,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.TileMapSystem">
-    <Position X="0.5" Y="10.25" Width="2.25" />
+    <Position X="0.5" Y="10.25" Width="2.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -87,14 +99,14 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AQAAAAAAgAAAAEACBAAgAQCAAQAAAAAAAAIAAAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAgAAAAEACBAAgAQCAAQAAAABAAAIAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
     <Position X="0.5" Y="15.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAAAAAAAAQAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAABAAAAAQAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -114,7 +126,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3" Y="11" Width="2" />
+    <Position X="3.25" Y="11" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -146,7 +158,7 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Struct Name="MapsLibrary.HTTPFileDownloader.FileDownloadInfo" Collapsed="true">
+      <Struct Name="MapsLibrary.HTTPFileDownloader.FileDownloadInfo">
         <TypeIdentifier>
           <NewMemberFileName>Map.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -177,7 +189,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.GoogleMapsSystem">
-    <Position X="3" Y="13" Width="2" />
+    <Position X="3.25" Y="13" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAQAAIAAAABAAAhAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -198,15 +210,22 @@
       <FileName>LRUQueue.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.MapnikMapSystem">
-    <Position X="0.5" Y="18.25" Width="2" />
+  <Class Name="MapsLibrary.NoNameMapSystem">
+    <Position X="5" Y="18.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OsmarenderMapSystem">
-    <Position X="3" Y="18.25" Width="2" />
+    <Position X="0.5" Y="18.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapsLibrary.MapnikMapSystem">
+    <Position X="2.75" Y="18.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>

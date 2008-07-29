@@ -40,11 +40,11 @@ namespace MapsLibrary
         {
             if (zoom == oldZoom && map_center != oldCenter)
             {
-                PxCoordinates pxCenter = mapsys.PointToPx(map_center, zoom),
-                              shift = pxCenter - mapsys.PointToPx(oldCenter, zoom),
+                PxCoordinates pxCenter = mMapsys.PointToPx(map_center, zoom),
+                              shift = pxCenter - mMapsys.PointToPx(oldCenter, zoom),
                               raC1 = pxCenter + shift * 4 - raareasize / 2,
                               raC2 = raC1 + raareasize;
-                ProjectedGeoArea raArea = new ProjectedGeoArea(mapsys.PxToPoint(raC1, zoom), mapsys.PxToPoint(raC2, zoom));
+                ProjectedGeoArea raArea = new ProjectedGeoArea(mMapsys.PxToPoint(raC1, zoom), mMapsys.PxToPoint(raC2, zoom));
                 lock (joblock)
                 {
                     jobArea = raArea;
@@ -70,8 +70,8 @@ namespace MapsLibrary
                     area = jobArea;
                     zoom = jobZoom;
                 }
-                TileNum tn1 = mapsys.PointToTileNum(area.pMin, zoom),
-                        tn2 = mapsys.PointToTileNum(area.pMax, zoom);
+                TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                        tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
                 TileIdxType x1 = Math.Min(tn1.X, tn2.X),
                             x2 = Math.Max(tn1.X, tn2.X),
                             y1 = Math.Min(tn1.Y, tn2.Y),
