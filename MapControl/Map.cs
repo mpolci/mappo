@@ -1087,17 +1087,20 @@ namespace MapsLibrary
         {
             public string uri;
             public DateTime modifiedtime;
+            public DateTime downloadedtime;
             public long lenght;
 
             public TileInfo(HttpWebResponse response)
             {
                 uri = response.ResponseUri.ToString();
                 modifiedtime = response.LastModified;
+                downloadedtime = modifiedtime;
                 lenght = response.ContentLength;
             }
 
             public virtual bool wasUpdated(TileInfo tileinfosaved)
             {
+                // TODO: controllare quanto tempo è passato dal download
                 return tileinfosaved == null 
                        || this.modifiedtime > tileinfosaved.modifiedtime
                        || this.lenght != tileinfosaved.lenght;
@@ -1168,8 +1171,11 @@ namespace MapsLibrary
         }
     }
 
-    public class OsmarenderMapSystem : OSMTileMapSystem
+    public class TAHMapSystem : OSMTileMapSystem
     {
+        public TAHMapSystem(string tileserver) : base(tileserver)
+        { }
+
         public override uint MaxZoom
         {
             get
@@ -1196,11 +1202,23 @@ namespace MapsLibrary
                 using (StreamReader reader = new StreamReader(dataStream))
                     htmlpage = reader.ReadToEnd();
 
-                //TODO: estrarre le informazioni sul tile da htmlpage e salvarle in tinfo
+                int pos = htmlpage.IndexOf("Base Tileset");
+                if (pos == -1) throw new Exception("formato pagina non valido");
+                pos += "Base Tileset".Length;
+                pos = htmlpage.IndexOf("Last modified:", pos);
+                if (pos == -1) throw new Exception("formato pagina non valido");
+                pos += "Last modified:".Length;
+                int endpos = htmlpage.IndexOf("<br", pos);
+                if (endpos == -1) throw new Exception("formato pagina non valido");
+                tinfo.modifiedtime = DateTime.Parse(htmlpage.Substring(pos, endpos - pos));
             }
-            catch (WebException) 
+            catch (WebException)
             {
                 System.Diagnostics.Debug.WriteLine("Impossibile scaricare le informazioni del tile - " + tileinfourl);
+            }
+            catch (Exception e) 
+            {
+                System.Diagnostics.Trace.WriteLine("Errore nel determinare le informazioni sul tile " + tn.ToString() + ": " + e.ToString());
             }
 
             return tinfo;
