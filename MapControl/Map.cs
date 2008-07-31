@@ -114,7 +114,7 @@ namespace MapsLibrary
             mapsystem = ms;
         }
 
-        public MercatorProjectionMapSystem mapsystem
+        public virtual MercatorProjectionMapSystem mapsystem
         {
             get {
                 return mMapsys;
@@ -228,6 +228,7 @@ namespace MapsLibrary
         public Bitmap createImageTile(TileNum tn) 
         {
             Bitmap img = null;
+            // TODO: utilizzare la funzione TileFile
             string file = mTileCachePath + tn.ToString('\\') + ".png";
             do {
                 if (File.Exists(file)) {
@@ -357,6 +358,14 @@ namespace MapsLibrary
         protected string TileFile(TileNum tn)
         {
             return mTileCachePath + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
+        }
+
+        public string TileCachePath
+        {
+            get
+            {
+                return mTileCachePath;
+            }
         }
 
         /*
@@ -1243,6 +1252,15 @@ namespace MapsLibrary
                 if (_imgTileNotFound == null)
                     _imgTileNotFound = createNotFoundImageTile();
                 return _imgTileNotFound;
+            }
+        }
+
+        public override MapsLibrary.MercatorProjectionMapSystem mapsystem
+        {
+            set
+            {
+                if (lruqueue != null) lruqueue.Clear();
+                base.mapsystem = value;
             }
         }
 
