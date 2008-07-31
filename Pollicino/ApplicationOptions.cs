@@ -26,7 +26,7 @@ using System.IO;
 
 namespace MapperTools.Pollicino
 {
-    public class ApplicationOptions
+    public class ApplicationOptions : ICloneable
     {
         public struct GPSOptions
         {
@@ -65,6 +65,7 @@ namespace MapperTools.Pollicino
             public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
         }
 
+        public string version;
         public GPSOptions GPS;
         public MapsOptions Maps;
         public InterfaceOptions Application;
@@ -100,6 +101,7 @@ namespace MapperTools.Pollicino
 
         public ApplicationOptions()
         {
+            version = "1.0";
             GPS.PortName = "";
             GPS.SimulationFile = "";
             GPS.LogsDir = "";
@@ -108,5 +110,19 @@ namespace MapperTools.Pollicino
             Maps.GMaps.CachePath = "";
             Application.WaypointSoundFile = "";
         }
+
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            ApplicationOptions cloned = new ApplicationOptions();
+            System.Diagnostics.Debug.Assert(GPS.GetType().IsValueType && Maps.GetType().IsValueType && Application.GetType().IsValueType);
+            cloned.GPS = this.GPS;
+            cloned.Maps = this.Maps;
+            cloned.Application = this.Application;
+            return cloned;
+        }
+
+        #endregion
     }
 }

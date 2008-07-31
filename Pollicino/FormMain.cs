@@ -379,11 +379,11 @@ namespace MapperTools.Pollicino
         {
             using (FormOptions opt = new FormOptions())
             {
-                opt.data = this.options;
+                opt.data = this.options.Clone();
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
-                    MessageBox.Show("The tile server is changed. You need to restart the application and you may need to refresh or delete the cache.", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    this.map.mapsystem = new OSMTileMapSystem(newopt.Maps.OSM.OSMTileServer);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
