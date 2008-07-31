@@ -222,14 +222,14 @@ namespace MapperTools.Pollicino
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(232, 242);
+            this.tabPage2.Size = new System.Drawing.Size(240, 245);
             this.tabPage2.Text = "Maps";
             // 
             // combo_TileServer
             // 
             this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
-            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile.php/");
+            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile/");
             this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
             this.combo_TileServer.Name = "combo_TileServer";
             this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
