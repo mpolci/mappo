@@ -127,6 +127,8 @@ namespace MapsLibrary
                 {
                     Directory.CreateDirectory(mTileCachePath);
                 }
+                if (MapChanged != null)
+                    MapChanged(this, this.mapsystem.FullMapArea);
             }
         }
 
