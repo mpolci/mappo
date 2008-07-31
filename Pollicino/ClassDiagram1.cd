@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="NMEA2GPX.GPXGenerator">
+  <Class Name="MapperTools.NMEA2GPX.GPXGenerator">
     <Position X="0.5" Y="4" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Class Name="NMEA2GPX.GPXGenerator.gpx" Collapsed="true">
+      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.gpx" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
-      <Struct Name="NMEA2GPX.GPXGenerator.waypoint" Collapsed="true">
+      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.waypoint" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Class Name="NMEA2GPX.GPXGenerator.Link" Collapsed="true">
+      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.Link" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
-      <Struct Name="NMEA2GPX.GPXGenerator.track" Collapsed="true">
+      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.track" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -32,69 +32,64 @@
       <FileName>NmeaToGpx.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.ApplicationOptions">
+  <Class Name="MapperTools.Pollicino.ApplicationOptions">
     <Position X="4.5" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Struct Name="MapperTool.ApplicationOptions.GPSOptions" Collapsed="true">
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.GPSOptions" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Struct Name="MapperTool.ApplicationOptions.MapsOptions" Collapsed="true">
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.MapsOptions" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Struct Name="MapperTool.ApplicationOptions.InterfaceOptions" Collapsed="true">
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.InterfaceOptions" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAgABAAAAAAAAAAAAAIAAAAAAAEAAAAAACAAAA=</HashCode>
+      <HashCode>AAAAACAgABAAAAAAAAAAAAAIAAAAAAgEAAAAAACAABA=</HashCode>
       <FileName>ApplicationOptions.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MapperTool.ApplicationResources" Collapsed="true">
-    <Position X="7" Y="2" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAQAABAAAAAAAAABEAAAAQAAAAAAAAQAIAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="MapperTool.Form_MapperToolMain">
+  <Class Name="MapperTools.Pollicino.Form_MapperToolMain">
     <Position X="11.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>KMACGC+YISwAAJKGQRCQowCCAcbGWElFwCoEJYJBACI=</HashCode>
+      <HashCode>KMACGC+YIS4AAJKGQRCQowACAQbGWEkFwCoEJYJBACI=</HashCode>
       <FileName>FormMain.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.FormOpenFile">
+  <Class Name="MapperTools.Pollicino.FormOpenFile">
     <Position X="14" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>IAIIAAAAQCICAAQAAASAAAACEABQEAAACAAAAAAgBAE=</HashCode>
       <FileName>FormOpenFile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.FormOptions">
+  <Class Name="MapperTools.Pollicino.FormOptions">
     <Position X="9" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>MACASGgEViAAUhAAICCAkAQCAKAAUQAoABAUAAgCBUA=</HashCode>
+      <HashCode>cACASGgEViAAUhAAICCAkAQCAKAAUQE4ABAUAAgCBUA=</HashCode>
       <FileName>FormOptions.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.GPSControl">
+  <Class Name="MapperTools.Pollicino.GPSControl">
     <Position X="2.5" Y="0.5" Width="1.5" />
     <NestedTypes>
-      <Struct Name="MapperTool.GPSControl.GPSPosition" Collapsed="true">
+      <Struct Name="MapperTools.Pollicino.GPSControl.GPSPosition" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>GPSControl.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
-      <Delegate Name="MapperTool.GPSControl.PositionUpdateHandler" Collapsed="true">
+      <Delegate Name="MapperTools.Pollicino.GPSControl.PositionUpdateHandler" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>GPSControl.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -105,30 +100,24 @@
       <FileName>GPSControl.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.GPWPL">
+  <Class Name="MapperTools.Pollicino.GPWPL">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIAYAAACAAAAACAIAAAAAAgCAAEEAAAAAAABAAAAAA=</HashCode>
       <FileName>Waypoint.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.Program" Collapsed="true">
+  <Class Name="MapperTools.Pollicino.Program" Collapsed="true">
     <Position X="7" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.Properties.Resources" Collapsed="true">
-    <Position X="7" Y="1.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAEAAAAAEAAAAQAAAAAgAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="MapperTool.Downloader">
+  <Class Name="MapperTools.Pollicino.Downloader">
     <Position X="7" Y="2.75" Width="1.75" />
     <NestedTypes>
-      <Struct Name="MapperTool.Downloader.AreaMapItem" Collapsed="true">
+      <Struct Name="MapperTools.Pollicino.Downloader.AreaMapItem" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Downloader.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -139,17 +128,17 @@
       <FileName>Downloader.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapperTool.BlinkingControlNotifier">
+  <Class Name="MapperTools.Pollicino.BlinkingControlNotifier">
     <Position X="4.5" Y="6" Width="2.5" />
     <NestedTypes>
-      <Delegate Name="MapperTool.BlinkingControlNotifier.AsyncDelegate" Collapsed="true">
+      <Delegate Name="MapperTools.Pollicino.BlinkingControlNotifier.AsyncDelegate" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>BlinkingControlNotifier.cs</NewMemberFileName>
         </TypeIdentifier>
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>ACAAAAwAACgABAAAAACFAUACAAAAAAAFAAAAAEAEAEA=</HashCode>
+      <HashCode>ACAAAAwAACgABAAAAACFA0ACAAAAAAAFAAAAAEAEAEA=</HashCode>
       <FileName>BlinkingControlNotifier.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

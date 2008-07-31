@@ -65,7 +65,19 @@ namespace MapperTools.Pollicino
             public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
         }
 
-        public string version;
+        /// <summary>
+        /// Versione attuale delle opzioni dell'applicazione
+        /// </summary>
+        /// <remarks>
+        /// Quando viene modificata questa classe è probabile che questo valore debba essere incrementato di uno.
+        /// Attenzione al tipo di modifiche sulla classe. Eliminare o rinominare dei campi potrebbe creare dei problemi quando viene caricato un file di configurazione di una vecchia versione. Sarebbe meglio aggiungere nuovi campi e considerati deprecati i nomi vecchi e non più utilizzati.
+        /// </remarks>
+        public const uint CurrentVersion = 1;
+        /// <summary>
+        /// Versione dellle opzioni.
+        /// </summary>
+        /// <remarks>Permette di salvare nel file di configurazione il numero di versione delle opzioni. Grazie a questo è possibile effettuare eventuali aggiornamenti ai dati salvati quando si fa un aggiornamento del programma.</remarks>
+        public uint version;
         public GPSOptions GPS;
         public MapsOptions Maps;
         public InterfaceOptions Application;
@@ -101,7 +113,7 @@ namespace MapperTools.Pollicino
 
         public ApplicationOptions()
         {
-            version = "1.0";
+            version = 0;
             GPS.PortName = "";
             GPS.SimulationFile = "";
             GPS.LogsDir = "";

@@ -85,18 +85,7 @@ namespace MapperTools.Pollicino
             gpx_saver.Notifier = blinkcnGPX;
             
             // carica le opzioni dal file di configurazione
-            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
-            try
-            {
-                options = (System.IO.File.Exists(configfile)) ?
-                           ApplicationOptions.FromFile(configfile) : DefaultOptions();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Config file error! Resetting options to default.");
-                options = DefaultOptions();
-            }
+            carica_opzioni();
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
@@ -143,6 +132,7 @@ namespace MapperTools.Pollicino
             waypoints.SetDrawPointFunction(LayerPoints.DrawEmptySquare, new Pen(Color.Red));
             idx_layer_waypnt = lmap.addLayerOnTop(waypoints);
 
+            verifica_opzioni_intermedio();
 
             mapcontrol.Map = lmap;
             this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.prepara_mappe);
@@ -153,10 +143,62 @@ namespace MapperTools.Pollicino
             autocenter = options.Application.AutoCentreMap;
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
 
+            verifica_opzioni_finale();
+
             // processa eventuali file di log che non sono ancora stati convertiti in GPX
             if (Directory.Exists(options.GPS.LogsDir)) 
                 gpx_saver.ParseLogsDir(options.GPS.LogsDir);
         
+        }
+
+        private void carica_opzioni()
+        {
+            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
+            try
+            {
+                if (System.IO.File.Exists(configfile)) {
+                    options = ApplicationOptions.FromFile(configfile);
+                    // qui posso controllare il numero di versione ed effettua eventuali aggiornamenti
+                    //if (options.version < ??) ...
+                    // ATTENZIONE! il numero di versione verrà aggiornato in verifica_opzioni_finale()
+                } else 
+                    options = DefaultOptions();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Config file error! Resetting options to default.");
+                options = DefaultOptions();
+            }
+        }
+
+        private void verifica_opzioni_intermedio()
+        {
+            if (options.version < 1)
+            {
+                // è necessario spostare gli eventuali file dei tile
+                // TODO: spostare i file dei tile nella nuova directory
+                DirectoryInfo newdir = new DirectoryInfo(map.TileCachePath);
+                if (!newdir.Exists) newdir.Create();
+                DirectoryInfo source = new DirectoryInfo(options.Maps.OSM.TileCachePath);
+                foreach (DirectoryInfo zoomdir in source.GetDirectories())
+                {
+                    try
+                    {
+                        zoomdir.MoveTo(newdir.FullName + zoomdir.Name);
+                    }
+                    catch (IOException) { }  // l'eccezione verrà sicuramente generata perché newdir è sottodirectory di source
+                }
+            }
+        }
+
+        private void verifica_opzioni_finale()
+        {
+            if (options.version < ApplicationOptions.CurrentVersion)
+            {
+                options.version = ApplicationOptions.CurrentVersion;
+                options.SaveToFile(this.configfile);
+            }
         }
 
         /// <summary>
@@ -379,7 +421,7 @@ namespace MapperTools.Pollicino
         {
             using (FormOptions opt = new FormOptions())
             {
-                opt.data = this.options.Clone();
+                opt.data = (ApplicationOptions) this.options.Clone();
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
@@ -440,6 +482,7 @@ namespace MapperTools.Pollicino
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
             opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
+            opt.version = ApplicationOptions.CurrentVersion;
             return opt;
         }
 
