@@ -35,9 +35,9 @@ namespace MapperTools.Pollicino
             public AreaMapItem(IDownloadableMap m, ProjectedGeoArea a, uint z) { map = m; area = a; zoom = z; }
         }
 
-        //private Queue<AreaMapItem> q;
         private Stack<AreaMapItem> q;
         ManualResetEvent mre;
+        private AreaMapItem mLastInserted;
 
         bool runthread;
         Thread thr;
@@ -46,8 +46,8 @@ namespace MapperTools.Pollicino
 
         public Downloader(IWorkNotifier wnotifier)
         {
-            //q = new Queue<AreaMapItem>();
             q = new Stack<AreaMapItem>();
+            mLastInserted = new AreaMapItem(null, new ProjectedGeoArea(), 0);
             thr = new Thread(new ThreadStart(this.threadproc));
             thr.Priority = ThreadPriority.BelowNormal;
             thr.Name = "Map Downloader Thread";
@@ -89,7 +89,6 @@ namespace MapperTools.Pollicino
                     #endif
                     AreaMapItem item;
                     lock (q)
-                        //item = q.Dequeue();
                         item = q.Pop();
                     try
                     {
@@ -112,10 +111,16 @@ namespace MapperTools.Pollicino
         {
             if (runthread)
             {
-                lock (q)
-                    q.Push(new AreaMapItem(map, area, zoom));
-                    //q.Enqueue(new AreaMapItem(map, area, zoom));
-                mre.Set();
+                // aggiunge l'area solo se questa non è equivalente all'ultima inserita o si fa riferimento ad un'altra mappa
+                bool process =   zoom != mLastInserted.zoom ||
+                                 !ReferenceEquals(map, mLastInserted.map) ||
+                                 !map.CompareAreas(area, mLastInserted.area, zoom);
+                if (process) {
+                    mLastInserted = new AreaMapItem(map, area, zoom);
+                    lock (q)
+                        q.Push(mLastInserted);
+                    mre.Set();
+                }
             }
         }
 
