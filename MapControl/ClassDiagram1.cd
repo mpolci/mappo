@@ -85,7 +85,7 @@
   <Class Name="MapsLibrary.CachedTilesMap">
     <Position X="3.25" Y="4" Width="2" />
     <TypeIdentifier>
-      <HashCode>gAAECAAAAKAAAAAAAAABAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
+      <HashCode>gAAECAAABKAAAAAAAAABAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -168,7 +168,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.ReadAheadCachedTilesMap">
-    <Position X="3.25" Y="7.25" Width="2" />
+    <Position X="3.25" Y="7.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
       <FileName>ReadAheadCachedTilesMap.cs</FileName>
@@ -226,7 +226,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>iAAEAAAAAAACAAgAAAAAgEAhAREAAAACQCAAIAAAhAA=</HashCode>
+      <HashCode>iAAEAAAABAACAAgAAAAAgEAhAREAAAACQCAAIAAAhAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

@@ -173,6 +173,9 @@ namespace MapsLibrary
                     // HTTPFileDownloader.downloadToFile(url, file.FullName, true);
                     bool changed = mMapsys.SaveTileToFile(tn, file.FullName);
                     // se il tile è stato scaricato invalida l'area relativa al tile
+                    if (changed)
+                        onTileChanged(tn);
+                    /*
                     if (changed && this.MapChanged != null)
                     {
                         PxCoordinates corner = mMapsys.TileNumToPx(tn),
@@ -180,6 +183,7 @@ namespace MapsLibrary
                         ProjectedGeoArea tilearea = new ProjectedGeoArea(mMapsys.PxToPoint(corner, tn.uZoom), mMapsys.PxToPoint(limit, tn.uZoom));
                         MapChanged(this, tilearea);
                     }
+                    */
                 }
             }
             catch (WebException we)
@@ -392,6 +396,18 @@ namespace MapsLibrary
             get
             {
                 return mTileCachePath;
+            }
+        }
+
+        protected virtual void onTileChanged(TileNum tn)
+        {
+            // Lancia l'evento MapChanged sull'area relativa al tile per invalidarla
+            if (MapChanged != null)
+            {
+                PxCoordinates corner = mMapsys.TileNumToPx(tn),
+                              limit = corner + new PxCoordinates(mMapsys.tilesize, mMapsys.tilesize);
+                ProjectedGeoArea tilearea = new ProjectedGeoArea(mMapsys.PxToPoint(corner, tn.uZoom), mMapsys.PxToPoint(limit, tn.uZoom));
+                MapChanged(this, tilearea);
             }
         }
 
@@ -1443,6 +1459,17 @@ namespace MapsLibrary
         }
 
         #endregion
+
+        protected override void onTileChanged(TileNum tn)
+        {
+            if (lruqueue.Contains(tn))
+            {
+                Bitmap bmp = lruqueue.Remove(tn);
+                Debug.Assert(bmp != null, "Il bitmap rimosso per tile cambiato è null");
+                bmp.Dispose();
+            }
+            base.onTileChanged(tn);
+        }
     }
 
     /// <summary>
