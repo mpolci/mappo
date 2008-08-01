@@ -77,6 +77,12 @@ namespace MapsLibrary
         {
             return this.ToString('/');
         }
+/*
+        public static bool operator ==(TileNum t1, TileNum t2)
+        {
+            return t1.uZoom == t2.uZoom && t1.X == t2.X && t1.Y == t2.Y;
+        }
+*/
     }
 
     public abstract class TilesMap : IMap, IDownloadableMap
@@ -138,13 +144,14 @@ namespace MapsLibrary
         {
             return zoom.ToString() + separator + x.ToString() + separator + y.ToString();
         }
-
+        
         /// <remarks>Può essere utilizzato come Handler per l'evento TileNotFound</remarks>
         public void downloadTile(TileNum tn) 
         {
+            //downloadTile(tn, DownloadMode.NoOverwrite);
             downloadTile(tn, DownloadMode.NoOverwrite);
         }
-
+        
         /// <summary>
         /// Scarica il tile indicato
         /// </summary>
@@ -164,9 +171,9 @@ namespace MapsLibrary
                 {
                     // può lanciare l'eccezzione System.Net.WebException
                     // HTTPFileDownloader.downloadToFile(url, file.FullName, true);
-                    mMapsys.SaveTileToFile(tn, file.FullName);
-                    // invalida l'area relativa al tile
-                    if (this.MapChanged != null)
+                    bool changed = mMapsys.SaveTileToFile(tn, file.FullName);
+                    // se il tile è stato scaricato invalida l'area relativa al tile
+                    if (changed && this.MapChanged != null)
                     {
                         PxCoordinates corner = mMapsys.TileNumToPx(tn),
                                       limit = corner + new PxCoordinates(mMapsys.tilesize, mMapsys.tilesize);
@@ -273,15 +280,35 @@ namespace MapsLibrary
             return img;
         }
 
-        
+        #region IDownloadableMap Members
+        /// <summary>
+        /// Confronta due aree per determinare se sono equivalenti ai fini del download, cioè corrispondo agli stessi tile
+        /// </summary>
+        /// <remarks>Utilizzato per evitare di tentare il download più volte su aree che sono equivalenti.</remarks>
+        /// <returns>true se le aree sono equivalenti ai fini del download</returns>
+        public bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom)
+        {
+            TileNum min1 = mMapsys.PointToTileNum(area1.pMin, zoom),
+                    min2 = mMapsys.PointToTileNum(area2.pMin, zoom);
+            if (min1.uZoom == min2.uZoom && min1.X == min2.X && min1.Y == min2.Y) 
+            {
+                TileNum max1 = mMapsys.PointToTileNum(area1.pMax, zoom),
+                        max2 = mMapsys.PointToTileNum(area2.pMax, zoom);
+                return max1.uZoom == max2.uZoom && max1.X == max2.X && max1.Y == max2.Y;
+            } 
+            else 
+                return false;
+        }
+
         /// <summary>
         /// Scarica, se necessario, i tile relativi all'area indicata
         /// </summary>
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
-            DownloadMapArea(area, zoom, DownloadMode.NoOverwrite);
+            //DownloadMapArea(area, zoom, DownloadMode.NoOverwrite);
+            DownloadMapArea(area, zoom, DownloadMode.Overwrite);
         }
-        
+        #endregion
         /// <summary>
         /// Scarica i tile che comprendono l'area indicata
         /// </summary>
@@ -1015,36 +1042,39 @@ namespace MapsLibrary
             bool saved = false;
             try
             {
-                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(this.TileUrl(tn));
-                using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
+                TileInfo tileinfosaved = getSavedTileInfo(filename);
+                if (tileinfosaved == null || !tileinfosaved.isRecent())  // procede solo se il tile non è stato scaricato di recente
                 {
-                    TileInfo tileinfonew = getTileInfo(tn, httpResponse),
-                             tileinfosaved = getSavedTileInfo(filename);
-
-                    bool download = tileinfonew.wasUpdated(tileinfosaved);
-
-                    if (download)
+                    HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(this.TileUrl(tn));
+                    using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
                     {
-                        using (System.IO.Stream dataStream = httpResponse.GetResponseStream())
-                        using (System.IO.FileStream outstream = new FileStream(filename, FileMode.Create))
+                        TileInfo tileinfonew = getTileInfo(tn, httpResponse);
+                        if (tileinfonew.wasUpdated(tileinfosaved)) // scarica solo se il tile è stato aggiornato
                         {
-                            const int BUFFSIZE = 8192;
-                            byte[] buffer = new byte[BUFFSIZE];
-                            int count = dataStream.Read(buffer, 0, BUFFSIZE);
-                            while (count > 0)
+                            using (System.IO.Stream dataStream = httpResponse.GetResponseStream())
+                            using (System.IO.FileStream outstream = new FileStream(filename, FileMode.Create))
                             {
-                                outstream.Write(buffer, 0, count);
-                                count = dataStream.Read(buffer, 0, BUFFSIZE);
+                                const int BUFFSIZE = 8192;
+                                byte[] buffer = new byte[BUFFSIZE];
+                                int count = dataStream.Read(buffer, 0, BUFFSIZE);
+                                while (count > 0)
+                                {
+                                    outstream.Write(buffer, 0, count);
+                                    count = dataStream.Read(buffer, 0, BUFFSIZE);
+                                }
+                                outstream.Close();
+                                dataStream.Close();
+                                httpResponse.Close();
                             }
-                            outstream.Close();
-                            dataStream.Close();
-                            httpResponse.Close();
+                            // salva le informazioni di download
+                            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(TileInfo));
+                            using (FileStream outs = new FileStream(filename + ".info", FileMode.Create))
+                            {
+                                ser.Serialize(outs, tileinfonew);
+                                outs.Close();
+                            }
+                            saved = true;
                         }
-                        // salva le informazioni di download
-                        System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(TileInfo));
-                        using (FileStream outs = new FileStream(filename + ".info", FileMode.Create))
-                            ser.Serialize(outs, tileinfonew);
-                        saved = true;
                     }
                 }
             }
@@ -1064,8 +1094,11 @@ namespace MapsLibrary
                 using (FileStream ins = new FileStream(filename + ".info", FileMode.Open))
                     fdi = (TileInfo)ser.Deserialize(ins);
             }
-            catch (Exception)
-            { }
+            catch (System.IO.FileNotFoundException) { }
+            catch (Exception e)
+            {
+                System.Diagnostics.Trace.WriteLine("Impossibile caricare il file di info relativo a " + filename + " - " + e.ToString());
+            }
             return fdi;
         }
 
@@ -1090,11 +1123,14 @@ namespace MapsLibrary
             public DateTime downloadedtime;
             public long lenght;
 
+            public TileInfo()  // necessario, altrimenti non posso usare XMLSerializer
+            { }
+
             public TileInfo(HttpWebResponse response)
             {
                 uri = response.ResponseUri.ToString();
                 modifiedtime = response.LastModified;
-                downloadedtime = modifiedtime;
+                downloadedtime = DateTime.Now;
                 lenght = response.ContentLength;
             }
 
@@ -1105,10 +1141,15 @@ namespace MapsLibrary
                        || this.modifiedtime > tileinfosaved.modifiedtime
                        || this.lenght != tileinfosaved.lenght;
             }
+
+            public bool isRecent()
+            {
+                return (DateTime.Now - downloadedtime).TotalMinutes < 60;
+            }
         }
 
         /// <summary>
-        /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile. 
+        /// Restituisce il nome del file (con path relativo) utilizzato per rappresentare il tile.
         /// </summary>
         //public abstract string TileFile(TileNum tn);
     }
@@ -1636,6 +1677,13 @@ namespace MapsLibrary
             }
         }
 
+        #region IDownloadable Members
+        public bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom)
+        {
+            //return area1 == area2;
+            return false; // HACK: il confronto fra aree non è implementato
+        }
+
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
             PxCoordinates cursorstart = msys.PointToPx(area.pMin, zoom) + new PxCoordinates(msys.imagemapsize / 2, msys.imagemapsize / 2),
@@ -1667,6 +1715,7 @@ namespace MapsLibrary
                 }
             }
         }
+        #endregion
 
         protected void downloadAt(ProjectedGeoPoint center, uint zoom, bool overwrite)
         {
@@ -1925,6 +1974,13 @@ namespace MapsLibrary
         /// Metodo utilizzato per scaricare i dati relativi ad un'area 
         /// </summary>
         void DownloadMapArea(ProjectedGeoArea area, uint zoom);
+
+        /// <summary>
+        /// Confronta due aree per determinare se sono equivalenti ai fini del download
+        /// </summary>
+        /// <remarks>Utilizzato per evitare di tentare il download più volte su aree che sono equivalenti.</remarks>
+        /// <returns>true se le aree sono equivalenti ai fini del download</returns>
+        bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom);
     }
 
     public class GoogleMapsSystem : SparseImagesMapSystem

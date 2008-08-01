@@ -43,34 +43,6 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MapsLibrary.TilesMap">
-    <Position X="0.5" Y="0.5" Width="2.5" />
-    <Compartments>
-      <Compartment Name="Nested Types" Collapsed="false" />
-    </Compartments>
-    <NestedTypes>
-      <Enum Name="MapsLibrary.TilesMap.DownloadMode" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Map.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-      <Delegate Name="MapsLibrary.TilesMap.TileNotFoundHandler" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Map.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-      <Class Name="MapsLibrary.TilesMap.TileNotFoundException" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Map.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
-    <TypeIdentifier>
-      <HashCode>iAAEAAAAAAACAAAAAAAAgEAhAREAAAACQAAAIAAAhAA=</HashCode>
-      <FileName>Map.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="MapsLibrary.LayeredMap" BaseTypeListCollapsed="true">
     <Position X="5.5" Y="8.5" Width="1.5" />
     <NestedTypes>
@@ -147,7 +119,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gFAABAAQAAABEgABAAAAAAAhEQAAAAAAEACMAAAAgAA=</HashCode>
+      <HashCode>gFAABAAQAAABEggBAAAAAAAhEQAAAAAAEACMAAAAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -217,7 +189,7 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MapsLibrary.OsmarenderMapSystem">
+  <Class Name="MapsLibrary.TAHMapSystem">
     <Position X="0.5" Y="18.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -231,7 +203,35 @@
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Struct Name="MapsLibrary.TileNum" Collapsed="true">
+  <Class Name="MapsLibrary.TilesMap">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="MapsLibrary.TilesMap.DownloadMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="MapsLibrary.TilesMap.TileNotFoundHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Class Name="MapsLibrary.TilesMap.TileNotFoundException" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>iAAEAAAAAAACAAgAAAAAgEAhAREAAAACQCAAIAAAhAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Struct Name="MapsLibrary.TileNum">
     <Position X="7.75" Y="6" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
@@ -286,7 +286,7 @@
   <Interface Name="MapsLibrary.IDownloadableMap">
     <Position X="3.25" Y="2.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Interface>
