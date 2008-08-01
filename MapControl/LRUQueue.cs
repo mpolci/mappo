@@ -25,6 +25,25 @@ namespace MapsLibrary
             }
         }
 
+        public TData Remove(TKey to_remove)
+        {
+            lock (accesslock)
+            {
+                System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency");
+                if (Contains(to_remove))
+                {
+                    keys.Remove(to_remove);
+                    TData v = (TData)data[to_remove];
+                    data.Remove(to_remove);
+                    System.Diagnostics.Debug.Assert(!data.Contains(to_remove), "data contains removed item");
+                    System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency after element removing");
+                    return v;
+                }
+                else
+                    return default(TData);
+            }
+        }
+
         public TData RemoveOlder()
         {
             lock (accesslock)
