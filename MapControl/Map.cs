@@ -239,8 +239,7 @@ namespace MapsLibrary
         public Bitmap createImageTile(TileNum tn) 
         {
             Bitmap img = null;
-            // TODO: utilizzare la funzione TileFile
-            string file = mTileCachePath + tn.ToString('\\') + ".png";
+            string file = TileFile(tn);
             do {
                 if (File.Exists(file)) {
                     try
@@ -388,7 +387,7 @@ namespace MapsLibrary
         /// </summary>
         protected string TileFile(TileNum tn)
         {
-            return mTileCachePath + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
+            return mTileCachePath + tn.uZoom.ToString() + '\\' + tn.X.ToString() + '\\' + tn.Y.ToString() + ".png";
         }
 
         public string TileCachePath
@@ -1078,6 +1077,7 @@ namespace MapsLibrary
                                     outstream.Write(buffer, 0, count);
                                     count = dataStream.Read(buffer, 0, BUFFSIZE);
                                 }
+                                tileinfonew.lenght = outstream.Length;
                                 outstream.Close();
                                 dataStream.Close();
                                 httpResponse.Close();
@@ -1152,7 +1152,6 @@ namespace MapsLibrary
 
             public virtual bool wasUpdated(TileInfo tileinfosaved)
             {
-                // TODO: controllare quanto tempo è passato dal download
                 return tileinfosaved == null 
                        || this.modifiedtime > tileinfosaved.modifiedtime
                        || this.lenght != tileinfosaved.lenght;
@@ -1160,7 +1159,7 @@ namespace MapsLibrary
 
             public bool isRecent()
             {
-                return (DateTime.Now - downloadedtime).TotalMinutes < 60;
+                return (DateTime.Now - downloadedtime).TotalMinutes < 360;
             }
         }
 
@@ -1193,6 +1192,24 @@ namespace MapsLibrary
             return sTileServer + tn.uZoom.ToString() + '/' + tn.X.ToString() + '/' + tn.Y.ToString() + ".png";
         }
 
+        /// <summary>
+        /// Crea l'oggetto di tipo OSMTileMapSystem o discendente più adeguato per il tile server indicato
+        /// </summary>
+        public static OSMTileMapSystem CreateOSMMapSystem(string serverurl)
+        {
+            switch (serverurl)
+            {
+                case "http://tile.openstreetmap.org/":
+                    return new MapnikMapSystem(serverurl); 
+                case "http://tah.openstreetmap.org/Tiles/tile/":
+                    return new TAHMapSystem(serverurl);
+                //case "http://dev.openstreetmap.org/~random/no-names/":
+                //    return new NoNameMapSystem();
+                default:
+                    return new OSMTileMapSystem(serverurl);
+            }
+        }
+
         public override uint MaxZoom
         {
             get
@@ -1220,11 +1237,63 @@ namespace MapsLibrary
 
     public class MapnikMapSystem : OSMTileMapSystem
     {
+        public MapnikMapSystem(string tileserver)
+            : base(tileserver)
+        { }
+
+        public override uint MaxZoom {
+            get {
+                return 19;
+            }
+        }
+
+        public override string identifier
+        {
+            get
+            {
+                return "OSM_mapnik";
+            }
+        }
+
         /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>
         /// <returns>un oggetto di tipo TileInfo o un suo derivato contenente le informazioni sul tile</returns>
-        protected override MapsLibrary.TileMapSystem.TileInfo getTileInfo(MapsLibrary.TileNum tn, System.Net.HttpWebResponse httpResponse)
+        protected override TileInfo getTileInfo(TileNum tn, System.Net.HttpWebResponse httpResponse)
         {
-            return base.getTileInfo(tn, httpResponse);
+            TileInfo tinfo = base.getTileInfo(tn, httpResponse);
+
+            string tileinfourl = TileUrl(tn) + "/status";
+            try
+            {
+                string htmlpage;
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(tileinfourl);
+                using (HttpWebResponse httpResp = (HttpWebResponse)httpRequest.GetResponse())
+                using (System.IO.Stream dataStream = httpResp.GetResponseStream())
+                using (StreamReader reader = new StreamReader(dataStream))
+                    htmlpage = reader.ReadToEnd();
+
+                int pos = htmlpage.IndexOf("Last rendered at ");
+                if (pos == -1) throw new Exception("formato pagina non valido");
+                pos += "Last rendered at ".Length;
+                string renderedtime = htmlpage.Substring(pos).TrimEnd(new char[] { '\n', '.' });
+                tinfo.modifiedtime = DateTime.ParseExact(renderedtime, "ddd MMM dd HH:mm:ss yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (WebException)
+            {
+                System.Diagnostics.Debug.WriteLine("Impossibile scaricare le informazioni del tile - " + tileinfourl);
+            }
+            catch (FormatException)
+            {
+                System.Diagnostics.Trace.WriteLine("Errore: formato data non valido nell'ottenere le informazioni sul tile  " + tn.ToString() );
+                #if DEBUG
+                System.Windows.Forms.MessageBox.Show("Errore! Formato data non valido nel download delle informazioni del tile");
+                #endif
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Trace.WriteLine("Errore nel determinare le informazioni sul tile " + tn.ToString() + ": " + e.ToString());
+            }
+
+            return tinfo;
         }
     }
 
@@ -1233,11 +1302,17 @@ namespace MapsLibrary
         public TAHMapSystem(string tileserver) : base(tileserver)
         { }
 
-        public override uint MaxZoom
+        public override uint MaxZoom {
+            get {
+                return 18;
+            }
+        }
+
+        public override string identifier
         {
             get
             {
-                return 18;
+                return "tiles@home";
             }
         }
         /// <param name="httpResponse">relativa alla connessione con il server per il download del tile</param>

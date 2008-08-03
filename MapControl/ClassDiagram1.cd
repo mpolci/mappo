@@ -76,9 +76,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.OSMTileMapSystem">
-    <Position X="0.5" Y="15.75" Width="2.5" />
+    <Position X="0.5" Y="16" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQAAAAABAAAAAQAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAACAAkAAAAQAAAAABAAAAAQAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -183,23 +183,23 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.NoNameMapSystem">
-    <Position X="5" Y="18.75" Width="2" />
+    <Position X="5" Y="19" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.TAHMapSystem">
-    <Position X="0.5" Y="18.75" Width="2" />
+    <Position X="0.5" Y="19" Width="2" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAQAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.MapnikMapSystem">
-    <Position X="2.75" Y="18.75" Width="1.75" />
+    <Position X="2.75" Y="19" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAQAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Class>
