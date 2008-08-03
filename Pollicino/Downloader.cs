@@ -73,6 +73,12 @@ namespace MapperTools.Pollicino
             thr.Join();
         }
 
+        public void clearQueue()
+        {
+            lock (q) 
+                q.Clear();
+        }
+
         private void threadproc()
         {
             #if DEBUG

@@ -117,7 +117,8 @@ namespace MapperTools.Pollicino
             // mappe
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 10);
+            this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), 10);
+
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
@@ -177,7 +178,6 @@ namespace MapperTools.Pollicino
             if (options.version < 1)
             {
                 // è necessario spostare gli eventuali file dei tile
-                // TODO: spostare i file dei tile nella nuova directory
                 DirectoryInfo newdir = new DirectoryInfo(map.TileCachePath);
                 if (!newdir.Exists) newdir.Create();
                 DirectoryInfo source = new DirectoryInfo(options.Maps.OSM.TileCachePath);
@@ -336,6 +336,8 @@ namespace MapperTools.Pollicino
         {
             options.Maps.AutoDownload = !options.Maps.AutoDownload;
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
+            if (!options.Maps.AutoDownload)
+                downloader.clearQueue();
         }
 
         private void menuItem_showpos_Click(object sender, EventArgs e)
@@ -425,7 +427,7 @@ namespace MapperTools.Pollicino
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
-                    this.map.mapsystem = new OSMTileMapSystem(newopt.Maps.OSM.OSMTileServer);
+                    this.map.mapsystem = OSMTileMapSystem.CreateOSMMapSystem(newopt.Maps.OSM.OSMTileServer);
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
