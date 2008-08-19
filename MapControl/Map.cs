@@ -1796,8 +1796,8 @@ namespace MapsLibrary
             if (cursorstart.ypx > areacenter.ypx)
                 cursorstart.ypx = areacenter.ypx;
 
-            int step = msys.imagemapsize - downloadimageoverlap, 
-                maxdist = msys.PxToPoint(new PxCoordinates(step, 0), zoom).nLon;  
+            int step = msys.imagemapsize - downloadimageoverlap,
+                maxdist = msys.PxToPoint(new PxCoordinates(msys.imagemapsize / 2, 0), zoom).nLon;  
 
             PxCoordinates cursor;
             for (cursor.xpx = cursorstart.xpx; cursor.xpx <= areasuplimit.xpx; cursor.xpx += step)
