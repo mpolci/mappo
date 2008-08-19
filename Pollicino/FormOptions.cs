@@ -191,6 +191,16 @@ namespace MapperTools.Pollicino
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
+        private void button_waypointsound_Click(object sender, EventArgs e)
+        {
+            string opendir = Path.GetDirectoryName(tb_waypointsound.Text);
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    tb_waypointsound.Text = openfiledlg.openfile;
+        }
+
 
     }
 }

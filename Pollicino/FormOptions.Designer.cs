@@ -344,7 +344,7 @@ namespace MapperTools.Pollicino
             this.tabPage3.Controls.Add(this.cb_waypointsound);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(232, 242);
+            this.tabPage3.Size = new System.Drawing.Size(240, 245);
             this.tabPage3.Text = "Interface";
             // 
             // combo_CameraButton
@@ -436,7 +436,7 @@ namespace MapperTools.Pollicino
             // 
             // cb_recordaudio
             // 
-            this.cb_recordaudio.Location = new System.Drawing.Point(0, 56);
+            this.cb_recordaudio.Location = new System.Drawing.Point(3, 56);
             this.cb_recordaudio.Name = "cb_recordaudio";
             this.cb_recordaudio.Size = new System.Drawing.Size(230, 20);
             this.cb_recordaudio.TabIndex = 19;
@@ -449,6 +449,7 @@ namespace MapperTools.Pollicino
             this.button_waypointsound.Size = new System.Drawing.Size(21, 21);
             this.button_waypointsound.TabIndex = 18;
             this.button_waypointsound.Text = "...";
+            this.button_waypointsound.Click += new System.EventHandler(this.button_waypointsound_Click);
             // 
             // tb_waypointsound
             // 
