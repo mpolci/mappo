@@ -382,16 +382,16 @@ namespace MapperTools.Pollicino
         private void menuItem_downloadmaps_Click(object sender, EventArgs e)
         {
             ProjectedGeoArea area = mapcontrol.VisibleArea;
-            for (uint i = (mapcontrol.Zoom > 1) ? -1 : 0; i <= options.Maps.OSM.DownloadDepth; i++)
+            for (int i = (mapcontrol.Zoom > 1) ? -1 : 0; i <= options.Maps.OSM.DownloadDepth; i++)
             {
-                uint z = mapcontrol.Zoom + i;
+                uint z = (uint) (mapcontrol.Zoom + i);
                 downloader.addDownloadArea(map, area, z);
                 if (i <= 2)
                     downloader.addDownloadArea(gmap, area, z);
             }
 
         }
-
+/*
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
         {
 
@@ -418,7 +418,7 @@ namespace MapperTools.Pollicino
 
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
-
+*/
         private void menuItem_config_Click(object sender, EventArgs e)
         {
             using (FormOptions opt = new FormOptions())

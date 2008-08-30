@@ -60,7 +60,6 @@ namespace MapperTools.Pollicino
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
-            this.menuItem_refreshTileCache = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
@@ -137,7 +136,6 @@ namespace MapperTools.Pollicino
             // menuItem4
             // 
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
-            this.menuItem4.MenuItems.Add(this.menuItem_refreshTileCache);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
             this.menuItem4.Text = "Other";
             // 
@@ -145,11 +143,6 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_downloadmaps.Text = "Download maps";
             this.menuItem_downloadmaps.Click += new System.EventHandler(this.menuItem_downloadmaps_Click);
-            // 
-            // menuItem_refreshTileCache
-            // 
-            this.menuItem_refreshTileCache.Text = "Refresh tiles cache";
-            this.menuItem_refreshTileCache.Click += new System.EventHandler(this.menuItem_refreshTileCache_Click);
             // 
             // menuItem_loadtrack
             // 
@@ -339,7 +332,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_followGPS;
         private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
         private System.Windows.Forms.MenuItem menuItem_exit;
-        private System.Windows.Forms.MenuItem menuItem_refreshTileCache;
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
         private System.Windows.Forms.MenuItem menuItem_autodownload;
