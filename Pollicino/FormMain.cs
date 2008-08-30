@@ -525,19 +525,28 @@ namespace MapperTools.Pollicino
                 if (!Directory.Exists(outdir))
                     Directory.CreateDirectory(outdir);
 
-                using (CameraCaptureDialog cameraCapture = new CameraCaptureDialog())
+                try
                 {
-                    cameraCapture.Owner = this;
-                    cameraCapture.InitialDirectory = outdir;
-                    cameraCapture.DefaultFileName = "temp.jpg";
-                    cameraCapture.Title = "Waypoint photo";
-                    //cameraCapture.Resolution = new Size(176, 144);
-                    cameraCapture.Mode = CameraCaptureMode.Still;
-                    if (cameraCapture.ShowDialog() == DialogResult.OK) {
-                        GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
-                        File.Move(cameraCapture.FileName, WaypointNames.PictureFile(this.logname, gpsdata.fixtime));
-                        waypoint_created(gpsdata);
+                    using (CameraCaptureDialog cameraCapture = new CameraCaptureDialog())
+                    {
+                        cameraCapture.Owner = this;
+                        cameraCapture.InitialDirectory = outdir;
+                        cameraCapture.DefaultFileName = "temp.jpg";
+                        cameraCapture.Title = "Waypoint photo";
+                        //cameraCapture.Resolution = new Size(176, 144);
+                        cameraCapture.Mode = CameraCaptureMode.Still;
+                        if (cameraCapture.ShowDialog() == DialogResult.OK)
+                        {
+                            GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
+                            File.Move(cameraCapture.FileName, WaypointNames.PictureFile(this.logname, gpsdata.fixtime));
+                            waypoint_created(gpsdata);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Funzionalità non supportata in questo dispositivo.");
+                    System.Diagnostics.Trace.WriteLine("--- Errore nell'utilizzo della fotocamera: " + e.ToString());
                 }
             }
         }
