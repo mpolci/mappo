@@ -346,6 +346,12 @@ namespace MapperTools.Pollicino
             menuItem_showpos.Checked = mapcontrol.ShowPosition;
         }
 
+        private void menuItem_showscale_Click(object sender, EventArgs e)
+        {
+            mapcontrol.ShowScaleRef = !mapcontrol.ShowScaleRef;
+            menuItem_showscale.Checked = mapcontrol.ShowScaleRef;
+        }
+
         private void menuItem_photo_Click(object sender, EventArgs e)
         {
             action_takephoto();

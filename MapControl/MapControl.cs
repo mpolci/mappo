@@ -43,6 +43,7 @@ namespace MapsLibrary
         private bool dragging;
 
         private bool _showcross;
+        private bool _showscaleref;
 
         public delegate void MapControlEventHandler(MapControl sender);
         public event MapControlEventHandler PrePaint;
@@ -57,8 +58,25 @@ namespace MapsLibrary
             pgpCenter = new ProjectedGeoPoint();
             dragging = false;
             _showcross = false;
+            _showscaleref = true;
+
+            using (Font f = getDrawingFont())
+            {
+                drawingfont_height = Tools.GetTextMetrics(f).tmHeight;
+                crossline_hlen = drawingfont_height * 3 / 2;
+            }
         }
 
+        #region campi e metodi utilizzati dal metodo paint
+
+        private static Font getDrawingFont()
+        {
+            return new Font("Arial", 8, FontStyle.Regular);
+        }
+
+        private readonly int drawingfont_height, crossline_hlen;
+
+        #endregion
 
         /// <summary>
         /// Mappa disegnata dal controllo
@@ -228,40 +246,83 @@ namespace MapsLibrary
                 // Il buffer viene disegnato il più vicino possibile alla croce e alle coordinate per minimizzare il flickering
                 //e.Graphics.DrawImage(buffer, 0, 0);
 
-                // croce centrale con coordinate
-                if (this.ShowPosition)
-                {
-                    int x = this.Size.Width / 2,
-                        y = this.Size.Height / 2;
-                    const int halflinelen = 8;
+                bool _showpos = this.ShowPosition,
+                     _showscale = this.ShowScaleRef && (this.Zoom >= 7);
 
+                // TODO: e se il font lo tenessi sempre, invece di rigenerarlo ad ogni paint?
+                Font drawFont = getDrawingFont();
+
+                // croce centrale con coordinate - preparazione 
+                // HACK: devo assegnare le seguenti variabili anche se non mi servono sempre. Il problema è causato dalla divisione in 2 dell'if
+                int scr_cent_x = 0, scr_cent_y = 0;
+                if (_showpos)
+                {
+                    scr_cent_x = this.Size.Width / 2;
+                    scr_cent_y = this.Size.Height / 2;
+                }
+                // riferimento di scala - preparazione
+                const int scalerefhlen = 40;
+                // HACK: devo assegnare le seguenti variabili anche se non mi servono sempre. Il problema è causato dalla divisione in 2 dell'if
+                int reflen_meters = 0;
+                if (_showscale)
+                {
+                    PxCoordinates p1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom),
+                                  p2 = p1;
+                    p1.xpx -= scalerefhlen; p2.xpx += scalerefhlen;
+                    GeoPoint g1 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p1, Zoom)),
+                             g2 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p2, Zoom));
+                    double len = g1.Distance(g2);
+                    reflen_meters = (len < int.MaxValue) ? (int)len : 0;
+                }
+
+                //----- Procede con il disegno effettivo. Prima il buffer con la mappa, poi le scritte sovrapposte.
+                e.Graphics.DrawImage(buffer, 0, 0);
+
+                // croce centrale con coordinate - disegno 
+                if (_showpos)
+                {
                     GeoPoint gpCenter = map.mapsystem.CalcInverseProjection(this.Center);
                     using (Pen pen = new Pen(Color.Black))
-                    using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+                    //using ()
                     using (SolidBrush blackBrush = new SolidBrush(Color.Black))
                     using (SolidBrush whiteBrush = new SolidBrush(Color.White))
                     {
-                        e.Graphics.DrawImage(buffer, 0, 0);
-                        e.Graphics.DrawLine(pen, x - halflinelen, y, x + halflinelen, y);
-                        e.Graphics.DrawLine(pen, x, y - halflinelen, x, y + halflinelen);
+                        //e.Graphics.DrawImage(buffer, 0, 0);
+                        e.Graphics.DrawLine(pen, scr_cent_x - crossline_hlen, scr_cent_y, scr_cent_x + crossline_hlen, scr_cent_y);
+                        e.Graphics.DrawLine(pen, scr_cent_x, scr_cent_y - crossline_hlen, scr_cent_x, scr_cent_y + crossline_hlen);
                         e.Graphics.DrawString(gpCenter.ToString(), drawFont, whiteBrush, 1, 1);
                         e.Graphics.DrawString(gpCenter.ToString(), drawFont, blackBrush, 0, 0);
                     }
                 }
-                else
+                // riferimento di scala - disegno
+                if (_showscale)
                 {
-                    e.Graphics.DrawImage(buffer, 0, 0);
+                    int base_y_txt = drawingfont_height,
+                        base_y_line = drawingfont_height + drawingfont_height / 2,
+                        y1 = base_y_line - drawingfont_height / 2,
+                        y2 = base_y_line + drawingfont_height / 2,
+                        ref_x1 = 10,
+                        ref_x2 = ref_x1 + 2*scalerefhlen;
+                    using (Pen pen = new Pen(Color.Black))
+                    //using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+                    using (SolidBrush blackBrush = new SolidBrush(Color.Black))
+                    using (SolidBrush whiteBrush = new SolidBrush(Color.White))
+                    {
+                        e.Graphics.DrawLine(pen, ref_x1, base_y_line, ref_x2, base_y_line);
+                        e.Graphics.DrawLine(pen, ref_x1, y1, ref_x1, y2);
+                        e.Graphics.DrawLine(pen, ref_x2, y1, ref_x2, y2);
+                        e.Graphics.DrawString(reflen_meters.ToString() + " m", drawFont, blackBrush, ref_x2 + 5, base_y_txt);
+                    }
                 }
 
-
-
-
 #if DEBUG
+                int ptime_base_y = drawingfont_height * 2;
                 string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
-                using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
+                //using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
                 using (SolidBrush drawBrush = new SolidBrush(Color.Black))
-                    e.Graphics.DrawString(msg, drawFont, drawBrush, 0, 12);
+                    e.Graphics.DrawString(msg, drawFont, drawBrush, 0, ptime_base_y);
 #endif
+                drawFont.Dispose();
             }
             else
             {
@@ -321,6 +382,24 @@ namespace MapsLibrary
                 if (_showcross != value)
                 {
                     _showcross = value;
+                    Invalidate();
+                }
+            }
+        }
+        /// <summary>
+        /// Indica/imposta la visualizzazione di un riferimento di scala
+        /// </summary>
+        public bool ShowScaleRef
+        {
+            get
+            {
+                return _showscaleref;
+            }
+            set
+            {
+                if (_showscaleref != value)
+                {
+                    _showscaleref = value;
                     Invalidate();
                 }
             }

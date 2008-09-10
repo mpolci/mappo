@@ -469,6 +469,35 @@ namespace MapsLibrary
         {
             return "Lat: " + dLat.ToString("F7") + " Lon: " + dLon.ToString("F7");
         }
+
+        /// <summary>
+        /// Distance in meters, using the Harversine Formula (Great circle).
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>Distance in meters</returns>
+        /// <remarks>
+        /// See:
+        /// http://en.wikipedia.org/wiki/Great-circle_distance
+        /// http://williams.best.vwh.net/avform.htm (Aviation Formulary)
+        /// 
+        /// Source code from SharpGPS http://www.codeplex.com/SharpGPS
+        /// </remarks>
+        public double Distance(GeoPoint other)
+        {
+            const double rad = Math.PI / 180;
+            const double NauticalMile = 1852;
+
+            double lon1 = rad * -dLon;
+            double lat1 = rad * dLat;
+            double lon2 = rad * -other.dLon;
+            double lat2 = rad * other.dLat;
+
+            double d = 2 * Math.Asin(Math.Sqrt(
+                Math.Pow(Math.Sin((lat1 - lat2) / 2), 2) + Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin((lon1 - lon2) / 2), 2)
+            ));
+            return (double)(NauticalMile * 60 * d / rad);
+        }
+
     }
 
     public class LayeredMap : IMap
@@ -1284,9 +1313,10 @@ namespace MapsLibrary
             catch (FormatException)
             {
                 System.Diagnostics.Trace.WriteLine("Errore: formato data non valido nell'ottenere le informazioni sul tile  " + tn.ToString() );
-                #if DEBUG
+                // HACK: il messaggio qui sotto deve essere messo solo in fase di DEBUG
+                //#if DEBUG
                 System.Windows.Forms.MessageBox.Show("Errore! Formato data non valido nel download delle informazioni del tile");
-                #endif
+                //#endif
             }
             catch (Exception e)
             {

@@ -66,10 +66,12 @@ namespace MapperTools.Pollicino
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem_map_osm = new System.Windows.Forms.MenuItem();
             this.menuItem_map_gmaps = new System.Windows.Forms.MenuItem();
-            this.menuItem_showpos = new System.Windows.Forms.MenuItem();
             this.menuItem_followGPS = new System.Windows.Forms.MenuItem();
             this.menuItem_autodownload = new System.Windows.Forms.MenuItem();
             this.menuItem_config = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.menuItem_showpos = new System.Windows.Forms.MenuItem();
+            this.menuItem_showscale = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
@@ -157,10 +159,10 @@ namespace MapperTools.Pollicino
             // menuItem2
             // 
             this.menuItem2.MenuItems.Add(this.menuItem3);
-            this.menuItem2.MenuItems.Add(this.menuItem_showpos);
             this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
+            this.menuItem2.MenuItems.Add(this.menuItem8);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -180,11 +182,6 @@ namespace MapperTools.Pollicino
             this.menuItem_map_gmaps.Text = "GMaps";
             this.menuItem_map_gmaps.Click += new System.EventHandler(this.menuItem_map_gmaps_Click);
             // 
-            // menuItem_showpos
-            // 
-            this.menuItem_showpos.Text = "Show position";
-            this.menuItem_showpos.Click += new System.EventHandler(this.menuItem_showpos_Click);
-            // 
             // menuItem_followGPS
             // 
             this.menuItem_followGPS.Text = "Follow GPS";
@@ -199,6 +196,22 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_config.Text = "Configuration...";
             this.menuItem_config.Click += new System.EventHandler(this.menuItem_config_Click);
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.MenuItems.Add(this.menuItem_showpos);
+            this.menuItem8.MenuItems.Add(this.menuItem_showscale);
+            this.menuItem8.Text = "Show";
+            // 
+            // menuItem_showpos
+            // 
+            this.menuItem_showpos.Text = "Position";
+            this.menuItem_showpos.Click += new System.EventHandler(this.menuItem_showpos_Click);
+            // 
+            // menuItem_showscale
+            // 
+            this.menuItem_showscale.Text = "Scale";
+            this.menuItem_showscale.Click += new System.EventHandler(this.menuItem_showscale_Click);
             // 
             // label1
             // 
@@ -227,6 +240,7 @@ namespace MapperTools.Pollicino
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
             this.mapcontrol.Name = "mapcontrol";
             this.mapcontrol.ShowPosition = false;
+            this.mapcontrol.ShowScaleRef = false;
             this.mapcontrol.Size = new System.Drawing.Size(240, 268);
             this.mapcontrol.TabIndex = 0;
             this.mapcontrol.Zoom = ((uint)(0u));
@@ -346,6 +360,8 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_photo;
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem menuItem_showscale;
 
 
 

@@ -63,7 +63,7 @@
   <Class Name="MapperTools.Pollicino.Form_MapperToolMain">
     <Position X="11.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>KMACGC+YIS4AAJKGQRCQowACAQbGWEkFwCoEJYJBACI=</HashCode>
+      <HashCode>KMACGC+YISoAAJKGQRCQowACAQbEWEkFwCoEJYJBACI=</HashCode>
       <FileName>FormMain.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -124,7 +124,7 @@
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAASAIABAAAAAAAAAAAAgAEAQAACAAAAgAAAA=</HashCode>
+      <HashCode>AAAAAAAAASAIABAIAAAAAAAAAAgAEAQAACAAAAggAAA=</HashCode>
       <FileName>Downloader.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -143,5 +143,12 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
+  <Interface Name="MapperTools.Pollicino.IWorkNotifier">
+    <Position X="7.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>
