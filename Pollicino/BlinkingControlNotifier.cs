@@ -3,11 +3,16 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Runtime.InteropServices;
+
 
 namespace MapperTools.Pollicino
 {
     public partial class BlinkingControlNotifier : Component, IWorkNotifier
     {
+        [DllImport("coredll")]
+        extern static void SystemIdleTimerReset();
+
         public BlinkingControlNotifier()
         {
             InitializeComponent();
@@ -135,6 +140,7 @@ namespace MapperTools.Pollicino
         {
             //if (control == null || control.IsDisposed) return;
             control.Visible = !control.Visible;
+            SystemIdleTimerReset();
         }
      }
 }
