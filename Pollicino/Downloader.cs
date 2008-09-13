@@ -95,7 +95,19 @@ namespace MapperTools.Pollicino
                     #endif
                     AreaMapItem item;
                     lock (q)
+                    {
                         item = q.Pop();
+                        ProjectedGeoArea[] subareas = item.map.SimplifyDownloadArea(item.area, item.zoom);
+                        if (subareas.Length > 1)
+                        {
+                            // l'area è stata scomposta in aree più piccole che vengono rimesse in coda
+                            foreach (ProjectedGeoArea sa in subareas)
+                                q.Push(new AreaMapItem(item.map, sa, item.zoom));
+                            continue;
+                        }
+                        else
+                            item.area = subareas[0];
+                    }
                     try
                     {
                         item.map.DownloadMapArea(item.area, item.zoom);

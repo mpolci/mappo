@@ -302,6 +302,36 @@ namespace MapsLibrary
             else 
                 return false;
         }
+        /// <summary>
+        /// Semplifica l'area per il download
+        /// </summary>
+        /// <remarks>Se l'area è di lato maggiore di 2 tile, viene spezzata in blocchi 2x2.</remarks>
+        /// <returns>Array di aree equivalenti per il download</returns>
+        public ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom)
+        {
+            TileNum tn1 = mMapsys.PointToTileNum(area.pMin, zoom),
+                    tn2 = mMapsys.PointToTileNum(area.pMax, zoom);
+            TileIdxType x1 = Math.Min(tn1.X, tn2.X),
+                        x2 = Math.Max(tn1.X, tn2.X) + 1,
+                        y1 = Math.Min(tn1.Y, tn2.Y),
+                        y2 = Math.Max(tn1.Y, tn2.Y) + 1;
+            //TODO: ottimizzare questo ciclo
+            ArrayList result = new ArrayList();
+            for (TileIdxType xi = x1; xi < x2; xi += 2) {
+                TileIdxType xmax = Math.Min(xi + 2, x2);
+                for (TileIdxType yi = y1; yi < y2; yi += 2)
+                {
+                    TileIdxType ymax = Math.Min(yi + 2, y2);
+                    TileNum tnmin = new TileNum(xi, yi, zoom),
+                            tnmax = new TileNum(xmax, ymax, zoom);
+                    ProjectedGeoPoint pmax = mMapsys.TileNumToPoint(tnmax) - new ProjectedGeoPoint(1, 1);
+                    ProjectedGeoArea sa = new ProjectedGeoArea(mMapsys.TileNumToPoint(tnmin), pmax);
+                    result.Add(sa);
+                }
+            }
+            return (ProjectedGeoArea[]) result.ToArray(typeof(ProjectedGeoArea));
+        }
+        
 
         /// <summary>
         /// Scarica, se necessario, i tile relativi all'area indicata
@@ -1054,6 +1084,10 @@ namespace MapsLibrary
             return new TileNum(p.nLon >> factor, p.nLat >> factor, zoom);
         }
 
+        public ProjectedGeoPoint TileNumToPoint(TileNum tn) {
+            int factor = 30 - (int)tn.uZoom;
+            return new ProjectedGeoPoint(tn.Y << factor, tn.X << factor);
+        }
 
         public GeoPoint PxToGeo(PxCoordinates px, uint zoom)
         {
@@ -1816,6 +1850,11 @@ namespace MapsLibrary
             return false; // HACK: il confronto fra aree non è implementato
         }
 
+        public ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom)
+        {
+            return new ProjectedGeoArea[] { area };
+        }
+
         public void DownloadMapArea(ProjectedGeoArea area, uint zoom)
         {
             PxCoordinates cursorstart = msys.PointToPx(area.pMin, zoom) + new PxCoordinates(msys.imagemapsize / 2, msys.imagemapsize / 2),
@@ -2113,6 +2152,13 @@ namespace MapsLibrary
         /// <remarks>Utilizzato per evitare di tentare il download più volte su aree che sono equivalenti.</remarks>
         /// <returns>true se le aree sono equivalenti ai fini del download</returns>
         bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom);
+
+        /// <summary>
+        /// Semplifica l'area per il download
+        /// </summary>
+        /// <remarks>Metodo utilizzato per evitare che un processo di download di un'area sia troppo lungo. Deve restituire un array di aree il cui download sia equivalente all'area indicata ma che singolarmente non rappresentano un processo di download troppo grande.</remarks>
+        /// <returns>Array di aree equivalenti per il download</returns>
+        ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom);
     }
 
     public class GoogleMapsSystem : SparseImagesMapSystem
