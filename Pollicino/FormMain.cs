@@ -388,7 +388,8 @@ namespace MapperTools.Pollicino
         private void menuItem_downloadmaps_Click(object sender, EventArgs e)
         {
             ProjectedGeoArea area = mapcontrol.VisibleArea;
-            for (int i = (mapcontrol.Zoom > 1) ? -1 : 0; i <= options.Maps.OSM.DownloadDepth; i++)
+            int end = (mapcontrol.Zoom > 1) ? -1 : 0;
+            for (int i = options.Maps.OSM.DownloadDepth; i >=  end ; i--)
             {
                 uint z = (uint) (mapcontrol.Zoom + i);
                 downloader.addDownloadArea(map, area, z);
