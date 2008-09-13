@@ -261,9 +261,9 @@ namespace MapsLibrary
                     scr_cent_y = this.Size.Height / 2;
                 }
                 // riferimento di scala - preparazione
-                const int scalerefhlen = 40;
+                int scalerefhlen = drawingfont_height * 3;
                 // HACK: devo assegnare le seguenti variabili anche se non mi servono sempre. Il problema è causato dalla divisione in 2 dell'if
-                int reflen_meters = 0;
+                string strRefLen = null;
                 if (_showscale)
                 {
                     PxCoordinates p1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom),
@@ -272,7 +272,22 @@ namespace MapsLibrary
                     GeoPoint g1 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p1, Zoom)),
                              g2 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p2, Zoom));
                     double len = g1.Distance(g2);
-                    reflen_meters = (len < int.MaxValue) ? (int)len : 0;
+                    int reflen_meters = (len < int.MaxValue) ? (int)len : 0;
+                    // approssimazione
+                    int aprox = ((int)Math.Log10(len));
+                    if (aprox > 0)
+                    {
+                        int coeff = (int)Math.Pow(10, aprox);
+                        reflen_meters /= coeff;
+                        reflen_meters *= coeff;
+                    }
+                    scalerefhlen = (int)((double)reflen_meters / len * (double)scalerefhlen);
+                    // sceglie unità di misura e prepara stringa
+                    if (reflen_meters >= 1000)
+                        strRefLen = ((double)reflen_meters / 1000.0).ToString() + " km";
+                    else
+                        strRefLen = reflen_meters.ToString() + " m";
+
                 }
 
                 //----- Procede con il disegno effettivo. Prima il buffer con la mappa, poi le scritte sovrapposte.
@@ -301,7 +316,7 @@ namespace MapsLibrary
                         base_y_line = drawingfont_height + drawingfont_height / 2,
                         y1 = base_y_line - drawingfont_height / 2,
                         y2 = base_y_line + drawingfont_height / 2,
-                        ref_x1 = 10,
+                        ref_x1 = drawingfont_height/2,
                         ref_x2 = ref_x1 + 2*scalerefhlen;
                     using (Pen pen = new Pen(Color.Black))
                     //using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
@@ -311,7 +326,7 @@ namespace MapsLibrary
                         e.Graphics.DrawLine(pen, ref_x1, base_y_line, ref_x2, base_y_line);
                         e.Graphics.DrawLine(pen, ref_x1, y1, ref_x1, y2);
                         e.Graphics.DrawLine(pen, ref_x2, y1, ref_x2, y2);
-                        e.Graphics.DrawString(reflen_meters.ToString() + " m", drawFont, blackBrush, ref_x2 + 5, base_y_txt);
+                        e.Graphics.DrawString(strRefLen, drawFont, blackBrush, ref_x2 + drawingfont_height/2, base_y_txt);
                     }
                 }
 
