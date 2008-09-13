@@ -92,10 +92,25 @@ namespace MapperTools.Pollicino
                 wdebug.Close();
             }
 #endif
-            using (TextWriter writer = new StreamWriter(filename))
+            try
             {
-                serializer.Serialize(writer, this);            
-                writer.Close();
+                if (File.Exists(filename))
+                {
+                    string bckname = filename + "_backup";
+                    if (File.Exists(bckname))
+                        File.Delete(bckname);
+                    File.Move(filename, bckname);
+                }
+                using (TextWriter writer = new StreamWriter(filename))
+                {
+                    serializer.Serialize(writer, this);
+                    writer.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("Error saving configuration. Skipping.");
+                System.Diagnostics.Trace.WriteLine("--- Errore nel salvataggio della configurazione: " + e.ToString());
             }
         }
 
