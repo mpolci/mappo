@@ -144,6 +144,7 @@ namespace MapperTools.Pollicino
         {
             ApplicationOptions cloned = new ApplicationOptions();
             System.Diagnostics.Debug.Assert(GPS.GetType().IsValueType && Maps.GetType().IsValueType && Application.GetType().IsValueType);
+            cloned.version = version;
             cloned.GPS = this.GPS;
             cloned.Maps = this.Maps;
             cloned.Application = this.Application;
