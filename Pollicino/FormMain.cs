@@ -177,17 +177,31 @@ namespace MapperTools.Pollicino
         {
             if (options.version < 1)
             {
-                // è necessario spostare gli eventuali file dei tile
-                DirectoryInfo newdir = new DirectoryInfo(map.TileCachePath);
-                if (!newdir.Exists) newdir.Create();
-                DirectoryInfo source = new DirectoryInfo(options.Maps.OSM.TileCachePath);
-                foreach (DirectoryInfo zoomdir in source.GetDirectories())
+                try
                 {
-                    try
+                    // è necessario spostare gli eventuali file dei tile
+                    DirectoryInfo newdir = new DirectoryInfo(map.TileCachePath);
+                    if (!newdir.Exists) newdir.Create();
+                    DirectoryInfo source = new DirectoryInfo(options.Maps.OSM.TileCachePath);
+                    foreach (DirectoryInfo zoomdir in source.GetDirectories())
                     {
-                        zoomdir.MoveTo(newdir.FullName + zoomdir.Name);
+                        try
+                        {
+                            zoomdir.MoveTo(newdir.FullName + zoomdir.Name);
+                        }
+                        catch (IOException) { }  // l'eccezione verrà sicuramente generata perché newdir è sottodirectory di source
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Trace.WriteLine("---- " + DateTime.Now + " ---- Eccezione inaspettata");
+                            System.Diagnostics.Trace.WriteLine("Stato: " + source.FullName + " - " + newdir.FullName + " - " + zoomdir.Name);
+                            System.Diagnostics.Trace.WriteLine(ex.ToString());
+                            throw;
+                        }
                     }
-                    catch (IOException) { }  // l'eccezione verrà sicuramente generata perché newdir è sottodirectory di source
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Errore inaspettato! Si consiglia di inviare il file di log \"pollicino_log.txt\" all'autore.");
                 }
             }
         }
