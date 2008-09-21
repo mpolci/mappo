@@ -63,7 +63,7 @@
   <Class Name="MapperTools.Pollicino.Form_MapperToolMain">
     <Position X="11.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>KMACGC+YISoAAJKGQRCQowACAQbEWEkFwCoEJYJBACI=</HashCode>
+      <HashCode>KMACGC+cISoAAJKGQRCQoxACAQbEWEkFwCoEpYJBACI=</HashCode>
       <FileName>FormMain.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -138,10 +138,29 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>ACAAAAwAACgABAAAAACFA0ACAAAAAAAFAAAAAEAEAEA=</HashCode>
+      <HashCode>ACAAAAwAACgABAAAIACFA0ACAAAAAAAFAAAAAEAEAEA=</HashCode>
       <FileName>BlinkingControlNotifier.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MapperTools.Pollicino.AudioRecorder">
+    <Position X="2.5" Y="6.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="MapperTools.Pollicino.AudioRecorder.NewRecordState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AudioRecorder.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MapperTools.Pollicino.AudioRecorder.OverlappingRecordBehaviorTypes" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AudioRecorder.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAQBAAAMEAAAACAgIFIAAAAABgAgAAgICAAAEABAAQA=</HashCode>
+      <FileName>AudioRecorder.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="MapperTools.Pollicino.IWorkNotifier">
     <Position X="7.25" Y="6.25" Width="1.5" />

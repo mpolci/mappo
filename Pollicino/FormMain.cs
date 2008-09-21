@@ -402,6 +402,8 @@ namespace MapperTools.Pollicino
             }
             else
             {
+                if (wpt_recorder.Running)
+                    wpt_recorder.stop();
                 string logfile = gpsControl.stop();
                 gpx_saver.SaveGPX(logfile);
                 this.menuItem_gpsactivity.Text = "start GPS";
@@ -639,6 +641,8 @@ namespace MapperTools.Pollicino
 
         private void Form_MapperToolMain_Closing(object sender, CancelEventArgs e)
         {
+            if (wpt_recorder.Running)
+                wpt_recorder.stop();
             if (gpsControl.Started)
                 gpsControl.stop();
             downloader.stopThread();
