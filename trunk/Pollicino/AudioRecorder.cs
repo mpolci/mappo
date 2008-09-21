@@ -186,7 +186,7 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private void stop()
+        public void stop()
         {
             timer1.Dispose();
             timer1 = null;
