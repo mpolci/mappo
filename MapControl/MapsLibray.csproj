@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTypes.cs" />
+    <Compile Include="MapSystems.cs" />
     <Compile Include="LayerPoints.cs">
     </Compile>
     <Compile Include="LRUQueue.cs" />
