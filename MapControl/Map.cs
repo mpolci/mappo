@@ -58,6 +58,28 @@ namespace MapsLibrary
 
     }
 
+    public interface IDownloadableMap
+    {
+        /// <summary>
+        /// Metodo utilizzato per scaricare i dati relativi ad un'area 
+        /// </summary>
+        void DownloadMapArea(ProjectedGeoArea area, uint zoom);
+
+        /// <summary>
+        /// Confronta due aree per determinare se sono equivalenti ai fini del download
+        /// </summary>
+        /// <remarks>Utilizzato per evitare di tentare il download più volte su aree che sono equivalenti.</remarks>
+        /// <returns>true se le aree sono equivalenti ai fini del download</returns>
+        bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom);
+
+        /// <summary>
+        /// Semplifica l'area per il download
+        /// </summary>
+        /// <remarks>Metodo utilizzato per evitare che un processo di download di un'area sia troppo lungo. Deve restituire un array di aree il cui download sia equivalente all'area indicata ma che singolarmente non rappresentano un processo di download troppo grande.</remarks>
+        /// <returns>Array di aree equivalenti per il download</returns>
+        ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom);
+    }
+
     public abstract class TilesMap : IMap, IDownloadableMap
     {
         private string mTileCacheBasePath;
@@ -452,94 +474,6 @@ namespace MapsLibrary
 
     }
 
-    public class LayeredMap : IMap
-    {
-        private struct LayerItem
-        {
-            public bool visible;
-            public IMap map;
-            public LayerItem(IMap m) {
-                map = m;
-                visible = true;
-            }
-            public override bool Equals(object obj)
-            {
-                return Object.ReferenceEquals(((LayerItem)obj).map, map);
-            }
-
-        }
-
-        private ArrayList aLayers = new ArrayList();
-
-        #region IMap Members
-
-        public event MapChangedEventHandler MapChanged;
-
-        public MercatorProjectionMapSystem mapsystem
-        {
-            get
-            {
-                return (aLayers.Count > 0) ? ((LayerItem)aLayers[0]).map.mapsystem : null;
-            }
-        }
-
-        public void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta)
-        {
-            foreach (LayerItem layer in this.aLayers)
-            {
-                if (layer.visible)
-                    layer.map.drawImageMapAt(map_center, zoom, area, g, delta);
-            }
-        }
-
-        #endregion
-
-        public int addLayerOnTop(IMap newLayer)
-        {
-            newLayer.MapChanged += new MapChangedEventHandler(mapchangedhandler);
-            return this.aLayers.Add(new LayerItem(newLayer));            
-        }
-
-        /// <summary>
-        /// cattura l'evento mapchanged dei vari layer
-        /// </summary>
-        protected void mapchangedhandler(IMap map, ProjectedGeoArea area)
-        {
-            if (MapChanged != null)
-            {
-                int idx = aLayers.IndexOf(new LayerItem(map));
-                if ( ((LayerItem) aLayers[idx]).visible )
-                    MapChanged(this, area);
-            }
-        }
-
-        public void setVisibility(int idx, bool v)
-        {
-            LayerItem layer =  (LayerItem) aLayers[idx];
-            if (layer.visible != v)
-            {
-                layer.visible = v;
-                aLayers[idx] = layer;
-                if (MapChanged != null)
-                    MapChanged(this, this.mapsystem.FullMapArea);
-            }
-        }
-
-        public bool isVisible(int idx)
-        {
-            return ((LayerItem)aLayers[idx]).visible;
-        }
-
-        public IMap this[int idx]
-        {
-            get
-            {
-                return ((LayerItem)aLayers[idx]).map;
-            }
-        }
-
-    }
-
     public class CachedTilesMap : TilesMap, IDisposable
     {
         LRUQueue<TileNum, Bitmap> lruqueue;
@@ -703,6 +637,94 @@ namespace MapsLibrary
             }
             base.onTileChanged(tn);
         }
+    }
+
+    public class LayeredMap : IMap
+    {
+        private struct LayerItem
+        {
+            public bool visible;
+            public IMap map;
+            public LayerItem(IMap m) {
+                map = m;
+                visible = true;
+            }
+            public override bool Equals(object obj)
+            {
+                return Object.ReferenceEquals(((LayerItem)obj).map, map);
+            }
+
+        }
+
+        private ArrayList aLayers = new ArrayList();
+
+        #region IMap Members
+
+        public event MapChangedEventHandler MapChanged;
+
+        public MercatorProjectionMapSystem mapsystem
+        {
+            get
+            {
+                return (aLayers.Count > 0) ? ((LayerItem)aLayers[0]).map.mapsystem : null;
+            }
+        }
+
+        public void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics g, Point delta)
+        {
+            foreach (LayerItem layer in this.aLayers)
+            {
+                if (layer.visible)
+                    layer.map.drawImageMapAt(map_center, zoom, area, g, delta);
+            }
+        }
+
+        #endregion
+
+        public int addLayerOnTop(IMap newLayer)
+        {
+            newLayer.MapChanged += new MapChangedEventHandler(mapchangedhandler);
+            return this.aLayers.Add(new LayerItem(newLayer));            
+        }
+
+        /// <summary>
+        /// cattura l'evento mapchanged dei vari layer
+        /// </summary>
+        protected void mapchangedhandler(IMap map, ProjectedGeoArea area)
+        {
+            if (MapChanged != null)
+            {
+                int idx = aLayers.IndexOf(new LayerItem(map));
+                if ( ((LayerItem) aLayers[idx]).visible )
+                    MapChanged(this, area);
+            }
+        }
+
+        public void setVisibility(int idx, bool v)
+        {
+            LayerItem layer =  (LayerItem) aLayers[idx];
+            if (layer.visible != v)
+            {
+                layer.visible = v;
+                aLayers[idx] = layer;
+                if (MapChanged != null)
+                    MapChanged(this, this.mapsystem.FullMapArea);
+            }
+        }
+
+        public bool isVisible(int idx)
+        {
+            return ((LayerItem)aLayers[idx]).visible;
+        }
+
+        public IMap this[int idx]
+        {
+            get
+            {
+                return ((LayerItem)aLayers[idx]).map;
+            }
+        }
+
     }
 
     public class SparseImagesMap : IMap, IDownloadableMap
@@ -1016,25 +1038,4 @@ namespace MapsLibrary
 
     }
 
-    public interface IDownloadableMap
-    {
-        /// <summary>
-        /// Metodo utilizzato per scaricare i dati relativi ad un'area 
-        /// </summary>
-        void DownloadMapArea(ProjectedGeoArea area, uint zoom);
-
-        /// <summary>
-        /// Confronta due aree per determinare se sono equivalenti ai fini del download
-        /// </summary>
-        /// <remarks>Utilizzato per evitare di tentare il download più volte su aree che sono equivalenti.</remarks>
-        /// <returns>true se le aree sono equivalenti ai fini del download</returns>
-        bool CompareAreas(ProjectedGeoArea area1, ProjectedGeoArea area2, uint zoom);
-
-        /// <summary>
-        /// Semplifica l'area per il download
-        /// </summary>
-        /// <remarks>Metodo utilizzato per evitare che un processo di download di un'area sia troppo lungo. Deve restituire un array di aree il cui download sia equivalente all'area indicata ma che singolarmente non rappresentano un processo di download troppo grande.</remarks>
-        /// <returns>Array di aree equivalenti per il download</returns>
-        ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom);
-    }
 }

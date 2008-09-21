@@ -31,6 +31,88 @@ namespace MapsLibrary
     using PxType = Int32;
     using TileIdxType = Int32;
 
+    /// <summary>
+    /// Classe per la gestione delle coordinate e della loro proiezione.
+    /// </summary>
+    /// <remarks>
+    /// Utilizza la proiezione di mercatore per la trasformazione di latitudine/longitudine in coordinate planari X/Y.
+    /// Concetto di zoom: utilizzato nella trasforamazione delle coordinate in pixel. Si considera la mappa del globo un quadrato (zoom=0) che viene suddiviso in 4 quadranti uguali in modo ricorsivo tante volte quanto è il fattore di zoom.
+    /// Da fare: inglobare la trasformazione delle coordinate in pixel, ora lasciata alle classi figlie ma implementata praticamente allo stesso modo.
+    /// </remarks>
+    public abstract class MercatorProjectionMapSystem
+    {
+        public abstract uint MaxZoom { get; }
+        /// <summary>
+        /// Indica l'ulteriore fattore di zoom per determinare la dimensione dei pixel.
+        /// </summary>
+        /// <remarks>
+        /// Ad un qualsiasi livello di zoom i pixel della mappa sono dati un certo numero di livelli di suddivisione ulteriore, in pratica i pixel corrispondono ad un fattore di zoom uguale a:
+        /// zoom + PixelZoomFactor
+        /// Da un altro punto di vista i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor
+        /// </remarks>
+        public abstract uint PixelZoomFactor { get; }
+
+        public readonly ProjectedGeoArea FullMapArea = new ProjectedGeoArea(new ProjectedGeoPoint(0, 0), new ProjectedGeoPoint((Int32)1 << (Int32)30, (Int32)1 << (Int32)30));
+
+        public GeoPoint CalcInverseProjection(ProjectedGeoPoint pgp)
+        {
+            GeoPoint p;
+            double X, Y;
+
+            X = (double)pgp.nLon;
+            Y = (double)pgp.nLat;
+            Int32 pow = (Int32)1 << (Int32)30;    // equivale a Math.Pow(2, 30)
+            p.dLon = X * 360 / pow - 180;
+            double v = Math.PI * (1 - (Y * 2 / pow));
+            /*
+            double t = Math.Sinh(v);
+            t = Math.Atan(t);
+            t *= 180;
+            t /= Math.PI;
+            */
+            p.dLat = Math.Atan(Math.Sinh(v)) * 180 / Math.PI;
+
+            return p;
+        }
+
+        public ProjectedGeoPoint CalcProjection(GeoPoint gp)
+        {
+            ProjectedGeoPoint pgp;
+            double X, Y;
+            //X = (gp.dLon + 180) / 360 * Math.Pow(2, 30);
+            //Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * Math.Pow(2, 30);
+            Int32 pow = (Int32)1 << (Int32)30;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
+            X = (gp.dLon + 180) / 360 * pow;
+            Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * pow;
+            pgp.nLon = (Int32)X;
+            pgp.nLat = (Int32)Y;
+            return pgp;
+        }
+
+
+        public PxCoordinates PointToPx(ProjectedGeoPoint pgp, uint zoom)
+        {
+            // Equivalente a: 
+            //Int32 factor = (1 << (30 - (int)zoom));
+            ////px.xpx = (long)pgp.nLon * (long)tilesize / factor;
+            ////px.ypx = (long)pgp.nLat * (long)tilesize / factor;
+            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
+            return new PxCoordinates(pgp.nLon >> factor, pgp.nLat >> factor);
+
+        }
+
+        public ProjectedGeoPoint PxToPoint(PxCoordinates px, uint zoom)
+        {
+            // Equivalente a:
+            //Int32 factor = (1 << (30 - (int)zoom)) >> (int) PixelZoomFactor;
+            //return new ProjectedGeoPoint((Int32)px.ypx * factor, (Int32)px.xpx * factor);
+            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
+            return new ProjectedGeoPoint((Int32)px.ypx << factor, (Int32)px.xpx << factor);
+
+        }
+
+    }
+
     public abstract class TileMapSystem : MercatorProjectionMapSystem
     {
         //public TileMapSystem() {}
@@ -457,88 +539,6 @@ namespace MapsLibrary
         public override string TileUrl(TileNum tn)
         {
             return sTileServer + "?zoom=" + tn.uZoom.ToString() + "&lat=" + tn.X.ToString() + "&lon=" + tn.Y.ToString() + "&layers=0B000";
-        }
-
-    }
-
-    /// <summary>
-    /// Classe per la gestione delle coordinate e della loro proiezione.
-    /// </summary>
-    /// <remarks>
-    /// Utilizza la proiezione di mercatore per la trasformazione di latitudine/longitudine in coordinate planari X/Y.
-    /// Concetto di zoom: utilizzato nella trasforamazione delle coordinate in pixel. Si considera la mappa del globo un quadrato (zoom=0) che viene suddiviso in 4 quadranti uguali in modo ricorsivo tante volte quanto è il fattore di zoom.
-    /// Da fare: inglobare la trasformazione delle coordinate in pixel, ora lasciata alle classi figlie ma implementata praticamente allo stesso modo.
-    /// </remarks>
-    public abstract class MercatorProjectionMapSystem
-    {
-        public abstract uint MaxZoom { get; }
-        /// <summary>
-        /// Indica l'ulteriore fattore di zoom per determinare la dimensione dei pixel.
-        /// </summary>
-        /// <remarks>
-        /// Ad un qualsiasi livello di zoom i pixel della mappa sono dati un certo numero di livelli di suddivisione ulteriore, in pratica i pixel corrispondono ad un fattore di zoom uguale a:
-        /// zoom + PixelZoomFactor
-        /// Da un altro punto di vista i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor
-        /// </remarks>
-        public abstract uint PixelZoomFactor { get; }
-
-        public readonly ProjectedGeoArea FullMapArea = new ProjectedGeoArea(new ProjectedGeoPoint(0, 0), new ProjectedGeoPoint((Int32)1 << (Int32)30, (Int32)1 << (Int32)30));
-    
-        public GeoPoint CalcInverseProjection(ProjectedGeoPoint pgp)
-        {
-            GeoPoint p;
-            double X, Y;
-
-            X = (double)pgp.nLon;
-            Y = (double)pgp.nLat;
-            Int32 pow = (Int32)1 << (Int32)30;    // equivale a Math.Pow(2, 30)
-            p.dLon = X * 360 / pow - 180;
-            double v = Math.PI * (1 - (Y * 2 / pow));
-            /*
-            double t = Math.Sinh(v);
-            t = Math.Atan(t);
-            t *= 180;
-            t /= Math.PI;
-            */
-            p.dLat = Math.Atan(Math.Sinh(v)) * 180 / Math.PI;
-            
-            return p;
-        }
-
-        public ProjectedGeoPoint CalcProjection(GeoPoint gp)
-        {
-            ProjectedGeoPoint pgp;
-            double X, Y;
-            //X = (gp.dLon + 180) / 360 * Math.Pow(2, 30);
-            //Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * Math.Pow(2, 30);
-            Int32 pow = (Int32)1 << (Int32)30;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
-            X = (gp.dLon + 180) / 360 * pow;
-            Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * pow;
-            pgp.nLon = (Int32)X;
-            pgp.nLat = (Int32)Y;
-            return pgp;
-        }
-
-
-        public PxCoordinates PointToPx(ProjectedGeoPoint pgp, uint zoom)
-        {
-            // Equivalente a: 
-            //Int32 factor = (1 << (30 - (int)zoom));
-            ////px.xpx = (long)pgp.nLon * (long)tilesize / factor;
-            ////px.ypx = (long)pgp.nLat * (long)tilesize / factor;
-            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
-            return new PxCoordinates(pgp.nLon >> factor, pgp.nLat >> factor);
-
-        }
-
-        public ProjectedGeoPoint PxToPoint(PxCoordinates px, uint zoom)
-        {
-            // Equivalente a:
-            //Int32 factor = (1 << (30 - (int)zoom)) >> (int) PixelZoomFactor;
-            //return new ProjectedGeoPoint((Int32)px.ypx * factor, (Int32)px.xpx * factor);
-            int factor = 30 - (int)zoom - (int)PixelZoomFactor;
-            return new ProjectedGeoPoint((Int32)px.ypx << factor, (Int32)px.xpx << factor);
-
         }
 
     }

@@ -31,33 +31,13 @@ namespace MapsLibrary
     using PxType = Int32;
     using TileIdxType = Int32;
 
-    public struct TileNum
+    public enum AreaIntersectionType
     {
-        public TileIdxType X, Y;
-        public uint uZoom;
-
-        public TileNum(TileIdxType x, TileIdxType y, uint zoom)
-        {
-            X = x; Y = y; uZoom = zoom;
-        }
-
-        public string ToString(char separator)
-        {
-            return uZoom.ToString() + separator + X.ToString() + separator + Y.ToString();
-        }
-
-        public override string ToString()
-        {
-            return this.ToString('/');
-        }
-/*
-        public static bool operator ==(TileNum t1, TileNum t2)
-        {
-            return t1.uZoom == t2.uZoom && t1.X == t2.X && t1.Y == t2.Y;
-        }
-*/
+        noItersection,
+        partialIntersection,
+        fullContains,
+        fullContained,
     }
-
 
     public struct GeoPoint
     {
@@ -109,16 +89,7 @@ namespace MapsLibrary
         }
 
     }
-
-
-    public enum AreaIntersectionType
-    {
-        noItersection,
-        partialIntersection,
-        fullContains,
-        fullContained,
-    }
-
+    
     public struct GeoArea
     {
 
@@ -250,6 +221,59 @@ namespace MapsLibrary
             return "[(" + this.pMin.ToString() + ") (" + pMax.ToString() + ")]";
         }
 
+
+    }
+
+    /// <summary>
+    /// Rappresentazione con numeri interi a 32 bit della proiezione delle coordinate geografiche
+    /// </summary>
+    public struct ProjectedGeoPoint
+    {
+        public Int32 nLat;
+        public Int32 nLon;
+
+        public ProjectedGeoPoint(Int32 lat, Int32 lon)
+        {
+            nLat = lat;
+            nLon = lon;
+        }
+
+        public static ProjectedGeoPoint middle(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+        {
+            return new ProjectedGeoPoint((p1.nLat + p2.nLat) / 2, (p1.nLon + p2.nLon) / 2);
+        }
+
+        public override string ToString()
+        {
+            return "(nLat: " + nLat.ToString("X8") + " nLon: " + nLon.ToString("X8") + ")";
+        }
+
+        public static bool operator ==(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+        {
+            return p1.nLat == p2.nLat && p1.nLon == p2.nLon;
+        }
+        public static bool operator !=(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+        {
+            return p1.nLat != p2.nLat || p1.nLon != p2.nLon;
+        }
+
+        public static Int32 distanceXY(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+        {
+            return Math.Max(Math.Abs(p1.nLat - p2.nLat), Math.Abs(p1.nLon - p2.nLon));
+        }
+
+        public static ProjectedGeoPoint operator -(ProjectedGeoPoint a, ProjectedGeoPoint b)
+        {
+            return new ProjectedGeoPoint(a.nLat - b.nLat, a.nLon - b.nLon);
+        }
+        public static ProjectedGeoPoint operator +(ProjectedGeoPoint a, ProjectedGeoPoint b)
+        {
+            return new ProjectedGeoPoint(a.nLat + b.nLat, a.nLon + b.nLon);
+        }
+        public static ProjectedGeoPoint operator /(ProjectedGeoPoint num, int den)
+        {
+            return new ProjectedGeoPoint(num.nLat / den, num.nLon / den);
+        }
 
     }
 
@@ -464,7 +488,6 @@ namespace MapsLibrary
         }
     }
 
-
     public struct PxCoordinates
     {
         public PxType xpx;
@@ -508,58 +531,30 @@ namespace MapsLibrary
         }
     }
 
-
-    /// <summary>
-    /// Rappresentazione con numeri interi a 32 bit della proiezione delle coordinate geografiche
-    /// </summary>
-    public struct ProjectedGeoPoint
+    public struct TileNum
     {
-        public Int32 nLat;
-        public Int32 nLon;
+        public TileIdxType X, Y;
+        public uint uZoom;
 
-        public ProjectedGeoPoint(Int32 lat, Int32 lon)
+        public TileNum(TileIdxType x, TileIdxType y, uint zoom)
         {
-            nLat = lat;
-            nLon = lon;
+            X = x; Y = y; uZoom = zoom;
         }
 
-        public static ProjectedGeoPoint middle(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+        public string ToString(char separator)
         {
-            return new ProjectedGeoPoint((p1.nLat + p2.nLat) / 2, (p1.nLon + p2.nLon) / 2);
+            return uZoom.ToString() + separator + X.ToString() + separator + Y.ToString();
         }
 
         public override string ToString()
         {
-            return "(nLat: " + nLat.ToString("X8") + " nLon: " + nLon.ToString("X8") + ")";
+            return this.ToString('/');
         }
-
-        public static bool operator ==(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
+/*
+        public static bool operator ==(TileNum t1, TileNum t2)
         {
-            return p1.nLat == p2.nLat && p1.nLon == p2.nLon;
+            return t1.uZoom == t2.uZoom && t1.X == t2.X && t1.Y == t2.Y;
         }
-        public static bool operator !=(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
-        {
-            return p1.nLat != p2.nLat || p1.nLon != p2.nLon;
-        }
-
-        public static Int32 distanceXY(ProjectedGeoPoint p1, ProjectedGeoPoint p2)
-        {
-            return Math.Max(Math.Abs(p1.nLat - p2.nLat), Math.Abs(p1.nLon - p2.nLon));
-        }
-
-        public static ProjectedGeoPoint operator -(ProjectedGeoPoint a, ProjectedGeoPoint b)
-        {
-            return new ProjectedGeoPoint(a.nLat - b.nLat, a.nLon - b.nLon);
-        }
-        public static ProjectedGeoPoint operator +(ProjectedGeoPoint a, ProjectedGeoPoint b)
-        {
-            return new ProjectedGeoPoint(a.nLat + b.nLat, a.nLon + b.nLon);
-        }
-        public static ProjectedGeoPoint operator /(ProjectedGeoPoint num, int den)
-        {
-            return new ProjectedGeoPoint(num.nLat / den, num.nLon / den);
-        }
-
+*/
     }
-
 }
