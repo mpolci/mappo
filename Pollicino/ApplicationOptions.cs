@@ -53,6 +53,7 @@ namespace MapperTools.Pollicino
         }
         public struct InterfaceOptions
         {
+            public bool DelayGPXTrackStart;
             public bool WaypointSoundPlay;
             public string WaypointSoundFile;
             public bool WaypointRecordAudio;
@@ -72,7 +73,7 @@ namespace MapperTools.Pollicino
         /// Quando viene modificata questa classe è probabile che questo valore debba essere incrementato di uno.
         /// Attenzione al tipo di modifiche sulla classe. Eliminare o rinominare dei campi potrebbe creare dei problemi quando viene caricato un file di configurazione di una vecchia versione. Sarebbe meglio aggiungere nuovi campi e considerati deprecati i nomi vecchi e non più utilizzati.
         /// </remarks>
-        public const uint CurrentVersion = 1;
+        public const uint CurrentVersion = 2;
         /// <summary>
         /// Versione dellle opzioni.
         /// </summary>

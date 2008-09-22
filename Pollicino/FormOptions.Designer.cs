@@ -87,6 +87,7 @@ namespace MapperTools.Pollicino
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.cb_delayTrackStart = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -329,6 +330,7 @@ namespace MapperTools.Pollicino
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.cb_delayTrackStart);
             this.tabPage3.Controls.Add(this.combo_CameraButton);
             this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.cb_fullscreen);
@@ -355,21 +357,21 @@ namespace MapperTools.Pollicino
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
-            this.combo_CameraButton.Location = new System.Drawing.Point(103, 192);
+            this.combo_CameraButton.Location = new System.Drawing.Point(103, 218);
             this.combo_CameraButton.Name = "combo_CameraButton";
             this.combo_CameraButton.Size = new System.Drawing.Size(130, 22);
             this.combo_CameraButton.TabIndex = 35;
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(7, 194);
+            this.label12.Location = new System.Drawing.Point(7, 220);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(90, 20);
             this.label12.Text = "Camera button";
             // 
             // cb_fullscreen
             // 
-            this.cb_fullscreen.Location = new System.Drawing.Point(3, 166);
+            this.cb_fullscreen.Location = new System.Drawing.Point(3, 192);
             this.cb_fullscreen.Name = "cb_fullscreen";
             this.cb_fullscreen.Size = new System.Drawing.Size(230, 20);
             this.cb_fullscreen.TabIndex = 30;
@@ -377,21 +379,21 @@ namespace MapperTools.Pollicino
             // 
             // combo_RecFormat
             // 
-            this.combo_RecFormat.Location = new System.Drawing.Point(69, 138);
+            this.combo_RecFormat.Location = new System.Drawing.Point(69, 164);
             this.combo_RecFormat.Name = "combo_RecFormat";
             this.combo_RecFormat.Size = new System.Drawing.Size(164, 22);
             this.combo_RecFormat.TabIndex = 26;
             // 
             // label11
             // 
-            this.label11.Location = new System.Drawing.Point(7, 140);
+            this.label11.Location = new System.Drawing.Point(7, 166);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(56, 20);
             this.label11.Text = "Format";
             // 
             // num_RecDeviceId
             // 
-            this.num_RecDeviceId.Location = new System.Drawing.Point(165, 110);
+            this.num_RecDeviceId.Location = new System.Drawing.Point(165, 136);
             this.num_RecDeviceId.Name = "num_RecDeviceId";
             this.num_RecDeviceId.Size = new System.Drawing.Size(68, 22);
             this.num_RecDeviceId.TabIndex = 23;
@@ -399,21 +401,21 @@ namespace MapperTools.Pollicino
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(7, 112);
+            this.label10.Location = new System.Drawing.Point(7, 138);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(100, 20);
             this.label10.Text = "Device ID";
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(7, 84);
+            this.label9.Location = new System.Drawing.Point(7, 110);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(141, 20);
             this.label9.Text = "Seconds to record:";
             // 
             // num_recordaudioseconds
             // 
-            this.num_recordaudioseconds.Location = new System.Drawing.Point(165, 82);
+            this.num_recordaudioseconds.Location = new System.Drawing.Point(165, 108);
             this.num_recordaudioseconds.Maximum = new decimal(new int[] {
             7200,
             0,
@@ -436,7 +438,7 @@ namespace MapperTools.Pollicino
             // 
             // cb_recordaudio
             // 
-            this.cb_recordaudio.Location = new System.Drawing.Point(3, 56);
+            this.cb_recordaudio.Location = new System.Drawing.Point(3, 82);
             this.cb_recordaudio.Name = "cb_recordaudio";
             this.cb_recordaudio.Size = new System.Drawing.Size(230, 20);
             this.cb_recordaudio.TabIndex = 19;
@@ -444,7 +446,7 @@ namespace MapperTools.Pollicino
             // 
             // button_waypointsound
             // 
-            this.button_waypointsound.Location = new System.Drawing.Point(212, 29);
+            this.button_waypointsound.Location = new System.Drawing.Point(212, 55);
             this.button_waypointsound.Name = "button_waypointsound";
             this.button_waypointsound.Size = new System.Drawing.Size(21, 21);
             this.button_waypointsound.TabIndex = 18;
@@ -453,7 +455,7 @@ namespace MapperTools.Pollicino
             // 
             // tb_waypointsound
             // 
-            this.tb_waypointsound.Location = new System.Drawing.Point(7, 29);
+            this.tb_waypointsound.Location = new System.Drawing.Point(7, 55);
             this.tb_waypointsound.Name = "tb_waypointsound";
             this.tb_waypointsound.Size = new System.Drawing.Size(199, 21);
             this.tb_waypointsound.TabIndex = 1;
@@ -463,11 +465,19 @@ namespace MapperTools.Pollicino
             // 
             this.cb_waypointsound.Checked = true;
             this.cb_waypointsound.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_waypointsound.Location = new System.Drawing.Point(3, 3);
+            this.cb_waypointsound.Location = new System.Drawing.Point(3, 29);
             this.cb_waypointsound.Name = "cb_waypointsound";
             this.cb_waypointsound.Size = new System.Drawing.Size(230, 20);
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
+            // 
+            // cb_delayTrackStart
+            // 
+            this.cb_delayTrackStart.Location = new System.Drawing.Point(3, 3);
+            this.cb_delayTrackStart.Name = "cb_delayTrackStart";
+            this.cb_delayTrackStart.Size = new System.Drawing.Size(226, 20);
+            this.cb_delayTrackStart.TabIndex = 40;
+            this.cb_delayTrackStart.Text = "GPX track from first waypoint";
             // 
             // FormOptions
             // 
@@ -529,5 +539,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.CheckBox cb_fullscreen;
         private System.Windows.Forms.ComboBox combo_CameraButton;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox cb_delayTrackStart;
     }
 }

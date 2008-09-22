@@ -69,6 +69,7 @@ namespace MapperTools.Pollicino
                 _data.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
                 _data.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
                 _data.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
+                _data.Application.DelayGPXTrackStart = cb_delayTrackStart.Checked;
                 _data.Application.WaypointSoundPlay = cb_waypointsound.Checked;
                 _data.Application.WaypointSoundFile = tb_waypointsound.Text;
                 _data.Application.WaypointRecordAudio = cb_recordaudio.Checked;
@@ -93,6 +94,7 @@ namespace MapperTools.Pollicino
                     num_DownloadDepth.Value = value.Maps.OSM.DownloadDepth;
                 } catch (Exception) { }
                 tb_GMapsCacheDir.Text = value.Maps.GMaps.CachePath;
+                cb_delayTrackStart.Checked = value.Application.DelayGPXTrackStart;
                 cb_waypointsound.Checked = value.Application.WaypointSoundPlay;
                 tb_waypointsound.Text = value.Application.WaypointSoundFile;
                 cb_recordaudio.Checked = value.Application.WaypointRecordAudio;

@@ -29,7 +29,10 @@ namespace MapperTools.NMEA2GPX
 {
     public static class GPXGenerator
     {
-        public static void NMEAToGPX(string nmea_input, string gpx_output)
+        /// <param name="nmea_input">file del log NMEA</param>
+        /// <param name="gpx_output">file GPX da salvare</param>
+        /// <param name="delaytrackstart">se true la traccia gpx inizia al primo waypoint</param>
+        public static void NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart)
         {
             gpx gpxdata = new gpx();
             // The using statement also closes the StreamReader.
@@ -43,6 +46,7 @@ namespace MapperTools.NMEA2GPX
                 // buffer
                 String line;
                 int count = 0;
+                bool elaboratetrack = !delaytrackstart;
                 // Read and display lines from the file until the end of 
                 // the file is reached.
                 while ((line = sr.ReadLine()) != null)
@@ -56,14 +60,18 @@ namespace MapperTools.NMEA2GPX
                     switch (line.Substring(0, 6))
                     {
                         case "$GPRMC":
-                            SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
-                            waypoint tp = new waypoint();
-                            tp.lat = gpmrc.Position.Latitude;
-                            tp.lon = gpmrc.Position.Longitude;
-                            tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
-                            gpxdata.trk.trkseg.Add(tp);
+                            if (elaboratetrack)
+                            {
+                                SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
+                                waypoint tp = new waypoint();
+                                tp.lat = gpmrc.Position.Latitude;
+                                tp.lon = gpmrc.Position.Longitude;
+                                tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
+                                gpxdata.trk.trkseg.Add(tp);
+                            }
                             break;
                         case "$GPWPL":
+                            elaboratetrack = true;
                             GPWPL gpwpl = new GPWPL(line);
                             waypoint w = new waypoint();
                             w.lat = gpwpl.latitude;
