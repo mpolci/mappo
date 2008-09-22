@@ -29,16 +29,20 @@ namespace MapperTools.Pollicino
             set { _notifier = value; }  // cambiare in esecuzione è un problema, CORREGGERE!
         }
 
+        public bool DelayTrackStart { get; set; }
+
         private class ConvertWork
         {
             //private delegate void InvokeDelegate();
             IWorkNotifier notifier;
             string logfilename;
+            bool delaytrackstart;
 
-            public ConvertWork(IWorkNotifier worknotifier, string log)
+            public ConvertWork(IWorkNotifier worknotifier, string log, bool trackfromfirstwpt)
             {
                 notifier = worknotifier;
                 logfilename = log;
+                delaytrackstart = trackfromfirstwpt;
             }
 
             public void GPXJob()
@@ -62,7 +66,7 @@ namespace MapperTools.Pollicino
                 outfile = outdir + ".gpx";
                 try
                 {
-                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile);
+                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart);
                     // archivia il file di log
                     if (!Directory.Exists(outdir))
                         Directory.CreateDirectory(outdir);
@@ -102,8 +106,8 @@ namespace MapperTools.Pollicino
 
         public void SaveGPX(string logfilename)
         {
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(this.GPXJob), logfilename);
-            ConvertWork work = new ConvertWork(_notifier, logfilename);
+            // Non uso ThreadPool.QueueUserWorkItem perché voglio un thread a bassa priorità
+            ConvertWork work = new ConvertWork(_notifier, logfilename, DelayTrackStart);
             Thread gpxthr = new Thread(new ThreadStart(work.GPXJob));
             gpxthr.Priority = ThreadPriority.Lowest;
             gpxthr.Name = "GPX Converter Thread";

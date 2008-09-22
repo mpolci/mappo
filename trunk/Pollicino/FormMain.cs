@@ -405,6 +405,8 @@ namespace MapperTools.Pollicino
                 if (wpt_recorder.Running)
                     wpt_recorder.stop();
                 string logfile = gpsControl.stop();
+                // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
+                gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
                 gpx_saver.SaveGPX(logfile);
                 this.menuItem_gpsactivity.Text = "start GPS";
             }
@@ -506,6 +508,7 @@ namespace MapperTools.Pollicino
             opt.Maps.OSM.DownloadDepth = 3;
             opt.Maps.AutoDownload = false;
             opt.Maps.GMaps.CachePath = programpath + "\\gmaps";
+            opt.Application.DelayGPXTrackStart = false;
             opt.Application.WaypointSoundPlay = true;
             opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
             opt.Application.WaypointRecordAudioSeconds = 10;
