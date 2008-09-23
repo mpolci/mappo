@@ -46,6 +46,11 @@ namespace MapperTools.Pollicino
 
         private DateTime activatedTime = DateTime.MinValue;
 
+        /// <summary>
+        /// Utilizzato per eliminare i rimbalzi del tasto enter (pressioni multiple molto ravvicinate nel tempo).
+        /// </summary>
+        private int lastEntertime = 0;
+
         SoundPlayer wpt_sound;
         AudioRecorder wpt_recorder;
         
@@ -585,9 +590,6 @@ namespace MapperTools.Pollicino
                 }
             }
         }
-
-
-        int lastEntertime = int.MinValue;
 
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
         { 
