@@ -156,7 +156,9 @@ namespace MapperTools.Pollicino
             // processa eventuali file di log che non sono ancora stati convertiti in GPX
             if (Directory.Exists(options.GPS.LogsDir)) 
                 gpx_saver.ParseLogsDir(options.GPS.LogsDir);
-        
+
+            if (options.GPS.Autostart)
+                action_StartGPS();
         }
 
         private uint required_buffers()
@@ -240,6 +242,35 @@ namespace MapperTools.Pollicino
             if (autocenter)
                 mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
 
+        }
+
+        private void action_StartGPS()
+        {
+            logname = null;
+            if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
+            {
+                gpsControl.SimulationFile = options.GPS.SimulationFile;
+                //DEBUG
+                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
+            }
+            else
+            {
+                gpsControl.SimulationFile = null;
+                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
+            }
+            gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
+            this.menuItem_gpsactivity.Text = "stop GPS";
+        }
+
+        private void action_StopGPS()
+        {
+            if (wpt_recorder.Running)
+                wpt_recorder.stop();
+            string logfile = gpsControl.stop();
+            // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
+            gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
+            gpx_saver.SaveGPX(logfile);
+            this.menuItem_gpsactivity.Text = "start GPS";        
         }
 
         private void action_CentreMap()
@@ -391,32 +422,9 @@ namespace MapperTools.Pollicino
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
             if (!this.gpsControl.Started)
-            {
-                logname = null;
-                if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
-                {
-                    gpsControl.SimulationFile = options.GPS.SimulationFile;
-                    //DEBUG
-                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
-                }
-                else
-                {
-                    gpsControl.SimulationFile = null;
-                    logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
-                }
-                gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
-                this.menuItem_gpsactivity.Text = "stop GPS";
-            }
+                action_StartGPS();
             else
-            {
-                if (wpt_recorder.Running)
-                    wpt_recorder.stop();
-                string logfile = gpsControl.stop();
-                // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
-                gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
-                gpx_saver.SaveGPX(logfile);
-                this.menuItem_gpsactivity.Text = "start GPS";
-            }
+                action_StopGPS();
         }
 
         private void menuItem_downloadmaps_Click(object sender, EventArgs e)
@@ -430,7 +438,6 @@ namespace MapperTools.Pollicino
                 if (i <= 2)
                     downloader.addDownloadArea(gmap, area, z);
             }
-
         }
 /*
         private void menuItem_refreshTileCache_Click(object sender, EventArgs e)

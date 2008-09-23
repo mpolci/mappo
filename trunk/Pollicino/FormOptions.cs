@@ -65,6 +65,7 @@ namespace MapperTools.Pollicino
                 _data.GPS.Simulation = cb_Simulation.Checked;
                 _data.GPS.SimulationFile = tb_SimulationFile.Text;
                 _data.GPS.LogsDir = tb_GPSLogPath.Text;
+                _data.GPS.Autostart = cb_gps_autostart.Checked;
                 _data.Maps.OSM.OSMTileServer = combo_TileServer.Text;
                 _data.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
                 _data.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
@@ -88,6 +89,7 @@ namespace MapperTools.Pollicino
                 cb_Simulation.Checked = value.GPS.Simulation;
                 tb_SimulationFile.Text = value.GPS.SimulationFile;
                 tb_GPSLogPath.Text = value.GPS.LogsDir;
+                cb_gps_autostart.Checked = value.GPS.Autostart;
                 combo_TileServer.Text = value.Maps.OSM.OSMTileServer;
                 tb_TileCacheDir.Text = value.Maps.OSM.TileCachePath;
                 try {
