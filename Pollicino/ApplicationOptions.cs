@@ -32,6 +32,7 @@ namespace MapperTools.Pollicino
         {
             public string PortName;
             public int PortSpeed;
+            public bool Autostart;
             public bool Simulation;
             public string SimulationFile;
             public string LogsDir;

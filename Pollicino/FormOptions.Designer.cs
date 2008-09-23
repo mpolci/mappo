@@ -73,6 +73,7 @@ namespace MapperTools.Pollicino
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.cb_delayTrackStart = new System.Windows.Forms.CheckBox();
             this.combo_CameraButton = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.cb_fullscreen = new System.Windows.Forms.CheckBox();
@@ -87,7 +88,7 @@ namespace MapperTools.Pollicino
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.cb_delayTrackStart = new System.Windows.Forms.CheckBox();
+            this.cb_gps_autostart = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -109,6 +110,7 @@ namespace MapperTools.Pollicino
             // tabPage_GPS
             // 
             this.tabPage_GPS.AutoScroll = true;
+            this.tabPage_GPS.Controls.Add(this.cb_gps_autostart);
             this.tabPage_GPS.Controls.Add(this.button_gpslogpath);
             this.tabPage_GPS.Controls.Add(this.tb_GPSLogPath);
             this.tabPage_GPS.Controls.Add(this.label8);
@@ -150,7 +152,7 @@ namespace MapperTools.Pollicino
             // 
             // button_SelectSimulationFile
             // 
-            this.button_SelectSimulationFile.Location = new System.Drawing.Point(216, 167);
+            this.button_SelectSimulationFile.Location = new System.Drawing.Point(216, 176);
             this.button_SelectSimulationFile.Name = "button_SelectSimulationFile";
             this.button_SelectSimulationFile.Size = new System.Drawing.Size(21, 21);
             this.button_SelectSimulationFile.TabIndex = 9;
@@ -159,14 +161,14 @@ namespace MapperTools.Pollicino
             // 
             // tb_SimulationFile
             // 
-            this.tb_SimulationFile.Location = new System.Drawing.Point(7, 167);
+            this.tb_SimulationFile.Location = new System.Drawing.Point(7, 176);
             this.tb_SimulationFile.Name = "tb_SimulationFile";
             this.tb_SimulationFile.Size = new System.Drawing.Size(206, 21);
             this.tb_SimulationFile.TabIndex = 7;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(7, 146);
+            this.label3.Location = new System.Drawing.Point(7, 155);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(90, 20);
             this.label3.Text = "Simulation file";
@@ -180,7 +182,7 @@ namespace MapperTools.Pollicino
             // 
             // cb_Simulation
             // 
-            this.cb_Simulation.Location = new System.Drawing.Point(7, 121);
+            this.cb_Simulation.Location = new System.Drawing.Point(7, 130);
             this.cb_Simulation.Name = "cb_Simulation";
             this.cb_Simulation.Size = new System.Drawing.Size(148, 20);
             this.cb_Simulation.TabIndex = 4;
@@ -223,7 +225,7 @@ namespace MapperTools.Pollicino
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Location = new System.Drawing.Point(0, 0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(240, 245);
+            this.tabPage2.Size = new System.Drawing.Size(232, 242);
             this.tabPage2.Text = "Maps";
             // 
             // combo_TileServer
@@ -346,8 +348,16 @@ namespace MapperTools.Pollicino
             this.tabPage3.Controls.Add(this.cb_waypointsound);
             this.tabPage3.Location = new System.Drawing.Point(0, 0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(240, 245);
+            this.tabPage3.Size = new System.Drawing.Size(232, 242);
             this.tabPage3.Text = "Interface";
+            // 
+            // cb_delayTrackStart
+            // 
+            this.cb_delayTrackStart.Location = new System.Drawing.Point(3, 3);
+            this.cb_delayTrackStart.Name = "cb_delayTrackStart";
+            this.cb_delayTrackStart.Size = new System.Drawing.Size(226, 20);
+            this.cb_delayTrackStart.TabIndex = 40;
+            this.cb_delayTrackStart.Text = "GPX track from first waypoint";
             // 
             // combo_CameraButton
             // 
@@ -471,13 +481,13 @@ namespace MapperTools.Pollicino
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
-            // cb_delayTrackStart
+            // cb_gps_autostart
             // 
-            this.cb_delayTrackStart.Location = new System.Drawing.Point(3, 3);
-            this.cb_delayTrackStart.Name = "cb_delayTrackStart";
-            this.cb_delayTrackStart.Size = new System.Drawing.Size(226, 20);
-            this.cb_delayTrackStart.TabIndex = 40;
-            this.cb_delayTrackStart.Text = "GPX track from first waypoint";
+            this.cb_gps_autostart.Location = new System.Drawing.Point(7, 104);
+            this.cb_gps_autostart.Name = "cb_gps_autostart";
+            this.cb_gps_autostart.Size = new System.Drawing.Size(206, 20);
+            this.cb_gps_autostart.TabIndex = 21;
+            this.cb_gps_autostart.Text = "Start GPS on application load";
             // 
             // FormOptions
             // 
@@ -540,5 +550,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.ComboBox combo_CameraButton;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox cb_delayTrackStart;
+        private System.Windows.Forms.CheckBox cb_gps_autostart;
     }
 }
