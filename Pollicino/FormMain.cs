@@ -91,6 +91,8 @@ namespace MapperTools.Pollicino
             
             // carica le opzioni dal file di configurazione
             carica_opzioni();
+            // disabilito l'autodownload
+            options.Maps.AutoDownload = false;
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
