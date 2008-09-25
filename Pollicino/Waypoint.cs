@@ -74,7 +74,8 @@ namespace MapperTools.Pollicino
 
         public static string DataDir(string nmea_log_name)
         {
-            return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')) + '\\';
+            //return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')) + '/';
+            return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')).Replace('\\', '/') + '/';
         }
 
     }
@@ -118,7 +119,7 @@ namespace MapperTools.Pollicino
         public GPWPL(string nmea_sentence)
         {
             string[] split = nmea_sentence.Split(new Char[] { ',' });
-            // To do: check the checksum validity
+            //TODO: controllare la validità del checksum 
 
             _lat = GPSToDecimalDegrees(split[1], split[2]);
             _lon = GPSToDecimalDegrees(split[3], split[4]);
@@ -130,7 +131,7 @@ namespace MapperTools.Pollicino
 
         public GPWPL(string name, double lat, double lon)
         {
-            // Mancano i controlli dei valori corretti
+            //TODO: Manca la verifica che i valori siano ammissibili
 
             _lat = lat;
             _lon = lon;
