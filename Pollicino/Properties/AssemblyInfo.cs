@@ -55,3 +55,5 @@ using System.Resources;
 // as Device app does not support STA thread.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2232:MarkWindowsFormsEntryPointsWithStaThread")]
 [assembly: NeutralResourcesLanguageAttribute("")]
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TestProject")]
