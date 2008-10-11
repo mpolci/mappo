@@ -479,7 +479,7 @@ namespace MapperTools.Pollicino
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
-                wpt_recorder.RecordingFormat = newopt.Application.RecordAudioFormat;
+                wpt_recorder.RecordingFormat = (WaveIn4CF.WaveFormats) newopt.Application.RecordAudioFormat;
                 //modalità full screen
                 this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
                 this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
