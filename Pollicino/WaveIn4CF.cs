@@ -316,12 +316,11 @@ namespace WaveIn4CF
     {
         public delegate void RecordFinishedDelegate(WaveInRecorder recorder);
         public event RecordFinishedDelegate RecFinishedEvent;
-        const int BUFFERSCOUNT = 5;
-        const uint BUFFERSIZE = 16384;
+        private uint mBuffersCount, mBuffersSize;
 
         WaveInBuffer[] buffers;
         protected HANDLE hwi;
-        WAVEFORMATEX mWFmt;
+        WAVEFORMATEX mWFmtx;
 
         private Native.waveInProc_delegate mWaveInProc = new Native.waveInProc_delegate(waveInProc);
         protected BinaryWriter mOutWriter;
@@ -338,22 +337,34 @@ namespace WaveIn4CF
         {
             mH_this = GCHandle.Alloc(this);
 
-            mWFmt = WAVEFORMATEX.FMT_RIFF(wfmt);
+            mWFmtx = WAVEFORMATEX.FMT_RIFF(wfmt);
             
-            MMRESULT mmresult = Native.waveInOpen(out hwi, devid, ref mWFmt, Marshal.GetFunctionPointerForDelegate(mWaveInProc).ToInt32(),
+            MMRESULT mmresult = Native.waveInOpen(out hwi, devid, ref mWFmtx, Marshal.GetFunctionPointerForDelegate(mWaveInProc).ToInt32(),
                                                   ((IntPtr)mH_this).ToInt32(), Native.CALLBACK_FUNCTION);
             if (mmresult != Native.MMSYSERR_NOERROR)
             {
                 throw new Exception("Errore nell'apertura del dispositivo " + devid + ", odice errore: " + mmresult.ToString());
             }
             // buffer per la registrazione
-            buffers = new WaveInBuffer[BUFFERSCOUNT];
-            for (int i = 0; i < BUFFERSCOUNT; i++) 
-                buffers[i] = new WaveInBuffer(hwi, BUFFERSIZE, i);
+            calcBuffersParams(); 
+            buffers = new WaveInBuffer[mBuffersCount];
+            for (int i = 0; i < mBuffersCount; i++) 
+                buffers[i] = new WaveInBuffer(hwi, mBuffersSize, i);
 
             mAudioEvent = new System.Threading.ManualResetEvent(false);
             mRecFinished = true;
 
+        }
+
+        private void calcBuffersParams()
+        {
+            // da 16k a 64k per buffer, in multipli di 16k
+            mBuffersSize = (1 + mWFmtx.nAvgBytesPerSec / 44100) * 16384;
+            if (mBuffersSize > 65536) mBuffersSize = 65536;
+            // almeno 5 secondi di buffers, comunque sempre da 3 a 15 buffer
+            mBuffersCount = 5 * mWFmtx.nAvgBytesPerSec / mBuffersSize;  
+            if (mBuffersCount < 3) mBuffersCount = 3;
+            else if (mBuffersCount > 15) mBuffersCount = 15;
         }
 
         public void StartRec(Stream output)
@@ -455,7 +466,7 @@ namespace WaveIn4CF
                         buffers[mCurrentBuffer].RecycleBuffer();
                         // avanza al buffer successivo
                         mCurrentBuffer++;
-                        if (mCurrentBuffer >= BUFFERSCOUNT) mCurrentBuffer = 0;
+                        if (mCurrentBuffer >= mBuffersCount) mCurrentBuffer = 0;
                     }
                     lock (mSync) {
                         mAudioEvent.Reset();
@@ -476,12 +487,12 @@ namespace WaveIn4CF
             mOutWriter.Write((Int32)0); // size, written later
             mOutWriter.Write("WAVEfmt ".ToCharArray());
             mOutWriter.Write((Int32)16);
-            mOutWriter.Write(mWFmt.wFormatTag);
-            mOutWriter.Write(mWFmt.nChannels);
-            mOutWriter.Write(mWFmt.nSamplesPerSec);
-            mOutWriter.Write(mWFmt.nAvgBytesPerSec);
-            mOutWriter.Write(mWFmt.nBlockAlign);
-            mOutWriter.Write(mWFmt.wBitsPerSample);
+            mOutWriter.Write(mWFmtx.wFormatTag);
+            mOutWriter.Write(mWFmtx.nChannels);
+            mOutWriter.Write(mWFmtx.nSamplesPerSec);
+            mOutWriter.Write(mWFmtx.nAvgBytesPerSec);
+            mOutWriter.Write(mWFmtx.nBlockAlign);
+            mOutWriter.Write(mWFmtx.wBitsPerSample);
             mOutWriter.Write("data".ToCharArray());
             mOutWriter.Write((Int32)0); // size, written later
         }
@@ -518,7 +529,7 @@ namespace WaveIn4CF
                 StopRec();
             lock (this)
             {
-                for (uint i = 0; i < BUFFERSCOUNT; i++)
+                for (uint i = 0; i < mBuffersCount; i++)
                     buffers[i].Dispose();
                 Native.waveInClose(hwi);
                 mH_this.Free();
