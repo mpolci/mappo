@@ -528,7 +528,7 @@ namespace MapperTools.Pollicino
             opt.Application.WaypointRecordAudioSeconds = 10;
             opt.Application.WaypointRecordAudio = true;
             opt.Application.RecordAudioDevice = 0;
-            opt.Application.RecordAudioFormat = OpenNETCF.Media.WaveAudio.SoundFormats.Mono16bit11kHz;
+            opt.Application.RecordAudioFormat = WaveIn4CF.WaveFormats.Mono16bit11kHz;
             opt.Application.AutoCentreMap = true;
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
