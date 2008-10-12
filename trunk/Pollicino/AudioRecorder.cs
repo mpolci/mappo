@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-//using OpenNETCF.Media.WaveAudio;
 using System.IO;
 using System.Media;
 using System.Threading;
@@ -40,10 +39,8 @@ namespace MapperTools.Pollicino
 
         private bool _running = false;
         private object runninglock = new object();
-        //private OpenNETCF.Media.WaveAudio.Recorder recorder;
         private WaveIn4CF.WaveInRecorder mRecorder;
-        private int _deviceid;
-        //private SoundFormats _recformat = SoundFormats.Mono16bit22kHz;
+        private uint _deviceid;
         private WaveIn4CF.WaveFormats _recformat = WaveFormats.Mono16bit22kHz;
         private const short rectimeout = short.MaxValue;
         private int currentrecseconds;
@@ -68,7 +65,7 @@ namespace MapperTools.Pollicino
             IgnoreNewRecord
         }
 
-        public int DeviceID
+        public uint DeviceID
         {
             get
             {
@@ -79,15 +76,14 @@ namespace MapperTools.Pollicino
                 if (value != _deviceid)
                 {
                     //if (recorder.Recording) recorder.Stop();
-                    mRecorder.StopRec();
+                    //   mRecorder.StopRec();
                     _deviceid = value;
                     //recorder = new Recorder(value);
-                    newAudioRec((uint)value, _recformat);
+                    //newAudioRec((uint)value, _recformat);
                 }
             }
 
         }
-        //public SoundFormats RecordingFormat
         public WaveIn4CF.WaveFormats RecordingFormat
         {
             get
@@ -129,16 +125,13 @@ namespace MapperTools.Pollicino
         private void newAudioRec(uint devid, WaveIn4CF.WaveFormats wf) {
             if (mRecorder != null) 
                 mRecorder.Dispose();
-            mRecorder = new WaveIn4CF.WaveInRecorder(devid, _recformat);
+            mRecorder = new WaveIn4CF.WaveInRecorder(_deviceid, _recformat);
             mRecorder.RecFinishedEvent += new WaveIn4CF.WaveInRecorder.RecordFinishedDelegate(this.rec_done);
         }
 
-        public AudioRecorder(int devid)
+        public AudioRecorder(uint devid)
         {
             _deviceid = devid;
-            //this.recorder = new OpenNETCF.Media.WaveAudio.Recorder(devid);
-            //this.recorder.DoneRecording += new WaveFinishedHandler(rec_done);
-            newAudioRec((uint) devid, _recformat);
             try
             {
                 if (File.Exists("\\Windows\\RecEnd.wav")) {
@@ -179,7 +172,7 @@ namespace MapperTools.Pollicino
                 this._running = true;
 
                 //start a new recording
-                //recorder.RecordFor(this.recordingStream, AudioRecorder.rectimeout, _recformat);
+                newAudioRec(_deviceid, _recformat); // inizializza mRecorder
                 mRecorder.StartRec(this.recordingStream);
             }
             // Per sicurezza fa partire il timer fuori dal lock. Se lo mettevo dentro e per qualche strano motivo partiva il primo tick 
@@ -206,18 +199,16 @@ namespace MapperTools.Pollicino
             timer1.Dispose();
             timer1 = null;
             _running = false;
-            //this.recorder.Stop();
-            mRecorder.StopRec();
+            if (mRecorder != null) 
+                mRecorder.StopRec();
         }
 
-        //private void rec_done()
         public void rec_done(WaveIn4CF.WaveInRecorder recorder)
         {
             if (_running) throw new Exception("Internal Error: probally record timeout");
             recordingStream.Close();
             if (endrec_sound != null) endrec_sound.Play();
         }
-
 
     }
 }

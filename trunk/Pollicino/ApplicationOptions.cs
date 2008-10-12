@@ -59,8 +59,8 @@ namespace MapperTools.Pollicino
             public string WaypointSoundFile;
             public bool WaypointRecordAudio;
             public int WaypointRecordAudioSeconds;
-            public int RecordAudioDevice;
-            public OpenNETCF.Media.WaveAudio.SoundFormats RecordAudioFormat;
+            public uint RecordAudioDevice;
+            public WaveIn4CF.WaveFormats RecordAudioFormat;
             public bool AutoCentreMap;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;

@@ -26,27 +26,25 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using OpenNETCF.Media.WaveAudio;
 using Microsoft.WindowsCE.Forms;
 
 namespace MapperTools.Pollicino
 {
     public partial class FormOptions : Form
     {
-        SoundFormats[] formats;
+        WaveIn4CF.WaveFormats[] formats;
 
         public FormOptions()
         {
             InitializeComponent();
 
-            int recdevices = OpenNETCF.Media.WaveAudio.Recorder.NumDevices;
+            uint recdevices = WaveIn4CF.Native.waveInGetNumDevs();
             num_RecDeviceId.Maximum = (decimal) recdevices - 1;
 
-            formats = new SoundFormats[recdevices];
-            OpenNETCF.Media.WaveAudio.Recorder rec = new OpenNETCF.Media.WaveAudio.Recorder();
-            for (int i = 0; i < recdevices; i++)
+            formats = new WaveIn4CF.WaveFormats[recdevices];
+            for (uint i = 0; i < recdevices; i++)
             {
-                formats[i] = rec.SupportedRecordingFormats(i);
+                formats[i] = WaveIn4CF.WaveInRecorder.GetSupportedFormats(i);
             }
             num_RecDeviceId.Value = 0;
             fill_RecFormats();
@@ -75,8 +73,8 @@ namespace MapperTools.Pollicino
                 _data.Application.WaypointSoundFile = tb_waypointsound.Text;
                 _data.Application.WaypointRecordAudio = cb_recordaudio.Checked;
                 _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
-                _data.Application.RecordAudioDevice = (int)num_RecDeviceId.Value;
-                _data.Application.RecordAudioFormat = (OpenNETCF.Media.WaveAudio.SoundFormats)combo_RecFormat.SelectedItem;
+                _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
+                _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
                 _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 return _data;
@@ -173,11 +171,11 @@ namespace MapperTools.Pollicino
         private void fill_RecFormats()
         {
             combo_RecFormat.Items.Clear();
-            SoundFormats devformats = formats[(int) num_RecDeviceId.Value];
+            WaveIn4CF.WaveFormats devformats = formats[(int)num_RecDeviceId.Value];
 
-            for (int i = 0; i < sizeof(SoundFormats) * 8 - 1; i++)
+            for (int i = 0; i < sizeof(WaveIn4CF.WaveFormats) * 8 - 1; i++)
             {
-                SoundFormats curf = (SoundFormats) (1 << i);
+                WaveIn4CF.WaveFormats curf = (WaveIn4CF.WaveFormats)(1 << i);
                 if ((devformats & curf) != 0)
                     combo_RecFormat.Items.Add(curf);
             }
