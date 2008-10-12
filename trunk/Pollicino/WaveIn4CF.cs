@@ -66,7 +66,7 @@ namespace WaveIn4CF
     }
 
     [Flags]
-    public enum WaveFormats
+    public enum WaveFormats: uint
     {
         // Summary:
         //     Format is not valid
@@ -329,9 +329,10 @@ namespace WaveIn4CF
 
         protected GCHandle mH_this;
 
-        protected bool mRecFinished;
         protected int mCurrentBuffer;
+        private object mSync = new object();
         private System.Threading.ManualResetEvent mAudioEvent;
+        protected bool mRecFinished;
 
         public WaveInRecorder(uint devid, WaveFormats wfmt)
         {
@@ -343,7 +344,7 @@ namespace WaveIn4CF
                                                   ((IntPtr)mH_this).ToInt32(), Native.CALLBACK_FUNCTION);
             if (mmresult != Native.MMSYSERR_NOERROR)
             {
-                throw new Exception("Errore nell'apertura del dispositivo: " + mmresult.ToString());
+                throw new Exception("Errore nell'apertura del dispositivo " + devid + ", odice errore: " + mmresult.ToString());
             }
             // buffer per la registrazione
             buffers = new WaveInBuffer[BUFFERSCOUNT];
@@ -366,8 +367,8 @@ namespace WaveIn4CF
             mOutWriter = new BinaryWriter(output);
             writeFileHeader();
             // Thread per il salvataggio su file
-            mRecFinished = false;
             mCurrentBuffer = 0;
+            mRecFinished = false;
             mAudioEvent.Reset();
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.recThreadProc));
             //avvia la registrazione
@@ -379,26 +380,40 @@ namespace WaveIn4CF
 
         public void StopRec()
         {
-            MMRESULT res = Native.waveInStop(hwi);
-            if (res != Native.MMSYSERR_NOERROR)
-                throw new Exception("errore nell'arresto della registrazione audio");
-            mRecFinished = true;
-            mAudioEvent.Set();
-            lock (this) { }; // aspetta il termine del thread di salvataggio
+            System.Diagnostics.Debug.WriteLine("-> StopRec()");
+            lock (mSync)
+            {
+                // La chiamata a waveInStop può causare l'ultimo completamento di un buffer e il conseguente sblocco
+                // del thread di salvataggio. E' importante che tale thread non vada a leggere mRecFinished prima che
+                // questo venga impostato a true.
+                MMRESULT res = Native.waveInStop(hwi);
+                if (res != Native.MMSYSERR_NOERROR)
+                    throw new Exception("errore nell'arresto della registrazione audio");
+                mRecFinished = true;
+                mAudioEvent.Set();
+            }
+            //System.Threading.Thread.Sleep(100);
+            System.Diagnostics.Debug.WriteLine("** StopRec() attesa thrd salvataggio");
+            lock (buffers) { }; // aspetta il termine del thread di salvataggio
+            System.Diagnostics.Debug.WriteLine("<- StopRec()");
+
         }
 
-        public static WaveFormats GetDevCaps(UINT uDeviceID)
+        public static WaveFormats GetSupportedFormats(UINT uDeviceID)
         {
             WAVEINCAPS caps = new WAVEINCAPS();
             //GCHandle hcaps = GCHandle.Alloc(caps, GCHandleType.Pinned);
-            Native.waveInGetDevCaps(uDeviceID, out caps, (UINT)Marshal.SizeOf(caps));
+            int res = Native.waveInGetDevCaps(uDeviceID, out caps, (UINT)Marshal.SizeOf(caps));
             //hcaps.Free();
+            if (res != Native.MMSYSERR_NOERROR)
+                throw new Exception("Impossibile ottenere i formati supportati dal dispositivo " + uDeviceID);
             return (WaveFormats) caps.dwFormats;
         }
 
 //        private static void waveInProc(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
         private static void waveInProc(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, ref WAVEHDR dwParam1, DWORD_PTR dwParam2)
         {
+            System.Diagnostics.Debug.WriteLine("-> waveInProc() " + uMsg);
             WaveInRecorder recorder = (WaveInRecorder) ((GCHandle)(IntPtr)dwInstance).Target;
             switch (uMsg) {
                 //case Native.MM_WIM_OPEN:
@@ -414,13 +429,24 @@ namespace WaveIn4CF
              }
         }
 
+        private string debugBufFlags()
+        {
+            StringBuilder res = new StringBuilder();
+            foreach (WaveInBuffer b in buffers)
+                res.AppendFormat(" {0:X}", b.mWHdr.dwFlags);
+            return res.ToString();
+        }
+
         private void recThreadProc(Object state)
         {
-            lock (this)
+            System.Diagnostics.Debug.WriteLine("-> recThreadProc()");
+            lock (buffers) 
             {
+                bool terminated;
                 do
                 {
                     mAudioEvent.WaitOne();
+                    System.Diagnostics.Debug.WriteLine("** recThreadProc() [" + mCurrentBuffer + "]" + debugBufFlags());
                     while ((buffers[mCurrentBuffer].mWHdr.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
                     {
                         //TODO: salva i dati presenti nel buffer
@@ -431,13 +457,17 @@ namespace WaveIn4CF
                         mCurrentBuffer++;
                         if (mCurrentBuffer >= BUFFERSCOUNT) mCurrentBuffer = 0;
                     }
-                    mAudioEvent.Reset();
-                    if (mRecFinished)
-                        WriteFileProlog();
-                } while (!mRecFinished);
+                    lock (mSync) {
+                        mAudioEvent.Reset();
+                        terminated = mRecFinished;
+                    }
+                } while (!terminated);
+                WriteFileProlog();
             }
             if (RecFinishedEvent != null)
                 RecFinishedEvent(this);
+            System.Diagnostics.Debug.WriteLine("<- recThreadProc()");
+
         }
 
         private void writeFileHeader()
@@ -473,6 +503,7 @@ namespace WaveIn4CF
             WaveInBuffer buf = buffers[mCurrentBuffer];
             byte[] bufdata = buf.mData;
             int len = (int)buf.mWHdr.dwBytesRecorded;
+            System.Diagnostics.Debug.WriteLine("## writeData(" + mCurrentBuffer + ") " + len);
             System.Diagnostics.Debug.Assert((len <= buf.mWHdr.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
             System.Diagnostics.Debug.Assert((buf.mWHdr.dwBytesRecorded <= buf.mWHdr.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
             mOutWriter.Write(bufdata, 0, len);
