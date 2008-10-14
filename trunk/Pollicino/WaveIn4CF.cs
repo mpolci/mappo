@@ -365,6 +365,7 @@ namespace WaveIn4CF
             mBuffersCount = 5 * mWFmtx.nAvgBytesPerSec / mBuffersSize;  
             if (mBuffersCount < 3) mBuffersCount = 3;
             else if (mBuffersCount > 15) mBuffersCount = 15;
+            System.Diagnostics.Debug.WriteLine("## " + mBuffersCount + " buffer da " + (mBuffersSize / 1024) + "k");
         }
 
         public void StartRec(Stream output)
