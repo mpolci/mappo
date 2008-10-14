@@ -28,7 +28,6 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
-using OpenNETCF.Windows.Forms;
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
 //using System.Runtime.InteropServices;
@@ -39,7 +38,7 @@ namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain : Form
     {
-        OpenNETCF.Windows.Forms.NotifyIcon notify_icon;
+        NotifyIcon mNotifyIcon;
 
 //        [DllImport("coredll")]
 //        extern static void SystemIdleTimerReset();
@@ -82,10 +81,8 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
-            notify_icon = new OpenNETCF.Windows.Forms.NotifyIcon();
-            notify_icon.Icon = Properties.Resources.Map;
-            notify_icon.Visible = true;
-            notify_icon.Click += new EventHandler(this.notify_icon_click);
+            mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
+            mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
 
             gpx_saver.Notifier = blinkcnGPX;
             
@@ -660,7 +657,7 @@ namespace MapperTools.Pollicino
             if (gpsControl.Started)
                 gpsControl.stop();
             downloader.stopThread();
-            notify_icon.Dispose();
+            mNotifyIcon.Dispose();
             map.Dispose();
             gpx_saver.Dispose();
 
