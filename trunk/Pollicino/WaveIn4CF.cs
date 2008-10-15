@@ -228,6 +228,12 @@ namespace WaveIn4CF
             WHDR_ENDLOOP   = 0x00000008,  /* loop end block */
             WHDR_INQUEUE   = 0x00000010   /* reserved for driver */
         }
+
+        public override string ToString()
+        {
+            return string.Format("lpData {0} - dwBufferLength {1} - dwBytesRecorded {2} - dwUser {3} - dwFlags {4} - dwLoops {5} - lpNext {6} - reserved {7}",
+                                 lpData, dwBufferLength, dwBytesRecorded, dwUser, dwFlags, dwLoops, lpNext, reserved);
+        }
     }
 
     public class Native
@@ -235,6 +241,8 @@ namespace WaveIn4CF
         public const UINT WAVE_MAPPER = 0xFFFFFFFF; 
         public const DWORD CALLBACK_FUNCTION = 0x00030000;
         public const MMRESULT MMSYSERR_NOERROR = 0;
+        public const MMRESULT MMSYSERR_INVALPARAM = 0x000B;
+        public const MMRESULT MMSYSERR_HANDLEBUSY = 0x000C;
         public const uint MM_WIM_OPEN = 0x3BE;
         public const uint MM_WIM_CLOSE = 0x3BF;
         public const uint MM_WIM_DATA = 0x3C0;
@@ -287,14 +295,24 @@ namespace WaveIn4CF
             mWHdr.dwBufferLength = bufsize;
             mWHdr.dwUser = dwUser;
             MMRESULT res = Native.waveInPrepareHeader(hwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
-            if (res != Native.MMSYSERR_NOERROR) throw new Exception("Impossibile preparare il buffer");
+            if (res != Native.MMSYSERR_NOERROR)
+            {
+                System.Diagnostics.Trace.WriteLine("!! waveInPrepareHeader() fallito con errore: " + res);
+                throw new Exception("Impossibile preparare il buffer");
+            }
             RecycleBuffer();
         }
 
         public void RecycleBuffer()
         {
             MMRESULT res = Native.waveInAddBuffer(mhwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
-            if (res != Native.MMSYSERR_NOERROR) throw new Exception("Immpossibile associare il buffer");
+            if (res != Native.MMSYSERR_NOERROR)
+            {
+                System.Diagnostics.Trace.WriteLine("!! waveInAddBuffer() fallito con errore: " + res);
+                System.Diagnostics.Trace.Write("mhwi " + mhwi + " mWHdr: ");
+                System.Diagnostics.Trace.WriteLine(mWHdr);
+                throw new Exception("Immpossibile associare il buffer");
+            }
         }
         #region IDisposable Members
 
@@ -343,7 +361,7 @@ namespace WaveIn4CF
                                                   ((IntPtr)mH_this).ToInt32(), Native.CALLBACK_FUNCTION);
             if (mmresult != Native.MMSYSERR_NOERROR)
             {
-                throw new Exception("Errore nell'apertura del dispositivo " + devid + ", odice errore: " + mmresult.ToString());
+                throw new Exception("Errore nell'apertura del dispositivo " + devid + ", codice errore: " + mmresult.ToString());
             }
             // buffer per la registrazione
             calcBuffersParams(); 
@@ -432,6 +450,7 @@ namespace WaveIn4CF
                 //    break;
                 case Native.MM_WIM_DATA:
                     System.Diagnostics.Debug.Assert((dwParam1.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE);
+                    System.Diagnostics.Debug.WriteLine("** flags: " + dwParam1.dwFlags + " idx: " + dwParam1.dwUser);
                     recorder.mAudioEvent.Set();
                     break;
                 //case Native.MM_WIM_CLOSE:
@@ -459,12 +478,22 @@ namespace WaveIn4CF
                 {
                     mAudioEvent.WaitOne();
                     System.Diagnostics.Debug.WriteLine("** recThreadProc() [" + mCurrentBuffer + "]" + debugBufFlags());
+                    #if DEBUG
+                    if ((buffers[mCurrentBuffer].mWHdr.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == 0) System.Media.SystemSounds.Exclamation.Play();
+                    #endif
                     while ((buffers[mCurrentBuffer].mWHdr.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
                     {
                         //TODO: salva i dati presenti nel buffer
                         writeData(mCurrentBuffer);
                         // Registra il buffer per il riutilizzo
-                        buffers[mCurrentBuffer].RecycleBuffer();
+                        try {
+                            buffers[mCurrentBuffer].RecycleBuffer();
+                        } catch {
+                            System.Diagnostics.Trace.WriteLine("Error recycling buffer " + mCurrentBuffer + ", creating a new buffer");
+                            buffers[mCurrentBuffer].Dispose();
+                            buffers[mCurrentBuffer] = new WaveInBuffer(hwi, mBuffersSize, mCurrentBuffer);
+                        }
+
                         // avanza al buffer successivo
                         mCurrentBuffer++;
                         if (mCurrentBuffer >= mBuffersCount) mCurrentBuffer = 0;
@@ -479,7 +508,6 @@ namespace WaveIn4CF
             if (RecFinishedEvent != null)
                 RecFinishedEvent(this);
             System.Diagnostics.Debug.WriteLine("<- recThreadProc()");
-
         }
 
         private void writeFileHeader()
