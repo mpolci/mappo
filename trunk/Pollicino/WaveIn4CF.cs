@@ -405,8 +405,8 @@ namespace WaveIn4CF
             // da 16k a 64k per buffer, in multipli di 16k
             mBuffersSize = (1 + mWFmtx.nAvgBytesPerSec / 44100) * 16384;
             if (mBuffersSize > 65536) mBuffersSize = 65536;
-            // almeno 5 secondi di buffers, comunque sempre da 3 a 15 buffer
-            mBuffersCount = 5 * mWFmtx.nAvgBytesPerSec / mBuffersSize;  
+            // circa 3 secondi di buffer, comunque sempre da 3 a 15 buffer
+            mBuffersCount = 3 * mWFmtx.nAvgBytesPerSec / mBuffersSize;  
             if (mBuffersCount < 3) mBuffersCount = 3;
             else if (mBuffersCount > 15) mBuffersCount = 15;
             System.Diagnostics.Debug.WriteLine("## " + mBuffersCount + " buffer da " + (mBuffersSize / 1024) + "k");
