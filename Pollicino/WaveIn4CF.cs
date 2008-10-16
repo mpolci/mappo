@@ -247,8 +247,8 @@ namespace WaveIn4CF
         public const uint MM_WIM_CLOSE = 0x3BF;
         public const uint MM_WIM_DATA = 0x3C0;
 
-//        public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2); // parametri ok
-        public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, ref WAVEHDR dwParam1, DWORD_PTR dwParam2); // parametri ok
+        //public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
+        public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, ref WAVEHDR dwParam1, DWORD_PTR dwParam2); 
 
         private const string sourcedll = "coredll.dll";    // WinCE
         //private const string sourcedll = "winmm.dll";      // Win32
@@ -258,15 +258,18 @@ namespace WaveIn4CF
         [DllImport(sourcedll)]
         public static extern MMRESULT waveInGetDevCaps(UINT uDeviceID, out WAVEINCAPS pwic, UINT cbwic); 
         [DllImport(sourcedll)]
-        public static extern MMRESULT waveInAddBuffer(HANDLE hwi, ref WAVEHDR pwh, UINT cbwh);
+        public static extern MMRESULT waveInAddBuffer(HANDLE hwi, IntPtr pwh, UINT cbwh);
+        //public static extern MMRESULT waveInAddBuffer(HANDLE hwi, ref WAVEHDR pwh, UINT cbwh);
         [DllImport(sourcedll)]
         public static extern MMRESULT waveInClose(HANDLE hwi);
         [DllImport(sourcedll)]
-        public static extern MMRESULT waveInOpen(out HANDLE phwi, UINT uDeviceID, ref WAVEFORMATEX pwfx, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen);  //parametri ok
+        public static extern MMRESULT waveInOpen(out HANDLE phwi, UINT uDeviceID, ref WAVEFORMATEX pwfx, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen);  
         [DllImport(sourcedll)]
-        public static extern MMRESULT waveInPrepareHeader(HANDLE hwi, ref WAVEHDR pwh, UINT cbwh);
+        public static extern MMRESULT waveInPrepareHeader(HANDLE hwi, IntPtr pwh, UINT cbwh);
+        //public static extern MMRESULT waveInPrepareHeader(HANDLE hwi, ref WAVEHDR pwh, UINT cbwh);
         [DllImport(sourcedll)]
-        public static extern MMRESULT waveInUnprepareHeader(HANDLE hWaveIn, ref WAVEHDR pwh, UINT cbwh);
+        public static extern MMRESULT waveInUnprepareHeader(HANDLE hWaveIn, IntPtr pwh, UINT cbwh);
+        //public static extern MMRESULT waveInUnprepareHeader(HANDLE hWaveIn, ref WAVEHDR pwh, UINT cbwh);
         [DllImport(sourcedll)]
         public static extern MMRESULT waveInReset(HANDLE hwi);
         [DllImport(sourcedll)]
@@ -279,22 +282,26 @@ namespace WaveIn4CF
     internal class WaveInBuffer: IDisposable
     {
         bool disposed = false;
-        public byte[] mData;
-        public WAVEHDR mWHdr;
-        GCHandle mH_Data;
-        GCHandle mH_WHdr;
-        HANDLE mhwi;
+        private byte[] mData;
+        private WAVEHDR mWHdr;  
+        private GCHandle mH_Data;
+        private GCHandle mH_WHdr;
+        private HANDLE mhwi;
 
         public WaveInBuffer(HANDLE hwi, uint bufsize, DWORD_PTR dwUser)
         {
             mhwi = hwi;
-            mH_WHdr = GCHandle.Alloc(mWHdr, GCHandleType.Pinned);
+
             mData = new byte[bufsize];
             mH_Data = GCHandle.Alloc(mData, GCHandleType.Pinned);
+
+            mWHdr = new WAVEHDR();
             mWHdr.lpData = mH_Data.AddrOfPinnedObject();
             mWHdr.dwBufferLength = bufsize;
             mWHdr.dwUser = dwUser;
-            MMRESULT res = Native.waveInPrepareHeader(hwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
+            mH_WHdr = GCHandle.Alloc(mWHdr, GCHandleType.Pinned);
+
+            MMRESULT res = Native.waveInPrepareHeader(hwi, mH_WHdr.AddrOfPinnedObject(), (UINT)Marshal.SizeOf(mWHdr));
             if (res != Native.MMSYSERR_NOERROR)
             {
                 System.Diagnostics.Trace.WriteLine("!! waveInPrepareHeader() fallito con errore: " + res);
@@ -303,14 +310,31 @@ namespace WaveIn4CF
             RecycleBuffer();
         }
 
+        public WAVEHDR WaveHeader
+        {
+            get
+            {
+                return (WAVEHDR) mH_WHdr.Target;
+            }
+        }
+
+        public byte[] Data
+        {
+            get
+            {
+                return (byte[])mH_Data.Target;
+            }
+        }
+
         public void RecycleBuffer()
         {
-            MMRESULT res = Native.waveInAddBuffer(mhwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
+            //MMRESULT res = Native.waveInAddBuffer(mhwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
+            MMRESULT res = Native.waveInAddBuffer(mhwi, mH_WHdr.AddrOfPinnedObject(), (UINT)Marshal.SizeOf(mWHdr));
             if (res != Native.MMSYSERR_NOERROR)
             {
                 System.Diagnostics.Trace.WriteLine("!! waveInAddBuffer() fallito con errore: " + res);
                 System.Diagnostics.Trace.Write("mhwi " + mhwi + " mWHdr: ");
-                System.Diagnostics.Trace.WriteLine(mWHdr);
+                System.Diagnostics.Trace.WriteLine(WaveHeader);
                 throw new Exception("Immpossibile associare il buffer");
             }
         }
@@ -320,7 +344,8 @@ namespace WaveIn4CF
         {
             if (disposed) 
                 throw new Exception("already disposed exception");
-            Native.waveInUnprepareHeader(mhwi, ref mWHdr, (UINT) Marshal.SizeOf(mWHdr));
+            //Native.waveInUnprepareHeader(mhwi, ref mWHdr, (UINT)Marshal.SizeOf(mWHdr));
+            Native.waveInUnprepareHeader(mhwi, mH_WHdr.AddrOfPinnedObject(), (UINT)Marshal.SizeOf(mWHdr));
             mH_WHdr.Free();
             mH_Data.Free();
             disposed = true;
@@ -337,6 +362,7 @@ namespace WaveIn4CF
         private uint mBuffersCount, mBuffersSize;
 
         WaveInBuffer[] buffers;
+        System.Collections.Queue mWriteQueue; 
         protected HANDLE hwi;
         WAVEFORMATEX mWFmtx;
 
@@ -464,7 +490,7 @@ namespace WaveIn4CF
         {
             StringBuilder res = new StringBuilder();
             foreach (WaveInBuffer b in buffers)
-                res.AppendFormat(" {0:X}", b.mWHdr.dwFlags);
+                res.AppendFormat(" {0:X}", b.WaveHeader.dwFlags);
             return res.ToString();
         }
 
@@ -479,11 +505,10 @@ namespace WaveIn4CF
                     mAudioEvent.WaitOne();
                     System.Diagnostics.Debug.WriteLine("** recThreadProc() [" + mCurrentBuffer + "]" + debugBufFlags());
                     #if DEBUG
-                    if ((buffers[mCurrentBuffer].mWHdr.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == 0) System.Media.SystemSounds.Exclamation.Play();
+                    if ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == 0) System.Media.SystemSounds.Exclamation.Play();
                     #endif
-                    while ((buffers[mCurrentBuffer].mWHdr.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
+                    while ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
                     {
-                        //TODO: salva i dati presenti nel buffer
                         writeData(mCurrentBuffer);
                         // Registra il buffer per il riutilizzo
                         try {
@@ -541,13 +566,13 @@ namespace WaveIn4CF
         private void writeData(int mCurrentBuffer)
         {
             WaveInBuffer buf = buffers[mCurrentBuffer];
-            byte[] bufdata = buf.mData;
-            int len = (int)buf.mWHdr.dwBytesRecorded;
+            byte[] bufdata = buf.Data;
+            int len = (int)buf.WaveHeader.dwBytesRecorded;
             System.Diagnostics.Debug.WriteLine("## writeData(" + mCurrentBuffer + ") " + len);
-            System.Diagnostics.Debug.Assert((len <= buf.mWHdr.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
-            System.Diagnostics.Debug.Assert((buf.mWHdr.dwBytesRecorded <= buf.mWHdr.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
+            System.Diagnostics.Debug.Assert((len <= buf.WaveHeader.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
+            System.Diagnostics.Debug.Assert((buf.WaveHeader.dwBytesRecorded <= buf.WaveHeader.dwBufferLength), "Inconsistenza fra byte registrati e dimensione buffer");
             mOutWriter.Write(bufdata, 0, len);
-            mDataCounter += buf.mWHdr.dwBytesRecorded;
+            mDataCounter += buf.WaveHeader.dwBytesRecorded;
         }
 
         #region IDisposable Members
