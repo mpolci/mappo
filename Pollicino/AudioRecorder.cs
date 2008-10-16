@@ -158,7 +158,7 @@ namespace MapperTools.Pollicino
                         case OverlappingRecordBehaviorTypes.IgnoreNewRecord:
                             return NewRecordState.NewRecordIgnored;
                         case OverlappingRecordBehaviorTypes.StartNewRecord:
-                            stop();
+                            unsyncStop();
                             break;
                     }
                 }
@@ -186,15 +186,19 @@ namespace MapperTools.Pollicino
             SystemIdleTimerReset();
             lock (runninglock)
             {
-                if (!_running) throw new Exception("Internal error: timer tick without recording");
+                if (timer1 != null)
+                {
+                    System.Diagnostics.Trace.Assert(_running, "Timer tick without recording");
 
-                TimeSpan elapsed = DateTime.Now - this.dtime_StartRec;
-                if (elapsed.Seconds >= this.currentrecseconds)
-                    stop();
+                    TimeSpan elapsed = DateTime.Now - this.dtime_StartRec;
+                    if (elapsed.Seconds >= this.currentrecseconds)
+                        unsyncStop();
+                } else 
+                    System.Diagnostics.Debug.WriteLine("Notice: tick with disposed timer");
             }
         }
 
-        public void stop()
+        private void unsyncStop()
         {
             timer1.Dispose();
             timer1 = null;
@@ -203,12 +207,18 @@ namespace MapperTools.Pollicino
                 mRecorder.StopRec();
         }
 
-        public void rec_done(WaveIn4CF.WaveInRecorder recorder)
+        public void stop()
         {
-            if (_running) throw new Exception("Internal Error: probally record timeout");
-            recordingStream.Close();
-            if (endrec_sound != null) endrec_sound.Play();
+            lock (runninglock)
+                unsyncStop();
         }
 
+        public void rec_done(WaveIn4CF.WaveInRecorder recorder)
+        {
+            if (_running)
+                System.Diagnostics.Trace.WriteLine("Warning: likely record timeout");
+            recordingStream.Close();  // non necessario, WaveInRecorder dovrebbe già chiudere il file
+            if (endrec_sound != null) endrec_sound.Play();
+        }
     }
 }
