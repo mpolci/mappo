@@ -32,11 +32,14 @@ namespace MapperTools.Pollicino
 {
     public partial class FormOptions : Form
     {
+        private const int MAXAUDIOREC = 18000;
         WaveIn4CF.WaveFormats[] formats;
 
         public FormOptions()
         {
             InitializeComponent();
+
+            num_recordaudioseconds.Maximum = MAXAUDIOREC;
 
             uint recdevices = WaveIn4CF.Native.waveInGetNumDevs();
             num_RecDeviceId.Maximum = (decimal) recdevices - 1;
@@ -71,7 +74,7 @@ namespace MapperTools.Pollicino
                 _data.Application.DelayGPXTrackStart = cb_delayTrackStart.Checked;
                 _data.Application.WaypointSoundPlay = cb_waypointsound.Checked;
                 _data.Application.WaypointSoundFile = tb_waypointsound.Text;
-                _data.Application.WaypointRecordAudio = cb_recordaudio.Checked;
+                _data.Application.WaypointRecordAudio = !rb_audiorec_disabled.Checked;
                 _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
                 _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
@@ -97,7 +100,14 @@ namespace MapperTools.Pollicino
                 cb_delayTrackStart.Checked = value.Application.DelayGPXTrackStart;
                 cb_waypointsound.Checked = value.Application.WaypointSoundPlay;
                 tb_waypointsound.Text = value.Application.WaypointSoundFile;
-                cb_recordaudio.Checked = value.Application.WaypointRecordAudio;
+                if (!value.Application.WaypointRecordAudio)
+                    rb_audiorec_disabled.Checked = true;
+                else if (value.Application.DelayGPXTrackStart && 
+                         value.Application.WaypointRecordAudioSeconds == MAXAUDIOREC)
+                    rb_audiorec_continuous.Checked = true;
+                else 
+                    rb_audiorec_multiple.Checked = true;
+
                 try {
                     num_recordaudioseconds.Value = value.Application.WaypointRecordAudioSeconds;
                 } catch (Exception) {}
@@ -159,8 +169,10 @@ namespace MapperTools.Pollicino
                 num_recordaudioseconds.Increment = 30;
             else if (num_recordaudioseconds.Value < 600)
                 num_recordaudioseconds.Increment = 60;
-            else
+            else if (num_recordaudioseconds.Value < 1800)
                 num_recordaudioseconds.Increment = 120;
+            else
+                num_recordaudioseconds.Increment = 900;
         }
 
         private void num_RecDeviceId_ValueChanged(object sender, EventArgs e)
@@ -201,6 +213,55 @@ namespace MapperTools.Pollicino
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb_waypointsound.Text = openfiledlg.openfile;
+        }
+
+        private void rb_audiorec_disabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_audiorec_disabled.Checked)
+            {
+                num_RecDeviceId.Enabled = false;
+                num_recordaudioseconds.Enabled = false;
+                combo_RecFormat.Enabled = false;
+            }
+        }
+
+        private void rb_audiorec_multiple_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_audiorec_multiple.Checked)
+            {
+                num_RecDeviceId.Enabled = true;
+                num_recordaudioseconds.Enabled = true;
+                combo_RecFormat.Enabled = true;
+            }
+        }
+
+        private void rb_audiorec_continuous_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_audiorec_continuous.Checked)
+            {
+                num_RecDeviceId.Enabled = true;
+                num_recordaudioseconds.Enabled = false;
+                combo_RecFormat.Enabled = true;
+                num_recordaudioseconds.Value = MAXAUDIOREC;
+                cb_delayTrackStart.Checked = true;
+                cb_delayTrackStart.Enabled = false;
+            }
+            else 
+            {
+                cb_delayTrackStart.Enabled = true;
+                if (_data.Application.WaypointRecordAudioSeconds == MAXAUDIOREC && _data.Application.DelayGPXTrackStart)
+                {
+                    num_recordaudioseconds.Value = 10;
+                    cb_delayTrackStart.Checked = false;
+                }
+                else
+                {
+                    num_recordaudioseconds.Value = _data.Application.WaypointRecordAudioSeconds;
+                    cb_delayTrackStart.Checked = _data.Application.DelayGPXTrackStart;
+                }
+
+            }
+
         }
 
 
