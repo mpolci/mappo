@@ -335,7 +335,7 @@ namespace WaveIn4CF
                 System.Diagnostics.Trace.WriteLine("!! waveInAddBuffer() fallito con errore: " + res);
                 System.Diagnostics.Trace.Write("mhwi " + mhwi + " mWHdr: ");
                 System.Diagnostics.Trace.WriteLine(WaveHeader);
-                throw new Exception("Immpossibile associare il buffer");
+                throw new WaveBufferException("Immpossibile associare il buffer");
             }
         }
         #region IDisposable Members
@@ -354,6 +354,10 @@ namespace WaveIn4CF
         #endregion
     }
 
+    internal class WaveBufferException : Exception 
+    {
+        public WaveBufferException(string msg) : base(msg) { }
+    }
 
     public class WaveInRecorder: IDisposable
     {
@@ -362,7 +366,6 @@ namespace WaveIn4CF
         private uint mBuffersCount, mBuffersSize;
 
         WaveInBuffer[] buffers;
-        System.Collections.Queue mWriteQueue; 
         protected HANDLE hwi;
         WAVEFORMATEX mWFmtx;
 
@@ -427,6 +430,8 @@ namespace WaveIn4CF
             mRecFinished = false;
             mAudioEvent.Reset();
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.recThreadProc));
+            //TODO: sono sicuro che i buffer siano tutti puliti? sistemarli
+            //      Se la registrazione si è interrotta per un errore di output è probabile che siano rimasti dei buffer sporchi
             //avvia la registrazione
             MMRESULT res = Native.waveInStart(hwi);
             if (res != Native.MMSYSERR_NOERROR)
@@ -499,37 +504,48 @@ namespace WaveIn4CF
             System.Diagnostics.Debug.WriteLine("-> recThreadProc()");
             lock (buffers) 
             {
-                bool terminated;
-                do
+                try
                 {
-                    mAudioEvent.WaitOne();
-                    System.Diagnostics.Debug.WriteLine("** recThreadProc() [" + mCurrentBuffer + "]" + debugBufFlags());
-                    #if DEBUG
-                    if ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == 0) System.Media.SystemSounds.Exclamation.Play();
-                    #endif
-                    while ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
+                    bool terminated;
+                    do
                     {
-                        writeData(mCurrentBuffer);
-                        // Registra il buffer per il riutilizzo
-                        try {
+                        mAudioEvent.WaitOne();
+                        System.Diagnostics.Debug.WriteLine("** recThreadProc() [" + mCurrentBuffer + "]" + debugBufFlags());
+#if DEBUG
+                        if ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == 0) System.Media.SystemSounds.Exclamation.Play();
+#endif
+                        while ((buffers[mCurrentBuffer].WaveHeader.dwFlags & (uint)WAVEHDR.Flags.WHDR_DONE) == (uint)WAVEHDR.Flags.WHDR_DONE)
+                        {
+                            writeData(mCurrentBuffer);
+                            // Registra il buffer per il riutilizzo
                             buffers[mCurrentBuffer].RecycleBuffer();
-                        } catch {
-                            System.Diagnostics.Trace.WriteLine("Error recycling buffer " + mCurrentBuffer + ", creating a new buffer");
-                            buffers[mCurrentBuffer].Dispose();
-                            buffers[mCurrentBuffer] = new WaveInBuffer(hwi, mBuffersSize, mCurrentBuffer);
+                            // avanza al buffer successivo
+                            mCurrentBuffer++;
+                            if (mCurrentBuffer >= mBuffersCount) mCurrentBuffer = 0;
                         }
+                        lock (mSync)
+                        {
+                            mAudioEvent.Reset();
+                            terminated = mRecFinished;
+                        }
+                    } while (!terminated);
 
-                        // avanza al buffer successivo
-                        mCurrentBuffer++;
-                        if (mCurrentBuffer >= mBuffersCount) mCurrentBuffer = 0;
-                    }
-                    lock (mSync) {
-                        mAudioEvent.Reset();
-                        terminated = mRecFinished;
-                    }
-                } while (!terminated);
-                WriteFileProlog();
-            }
+                    WriteFileProlog();
+                }
+                catch (IOException ioex)
+                {
+                    Native.waveInStop(hwi);
+                    mRecFinished = true;
+                    System.Diagnostics.Trace.WriteLine("--- Impossibile salvare nel file wav");
+                    System.Diagnostics.Trace.WriteLine(ioex);
+                }
+                catch (WaveBufferException)
+                {
+                    Native.waveInStop(hwi);
+                    mRecFinished = true;
+                    System.Diagnostics.Trace.WriteLine("Error recycling buffer " + mCurrentBuffer);
+                }
+            } // end lock
             if (RecFinishedEvent != null)
                 RecFinishedEvent(this);
             System.Diagnostics.Debug.WriteLine("<- recThreadProc()");
