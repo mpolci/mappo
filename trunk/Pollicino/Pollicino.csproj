@@ -52,10 +52,6 @@
     <Reference Include="Microsoft.WindowsMobile.Forms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.WindowsMobile.Status, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="mscorlib" />
-    <Reference Include="SharpGps, Version=0.5.3048.18227, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>sharpgps\SharpGps.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -144,6 +140,10 @@
     <ProjectReference Include="..\MapControl\MapsLibray.csproj">
       <Project>{55C7C88D-38A0-412B-BFD8-6EC3B903182C}</Project>
       <Name>MapsLibray</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpGps\SharpGps.csproj">
+      <Project>{8516BA0A-3E52-4770-9D99-0C866B7E513B}</Project>
+      <Name>SharpGps</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
