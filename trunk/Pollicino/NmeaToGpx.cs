@@ -63,11 +63,14 @@ namespace MapperTools.NMEA2GPX
                             if (elaboratetrack)
                             {
                                 SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
-                                waypoint tp = new waypoint();
-                                tp.lat = gpmrc.Position.Latitude;
-                                tp.lon = gpmrc.Position.Longitude;
-                                tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
-                                gpxdata.trk.trkseg.Add(tp);
+                                if (gpmrc.Status == SharpGis.SharpGps.NMEA.GPRMC.StatusEnum.OK)
+                                {
+                                    waypoint tp = new waypoint();
+                                    tp.lat = gpmrc.Position.Latitude;
+                                    tp.lon = gpmrc.Position.Longitude;
+                                    tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
+                                    gpxdata.trk.trkseg.Add(tp);
+                                }
                             }
                             break;
                         case "$GPWPL":
