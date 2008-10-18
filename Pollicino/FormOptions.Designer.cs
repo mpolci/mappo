@@ -249,6 +249,7 @@ namespace MapperTools.Pollicino
             this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
             this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile/");
+            this.combo_TileServer.Items.Add("http://andy.sandbox.cloudmade.com/tiles/cycle/");
             this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
             this.combo_TileServer.Name = "combo_TileServer";
             this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
@@ -358,7 +359,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.Controls.Add(this.label13);
             this.tabPage_AudioRec.Location = new System.Drawing.Point(0, 0);
             this.tabPage_AudioRec.Name = "tabPage_AudioRec";
-            this.tabPage_AudioRec.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_AudioRec.Size = new System.Drawing.Size(232, 242);
             this.tabPage_AudioRec.Text = "Audio Recording";
             // 
             // panel1
@@ -475,7 +476,7 @@ namespace MapperTools.Pollicino
             this.tabPage_Misc.Controls.Add(this.cb_waypointsound);
             this.tabPage_Misc.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Misc.Name = "tabPage_Misc";
-            this.tabPage_Misc.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_Misc.Size = new System.Drawing.Size(232, 242);
             this.tabPage_Misc.Text = "Misc.";
             // 
             // cb_delayTrackStart
