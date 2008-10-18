@@ -534,32 +534,33 @@ namespace MapperTools.Pollicino
             return opt;
         }
 
-        private void waypoint_created(GPSControl.GPSPosition gpsdata)
+        private void waypoint_created(GPSControl.GPSPosition? gpsdata)
         {
-            if (options.Application.WaypointSoundPlay && wpt_sound != null)
-                wpt_sound.Play();
-            waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+            if (gpsdata != null)
+            {
+                if (options.Application.WaypointSoundPlay && wpt_sound != null)
+                    wpt_sound.Play();
+                waypoints.addPoint(map.mapsystem.CalcProjection(gpsdata.Value.position));
+            }
+            else
+                SystemSounds.Exclamation.Play();
         }
 
         private void action_CreateWaypoint()
         {
             if (gpsControl.Started) {
-                GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
+                GPSControl.GPSPosition? gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString, 5);
                 waypoint_created(gpsdata);
                 //record audio
-                if (options.Application.WaypointRecordAudio)
+                if (gpsdata != null && options.Application.WaypointRecordAudio)
                 {
                     string recdir = WaypointNames.DataDir(logname),
-                           recfilename = WaypointNames.AudioRecFile(logname, gpsdata.fixtime);
+                           recfilename = WaypointNames.AudioRecFile(logname, gpsdata.Value.fixtime);
                     if (!Directory.Exists(recdir))
                         Directory.CreateDirectory(recdir);
                     wpt_recorder.start(recfilename, options.Application.WaypointRecordAudioSeconds);
                 }
             }
-#if DEBUG
-            else
-                System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString() + " --- No waypoint created because GPS is not started" );
-#endif
         }
 
         private void action_takephoto()
@@ -583,7 +584,7 @@ namespace MapperTools.Pollicino
                         cameraCapture.Mode = CameraCaptureMode.Still;
                         if (cameraCapture.ShowDialog() == DialogResult.OK)
                         {
-                            GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString);
+                            GPSControl.GPSPosition gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString, 0).Value;
                             File.Move(cameraCapture.FileName, WaypointNames.PictureFile(this.logname, gpsdata.fixtime));
                             waypoint_created(gpsdata);
                         }

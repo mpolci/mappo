@@ -37,8 +37,18 @@ namespace MapperTools.Pollicino
     {
         public struct GPSPosition
         {
+            /// <summary>
+            /// Posizione rilevata
+            /// </summary>
             public GeoPoint position;
+            /// <summary>
+            /// Ora del fix indicata dal gps
+            /// </summary>
             public DateTime fixtime;
+            /// <summary>
+            /// Ora di ricezione del messaggio NMEA con il fix. L'orologio di riferimento è quello interno del dispositivo.
+            /// </summary>
+            public DateTime receivedtime;
         }
 
         public GPSControl()
@@ -108,20 +118,27 @@ namespace MapperTools.Pollicino
         /// Il nome del waypoint viene generato con l'istruzione <code>string.Format(name, fixtime)</code>
         /// quindi per inserire la data e l'ora del fix nel nome utilizzare il riferimento al parametro zero, ad esempio {0:o}.
         /// </param>
-        public GPSPosition saveWaypoint(string name)
+        /// <param name="maxage">L'età massima del fix, in secondi, oltre la quale il waypoint non viene salvato. 0 indica che il waypoint deve essere salvato con i dati dell'ultimo fix, indipendentemente dalla sua età.</param>
+        public GPSPosition? saveWaypoint(string name, int maxage)
         {
             GPSPosition gpsdata = this.PositionData;
+            TimeSpan age = DateTime.Now - gpsdata.receivedtime;
 
-            if (swGPSLog != null)
+            if (maxage == 0 || age.TotalSeconds <= maxage)
             {
-                string wptname = string.Format(name, gpsdata.fixtime);
-                GPWPL nmeawpt = new GPWPL(wptname, gpsdata.position.dLat, gpsdata.position.dLon);
-                lock (swGPSLog)
+                if (swGPSLog != null)
                 {
-                    swGPSLog.WriteLine(nmeawpt.NMEASentence);
+                    string wptname = string.Format(name, gpsdata.fixtime);
+                    GPWPL nmeawpt = new GPWPL(wptname, gpsdata.position.dLat, gpsdata.position.dLon);
+                    lock (swGPSLog)
+                    {
+                        swGPSLog.WriteLine(nmeawpt.NMEASentence);
+                    }
                 }
+                return gpsdata;
             }
-            return gpsdata;
+            else
+                return null;
         }
 
         /// <summary>
@@ -179,10 +196,10 @@ namespace MapperTools.Pollicino
                     {
                         gpsdata.position = new GeoPoint(gpshandler.GPRMC.Position.Latitude, gpshandler.GPRMC.Position.Longitude);
                         gpsdata.fixtime = DateTime.SpecifyKind(gpshandler.GPRMC.TimeOfFix, DateTimeKind.Utc);
+                        gpsdata.receivedtime = DateTime.Now;
                         lock (gpsdatalock)
                             _gpsdata = gpsdata;
                         sendevent = true;
-
                     }
                     else
                     {
