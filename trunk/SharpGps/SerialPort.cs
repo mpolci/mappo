@@ -15,7 +15,8 @@
 // along with SharpGps; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-//
+// History:
+// 2008-10-19: Added reconnection on serial port connection loss. (c) by Marco Polci
 // 2005-05-22: Added checksum checking
 //
 
@@ -40,6 +41,7 @@ namespace SharpGis.SharpGps
 		private const int _receivedBytesThreshold = 200;
 		private System.IO.Ports.SerialPort com;
 		private bool disposed = false;
+        private bool stopped = false;
 		
 		/// <summary>
 		/// Initilializes the serialport
@@ -142,7 +144,27 @@ namespace SharpGis.SharpGps
 		/// </summary>
 		internal void Start()
 		{
-			Read();
+            const int delay = 5000; // Not below 3000 ms. 
+            stopped = false;
+            while (!stopped)
+            {
+                try
+                {
+                    if (com.IsOpen) com.Close();
+                    Read();
+                }
+                catch (System.IO.IOException)
+                {
+                    System.Diagnostics.Trace.WriteLine("-- " + DateTime.Now + " Serial port connection lost");
+                    System.Threading.Thread.Sleep(delay);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine("-- " + DateTime.Now + " - " + ex);
+                    System.Threading.Thread.Sleep(delay);
+                }
+
+            }
 		}
 
 		/// <summary>
@@ -232,7 +254,8 @@ namespace SharpGis.SharpGps
 		/// </summary>
 		internal void Stop() 
 		{
-			if(com!=null)
+            stopped = true;
+            if (com != null)
 				if(com.IsOpen)
 					com.Close();
 		}
