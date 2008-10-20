@@ -150,7 +150,6 @@ namespace SharpGis.SharpGps
             {
                 try
                 {
-                    if (com.IsOpen) com.Close();
                     Read();
                 }
                 catch (System.IO.IOException)
@@ -158,12 +157,19 @@ namespace SharpGis.SharpGps
                     System.Diagnostics.Trace.WriteLine("-- " + DateTime.Now + " Serial port connection lost");
                     System.Threading.Thread.Sleep(delay);
                 }
+                catch (ThreadAbortException)
+                {   // Nothing to do
+                }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.WriteLine("-- " + DateTime.Now + " - " + ex);
                     System.Threading.Thread.Sleep(delay);
                 }
-
+                finally
+                {
+                    if (com.IsOpen) 
+                        com.Close();
+                }
             }
 		}
 
