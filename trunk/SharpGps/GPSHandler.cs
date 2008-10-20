@@ -354,10 +354,11 @@ namespace SharpGis.SharpGps
 		public void Stop()
 		{
 			GPGGA.FixQuality = NMEA.GPGGA.FixQualityEnum.Invalid;
-			if(this.clThread!=null)
-				this.clThread.Abort();
-			GpsPort.Stop();
-			this.clThread = null;
+            // clThread.Abort() not necessary. The thread ends after GpsPort.Stop() .
+            //if (this.clThread != null)
+            //    this.clThread.Abort();   
+            GpsPort.Stop();
+            this.clThread = null;
 			this.clThreadStart = null;
 		}
 
