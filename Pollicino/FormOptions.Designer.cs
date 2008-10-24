@@ -93,6 +93,12 @@ namespace MapperTools.Pollicino
             this.button_waypointsound = new System.Windows.Forms.Button();
             this.tb_waypointsound = new System.Windows.Forms.TextBox();
             this.cb_waypointsound = new System.Windows.Forms.CheckBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
@@ -100,6 +106,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabPage_Misc.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -108,6 +115,7 @@ namespace MapperTools.Pollicino
             this.tabControl1.Controls.Add(this.tabPage_Maps);
             this.tabControl1.Controls.Add(this.tabPage_AudioRec);
             this.tabControl1.Controls.Add(this.tabPage_Misc);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -241,7 +249,7 @@ namespace MapperTools.Pollicino
             this.tabPage_Maps.Controls.Add(this.label4);
             this.tabPage_Maps.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Maps.Name = "tabPage_Maps";
-            this.tabPage_Maps.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_Maps.Size = new System.Drawing.Size(232, 242);
             this.tabPage_Maps.Text = "Maps";
             // 
             // combo_TileServer
@@ -360,7 +368,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.Location = new System.Drawing.Point(0, 0);
             this.tabPage_AudioRec.Name = "tabPage_AudioRec";
             this.tabPage_AudioRec.Size = new System.Drawing.Size(232, 242);
-            this.tabPage_AudioRec.Text = "Audio Recording";
+            this.tabPage_AudioRec.Text = "Audio";
             // 
             // panel1
             // 
@@ -542,6 +550,73 @@ namespace MapperTools.Pollicino
             this.cb_waypointsound.TabIndex = 0;
             this.cb_waypointsound.Text = "Play sound on new waypoint";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.linkLabel1);
+            this.tabPage1.Controls.Add(this.label16);
+            this.tabPage1.Controls.Add(this.label15);
+            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Location = new System.Drawing.Point(0, 0);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(240, 245);
+            this.tabPage1.Text = "About";
+            // 
+            // textBox1
+            // 
+            this.textBox1.AcceptsReturn = true;
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(7, 100);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(226, 142);
+            this.textBox1.TabIndex = 7;
+            this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
+                "l.html).\r\n\r\nPart of this software is based on SharpGPS (http://www.codeplex.com/" +
+                "SharpGPS).";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.Location = new System.Drawing.Point(7, 72);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(226, 20);
+            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.Text = "http://www.marcopolci.net/wiki/informatica:progetti:pollicino_en";
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label16.Location = new System.Drawing.Point(7, 48);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(226, 20);
+            this.label16.Text = "Copyright (c) 2008 by Marco Polci";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label15
+            // 
+            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label15.Location = new System.Drawing.Point(7, 24);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(226, 20);
+            this.label15.Text = "Version 0.9.xxx for Pocket PC";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label14
+            // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label14.Location = new System.Drawing.Point(7, 4);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(226, 20);
+            this.label14.Text = "Pollicino for OpenStreetMap";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -558,6 +633,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabPage_Misc.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -611,5 +687,11 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.RadioButton rb_audiorec_multiple;
         private System.Windows.Forms.RadioButton rb_audiorec_disabled;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
