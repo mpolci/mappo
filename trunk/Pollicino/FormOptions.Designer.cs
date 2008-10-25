@@ -571,6 +571,7 @@ namespace MapperTools.Pollicino
             this.textBox1.Location = new System.Drawing.Point(7, 100);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(226, 142);
             this.textBox1.TabIndex = 7;
             this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
