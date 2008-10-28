@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MapperTools.NMEA2GPX.GPXGenerator">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.gpx" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.waypoint" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.Link" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.track" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>NmeaToGpx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.ApplicationOptions">
+    <Position X="4.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.GPSOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.MapsOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="MapperTools.Pollicino.ApplicationOptions.InterfaceOptions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ApplicationOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAACAgABAAAAAAAAAAAAAIAAAAAAgEAAAAAACAABA=</HashCode>
+      <FileName>ApplicationOptions.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MapperTools.Pollicino.Form_MapperToolMain">
+    <Position X="11.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>KMACOC+cISoAAJKGQRCQoxACAQbEWEkFwC4EpYJRACI=</HashCode>
+      <FileName>FormMain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.FormOpenFile">
+    <Position X="14" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAIIAAAAQCICAAQAAASAAAACEABQEAAACAAAAAAgBAE=</HashCode>
+      <FileName>FormOpenFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.FormOptions">
+    <Position X="9" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>8AAAQGoEViAAVhIAICCB0AQCAKAEUwF4ABAUAYgCBUQ=</HashCode>
+      <FileName>FormOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.GPSControl">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="MapperTools.Pollicino.GPSControl.GPSPosition">
+        <TypeIdentifier>
+          <NewMemberFileName>GPSControl.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Delegate Name="MapperTools.Pollicino.GPSControl.PositionUpdateHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GPSControl.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAhEAACBIAAggIACAAgISAAIgAAECAAEQAAAAAAQ=</HashCode>
+      <FileName>GPSControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.GPWPL">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAYAAACAAAAACAIAAAAAAgCAAEEAAAAAAABAAAAAA=</HashCode>
+      <FileName>Waypoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.Program">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.Downloader">
+    <Position X="7" Y="2.75" Width="1.75" />
+    <NestedTypes>
+      <Struct Name="MapperTools.Pollicino.Downloader.AreaMapItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Downloader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAASAIABAIAAAAAAAAAAgAEAQAACAAAAggAAA=</HashCode>
+      <FileName>Downloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.BlinkingControlNotifier">
+    <Position X="4.5" Y="6" Width="2.5" />
+    <NestedTypes>
+      <Delegate Name="MapperTools.Pollicino.BlinkingControlNotifier.AsyncDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BlinkingControlNotifier.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACAAAAwAACgABAAAIACFA0ACAAAAAAAFAAAAAEAEAEA=</HashCode>
+      <FileName>BlinkingControlNotifier.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MapperTools.Pollicino.AudioRecorder">
+    <Position X="2.5" Y="8" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="MapperTools.Pollicino.AudioRecorder.NewRecordState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AudioRecorder.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="MapperTools.Pollicino.AudioRecorder.OverlappingRecordBehaviorTypes" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AudioRecorder.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAQBAAAMEAAAACAgIVIAAAAABgAgAAgIAAAAsABAAQA=</HashCode>
+      <FileName>AudioRecorder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MapperTools.Pollicino.IWorkNotifier">
+    <Position X="7.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
