@@ -22,14 +22,14 @@ namespace MapperTools.Pollicino
             InitializeComponent();
         }
 
-        IWorkNotifier _notifier;
-        public IWorkNotifier Notifier
-        {
-            get { return _notifier; }
-            set { _notifier = value; }  // cambiare in esecuzione è un problema, CORREGGERE!
-        }
+        public IWorkNotifier Notifier { get; set; }
 
         public bool DelayTrackStart { get; set; }
+
+        /// <summary>
+        /// Mandatory to set before to create jobs.
+        /// </summary>
+        public GPXCollection GPXFilesDB { get; set; }  
 
         private class ConvertWork
         {
@@ -37,12 +37,14 @@ namespace MapperTools.Pollicino
             IWorkNotifier notifier;
             string logfilename;
             bool delaytrackstart;
+            GPXCollection gpxcollection;
 
-            public ConvertWork(IWorkNotifier worknotifier, string log, bool trackfromfirstwpt)
+            public ConvertWork(IWorkNotifier worknotifier, string log, bool trackfromfirstwpt, GPXCollection gpxcoll)
             {
                 notifier = worknotifier;
                 logfilename = log;
                 delaytrackstart = trackfromfirstwpt;
+                gpxcollection = gpxcoll;
             }
 
             public void GPXJob()
@@ -66,11 +68,17 @@ namespace MapperTools.Pollicino
                 outfile = outdir + ".gpx";
                 try
                 {
-                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart);
+                    int wpts, tpts;
+                    DateTime t_start, t_end;
+                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart, 
+                                                                out tpts, out wpts, out t_start, out t_end);
+                    System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + tpts + " wp: " + wpts + " start: " + t_start + " end: " + t_end);
+                    gpxcollection.AddGPX(new GPXFile(outfile, t_start, t_end, tpts, wpts));
                     // archivia il file di log
                     if (!Directory.Exists(outdir))
                         Directory.CreateDirectory(outdir);
                     File.Move(logfilename, outdir + '\\' + Path.GetFileName(logfilename));
+
                 }
                 catch (Exception ex)
                 {
@@ -107,7 +115,7 @@ namespace MapperTools.Pollicino
         public void SaveGPX(string logfilename)
         {
             // Non uso ThreadPool.QueueUserWorkItem perché voglio un thread a bassa priorità
-            ConvertWork work = new ConvertWork(_notifier, logfilename, DelayTrackStart);
+            ConvertWork work = new ConvertWork(Notifier, logfilename, DelayTrackStart, GPXFilesDB);
             Thread gpxthr = new Thread(new ThreadStart(work.GPXJob));
             gpxthr.Priority = ThreadPriority.Lowest;
             gpxthr.Name = "GPX Converter Thread";
