@@ -32,9 +32,12 @@ namespace MapperTools.NMEA2GPX
         /// <param name="nmea_input">file del log NMEA</param>
         /// <param name="gpx_output">file GPX da salvare</param>
         /// <param name="delaytrackstart">se true la traccia gpx inizia al primo waypoint</param>
-        public static void NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart)
+        public static void NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
+                                     out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
             gpx gpxdata = new gpx();
+            gpxdata.init();
+            int nNMEAMsgs = 0;
             // The using statement also closes the StreamReader.
             using (System.IO.StreamReader sr = new System.IO.StreamReader(nmea_input))
             {
@@ -45,16 +48,15 @@ namespace MapperTools.NMEA2GPX
                        audiodir = fi_in.Name.Substring(0, fi_in.Name.Length - 4);
                 // buffer
                 String line;
-                int count = 0;
                 bool elaboratetrack = !delaytrackstart;
                 // Read and display lines from the file until the end of 
                 // the file is reached.
                 while ((line = sr.ReadLine()) != null)
                 {
-                    count++;
+                    nNMEAMsgs++;
                     if (line.Length < 6)
                     {
-                        System.Diagnostics.Debug.WriteLine("NMEAToGPX() - Invalid NMEA sentence (line " + count.ToString() + "): " + line);
+                        System.Diagnostics.Debug.WriteLine("NMEAToGPX() - Invalid NMEA sentence (line " + nNMEAMsgs.ToString() + "): " + line);
                         continue;
                     }
                     switch (line.Substring(0, 6))
@@ -113,58 +115,105 @@ namespace MapperTools.NMEA2GPX
                 xmls.Serialize(outstream, gpxdata);
                 outstream.Close();
             }
-        }
-
-        [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1")]
-        public class gpx
-        {
-            [XmlAttributeAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
-            public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
-
-            [XmlElement]
-            public List<waypoint> wpt = new List<waypoint>();
-            public track trk;
-
-            public gpx()
+            wpts = gpxdata.wpt.Count;
+            tpts = gpxdata.trk.trkseg.Count;
+            if (tpts > 0) {
+                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
+                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
+            }
+            else
             {
-                trk.trkseg = new List<waypoint>();
+                begintrk = new DateTime();
+                endtrk = new DateTime();
             }
         }
 
-        public struct waypoint
+        public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
-            [XmlAttribute]
-            public double lat;
-            [XmlAttribute]
-            public double lon;
-            public string name;
-            // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
-            [XmlElement(typeof(DateTime))]
-            public object time; 
-            public Link link;
-
-            [XmlElement(typeof(double))]
-            public object ele;
-            
-        }
-
-        public class Link
-        {
-            [XmlAttribute]
-            public string href;
-
-            public Link(string uri) {
-                href = uri;
+            gpx gpxdata;
+            using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
+                gpxdata = (gpx) xmls.Deserialize(gpxstream);
+            }
+            tpts = gpxdata.trk != null && gpxdata.trk.trkseg != null ? gpxdata.trk.trkseg.Count : 0;
+            wpts = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
+            if (tpts > 0)
+            {
+                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
+                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
+            }
+            else
+            {
+                begintrk = new DateTime();
+                endtrk = new DateTime();
             }
         }
+    }
 
+    [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1")]
+    public class gpx
+    {
+        [XmlAttributeAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
+        public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
 
-        public struct track
+        //[XmlElement(Type = typeof(waypoint), ElementName = "wpt")]
+        [XmlElement]
+        public List<waypoint> wpt;
+        public track trk;
+
+        public gpx()
         {
-            public string name;
-            [XmlArrayItem(ElementName = "trkpt")]
-            public List<waypoint> trkseg;
+            wpt = null;
+            trk = null;
         }
 
+        public void init()
+        {
+            wpt = new List<waypoint>();
+            trk = new track();
+            trk.trkseg = new List<waypoint>();
+        }
+    }
+
+    public struct waypoint
+    {
+        [XmlAttribute]
+        public double lat;
+        [XmlAttribute]
+        public double lon;
+        public string name;
+        // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
+        [XmlElement(typeof(DateTime))]
+        public object time;
+        public Link link;
+
+        [XmlElement(typeof(double))]
+        public object ele;
+
+    }
+
+    public class Link
+    {
+        [XmlAttribute]
+        public string href;
+
+        public Link(string uri)
+        {
+            href = uri;
+        }
+        public Link()
+        {
+            href = string.Empty;
+        }
+    }
+
+    //[Serializable]
+    public class track
+    {
+        public string name;
+        [XmlArrayItem(ElementName = "trkpt",Type=typeof(waypoint))]
+        [XmlArray]
+        public List<waypoint> trkseg;
     }
 }
