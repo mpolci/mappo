@@ -92,6 +92,7 @@
     <Compile Include="GPSControl.Designer.cs">
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="GPXCollection.cs" />
     <Compile Include="GPXSaver.cs">
       <SubType>Component</SubType>
     </Compile>

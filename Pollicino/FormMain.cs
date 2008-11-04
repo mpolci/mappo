@@ -84,8 +84,6 @@ namespace MapperTools.Pollicino
             mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
             mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
 
-            gpx_saver.Notifier = blinkcnGPX;
-            
             // carica le opzioni dal file di configurazione
             carica_opzioni();
             // disabilito l'autodownload
@@ -109,6 +107,11 @@ namespace MapperTools.Pollicino
             { }
 
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
+
+            gpx_saver.Notifier = blinkcnGPX;
+            // TODO: quando cambio directory per i log dovrei aggiornare il db come qui sotto
+            gpx_saver.GPXFilesDB = new GPXCollection(options.GPS.LogsDir + Path.DirectorySeparatorChar + "gpxdb.xml");
+            gpx_saver.GPXFilesDB.ScanDir(options.GPS.LogsDir);
 
             // thread per il download automatico delle mappe
             downloader = new Downloader(this.blinkcnDownloader);
