@@ -86,6 +86,7 @@ namespace MapperTools.Pollicino
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.menuItem_TracksManager = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -139,6 +140,7 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
+            this.menuItem4.MenuItems.Add(this.menuItem_TracksManager);
             this.menuItem4.Text = "Other";
             // 
             // menuItem_downloadmaps
@@ -304,6 +306,11 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem7.Text = "Full screen";
             // 
+            // menuItem_TracksManager
+            // 
+            this.menuItem_TracksManager.Text = "Tracks manager...";
+            this.menuItem_TracksManager.Click += new System.EventHandler(this.menuItem_TracksManager_Click);
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -362,6 +369,7 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem menuItem_showscale;
+        private System.Windows.Forms.MenuItem menuItem_TracksManager;
 
 
 

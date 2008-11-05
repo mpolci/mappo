@@ -5,30 +5,8 @@
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
-    <NestedTypes>
-      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.gpx" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.waypoint" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-      <Class Name="MapperTools.NMEA2GPX.GPXGenerator.Link" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-      <Struct Name="MapperTools.NMEA2GPX.GPXGenerator.track" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>NmeaToGpx.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>NmeaToGpx.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -178,8 +156,22 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAACAAgQACAAAAGAAAAAAAAAAAAAAABIAA=</HashCode>
+      <HashCode>AAAAAAAAACAACAAgQACAAAACAAAAAAAAAEAAAAABIAA=</HashCode>
       <FileName>GPXSaver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.GPXCollection">
+    <Position X="4.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAQAAAAAAAAAAIAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GPXCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapperTools.Pollicino.GPXFile">
+    <Position X="6.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIQAIAIgAAAAAAAACABAAAA=</HashCode>
+      <FileName>GPXCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="MapperTools.Pollicino.IWorkNotifier">

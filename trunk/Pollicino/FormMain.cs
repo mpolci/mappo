@@ -358,6 +358,17 @@ namespace MapperTools.Pollicino
             
         }
 
+        private void action_TracksManager()
+        {
+            using (FormTracksManager form = new FormTracksManager())
+            {
+                form.TracksCollection = gpx_saver.GPXFilesDB;
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                }
+            }
+        }
+
         private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
         {
             this.label_zoom.Text = sender.Zoom.ToString();
@@ -673,5 +684,11 @@ namespace MapperTools.Pollicino
         {
             activatedTime = DateTime.Now;
         }
+
+        private void menuItem_TracksManager_Click(object sender, EventArgs e)
+        {
+            action_TracksManager();
+        }
+
     }
 }

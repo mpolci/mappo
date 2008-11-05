@@ -11,11 +11,15 @@ namespace MapperTools.Pollicino
         private string datafilename;
         [XmlElement]
         private List<GPXFile> gpxfiles;
-
+        [XmlIgnore]
+        public List<GPXFile> Items { get { return gpxfiles; } }
 
         public GPXCollection(string filename)
         {
             datafilename = filename;
+            string dir = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
 
             LoadData();
         }
@@ -35,7 +39,7 @@ namespace MapperTools.Pollicino
             }
             catch (Exception e)
             {
-                File.Create(datafilename).Close();
+                //File.Create(datafilename).Close();
                 gpxfiles = new List<GPXFile>();
             }
         }
@@ -108,7 +112,7 @@ namespace MapperTools.Pollicino
         }
     }
 
-
+    //class invece che struct per problemi con la serializzazione xml
     public class GPXFile
     {
         public string FileName;
@@ -117,10 +121,20 @@ namespace MapperTools.Pollicino
         [XmlElement(typeof(DateTime))]
         public object EndTime;
         public int WayPoints, TrackPoints;
+        public bool UploadedToOSM;
 
         public string Name { 
             get {
                 return Path.GetFileNameWithoutExtension(FileName);
+            }
+        }
+
+        public TimeSpan Duration {
+            get {
+                if (StartTime != null && EndTime != null)
+                    return (DateTime)EndTime - (DateTime)StartTime;
+                else
+                    return TimeSpan.Zero;
             }
         }
 
@@ -144,6 +158,7 @@ namespace MapperTools.Pollicino
             }
             WayPoints = wpts;
             TrackPoints = tpts;
+            UploadedToOSM = false;
         }
 
         public GPXFile()
