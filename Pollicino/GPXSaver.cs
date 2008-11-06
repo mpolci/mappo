@@ -49,7 +49,6 @@ namespace MapperTools.Pollicino
 
             public void GPXJob()
             {
-                string outfile, outdir;
                 // se il file di log è vuoto viene cancellato
                 FileInfo fiLog = new FileInfo(logfilename);
                 if (fiLog.Length == 0)
@@ -61,35 +60,42 @@ namespace MapperTools.Pollicino
                 //gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_begin));
                 if (notifier != null) notifier.WorkBegin();
 
+                string outfile, outdir;
                 // la directory di output si chiama come file di log tolta l'estensione ".txt"
                 outdir = (logfilename.EndsWith(".txt")) ? logfilename.Substring(0, logfilename.Length - 4) : logfilename;
                 // il file di output ha lo stesso nome del log ma estensione GPX
-                //outfile = outdir + '\\' + Path.GetFileName(outdir) + ".gpx";
                 outfile = outdir + ".gpx";
                 try
                 {
                     int wpts, tpts;
                     DateTime t_start, t_end;
-                    MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart, 
-                                                                out tpts, out wpts, out t_start, out t_end);
-                    System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + tpts + " wp: " + wpts + " start: " + t_start + " end: " + t_end);
-                    gpxcollection.AddGPX(new GPXFile(outfile, t_start, t_end, tpts, wpts));
-                    // archivia il file di log
-                    if (!Directory.Exists(outdir))
-                        Directory.CreateDirectory(outdir);
-                    File.Move(logfilename, outdir + '\\' + Path.GetFileName(logfilename));
-
+                    string logdestdir;
+                    if (MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart,
+                                                                out tpts, out wpts, out t_start, out t_end))
+                    {
+                        System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + tpts + " wp: " + wpts + " start: " + t_start + " end: " + t_end);
+                        gpxcollection.AddGPX(new GPXFile(outfile, t_start, t_end, tpts, wpts));
+                        // archivia il file di log
+                        if (!Directory.Exists(outdir))
+                            Directory.CreateDirectory(outdir);
+                        logdestdir = outdir;
+                    }
+                    else
+                    {   
+                        // Il file di log non contiene dati validi, viene quindi spostato nel cestino. 
+                        logdestdir = fiLog.DirectoryName + Path.DirectorySeparatorChar + "Trash";
+                        if (!Directory.Exists(logdestdir))
+                            Directory.CreateDirectory(logdestdir);
+                    }
+                    File.Move(logfilename, logdestdir + Path.DirectorySeparatorChar + Path.GetFileName(logfilename));
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.WriteLine("\n---- GPXJob(" + logfilename + ")\n" + ex.ToString() + "\n----\n");
                     System.Windows.Forms.MessageBox.Show("Error converting log to GPX: " + Path.GetFileName(logfilename));
                 }
-
-                //gpxcontrol_owner.BeginInvoke(new InvokeDelegate(gpxcontrol_owner.job_end));
                 if (notifier != null) notifier.WorkEnd();
             }
-
         }
         
         public void ParseLogsDir(string dir)
