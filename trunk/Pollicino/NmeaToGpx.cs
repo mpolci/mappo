@@ -29,10 +29,14 @@ namespace MapperTools.NMEA2GPX
 {
     public static class GPXGenerator
     {
+        /// <summary>
+        /// Genera un file GPX partendo da un log NMEA
+        /// </summary>
         /// <param name="nmea_input">file del log NMEA</param>
         /// <param name="gpx_output">file GPX da salvare</param>
         /// <param name="delaytrackstart">se true la traccia gpx inizia al primo waypoint</param>
-        public static void NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
+        /// <returns>True se è stato generato il file gpx. Il file GPX non viene creato nel caso il log nmea non contenga trackpoint né waypoint.</returns>
+        public static bool NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
                                      out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
             gpx gpxdata = new gpx();
@@ -41,11 +45,8 @@ namespace MapperTools.NMEA2GPX
             // The using statement also closes the StreamReader.
             using (System.IO.StreamReader sr = new System.IO.StreamReader(nmea_input))
             {
-                // questa parte di generazione dei nomi sarebbe da inserire in una classe apposita
                 FileInfo fi_in = new FileInfo(nmea_input);
                 System.Diagnostics.Trace.Assert(fi_in.Name.EndsWith(".txt"), "NMEAToGPX() - Invalid log file name: " + nmea_input);
-                String basedir = fi_in.DirectoryName,
-                       audiodir = fi_in.Name.Substring(0, fi_in.Name.Length - 4);
                 // buffer
                 String line;
                 bool elaboratetrack = !delaytrackstart;
@@ -109,12 +110,6 @@ namespace MapperTools.NMEA2GPX
                     }
                 }
             }
-            using (StreamWriter outstream = new StreamWriter(gpx_output))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
-                xmls.Serialize(outstream, gpxdata);
-                outstream.Close();
-            }
             wpts = gpxdata.wpt.Count;
             tpts = gpxdata.trk.trkseg.Count;
             if (tpts > 0) {
@@ -126,6 +121,16 @@ namespace MapperTools.NMEA2GPX
                 begintrk = new DateTime();
                 endtrk = new DateTime();
             }
+            string audiodir = WaypointNames.DataDir(nmea_input);
+            if (wpts == 0 && tpts == 0 && !Directory.Exists(audiodir))
+                return false;
+            using (StreamWriter outstream = new StreamWriter(gpx_output))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
+                xmls.Serialize(outstream, gpxdata);
+                outstream.Close();
+            }
+            return true;
         }
 
         public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
