@@ -360,6 +360,16 @@ namespace MapsLibrary
                 MapChanged(this, new ProjectedGeoArea(point, new ProjectedGeoPoint(point.nLat + 1, point.nLon +1)));
         }
 
+        /// <summary>
+        /// Elimina tutti i punti dal layer
+        /// </summary>
+        public virtual void clear()
+        {
+            points = new PointsCollection();
+            if (MapChanged != null)
+                MapChanged(this, this.mapsystem.FullMapArea);
+        }
+
         #region ILayer Members
 
         public virtual void drawImageMapAt(ProjectedGeoPoint map_center, uint zoom, ProjectedGeoArea area, Graphics dst, Point delta)
