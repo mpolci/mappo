@@ -67,15 +67,15 @@
             this.lw_Tracks.Columns.Add(this.columnHeader2);
             this.lw_Tracks.Columns.Add(this.columnHeader3);
             this.lw_Tracks.Columns.Add(this.columnHeader4);
-            this.lw_Tracks.ContextMenu = this.contextMenu_track;
             this.lw_Tracks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lw_Tracks.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.lw_Tracks.FullRowSelect = true;
+            this.lw_Tracks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             listViewItem1.ImageIndex = 0;
             listViewItem1.Tag = "gpslog_20081105_1134.gpx";
             listViewItem1.Text = "2008-11-05_113400";
-            listViewItem1.SubItems.Add("0:13:48");
-            listViewItem1.SubItems.Add("1345");
+            listViewItem1.SubItems.Add("3:48");
+            listViewItem1.SubItems.Add("12345");
             listViewItem1.SubItems.Add("23");
             this.lw_Tracks.Items.Add(listViewItem1);
             this.lw_Tracks.Location = new System.Drawing.Point(0, 0);
@@ -84,29 +84,30 @@
             this.lw_Tracks.SmallImageList = this.imglist_gpxstatus;
             this.lw_Tracks.TabIndex = 0;
             this.lw_Tracks.View = System.Windows.Forms.View.Details;
+            this.lw_Tracks.SelectedIndexChanged += new System.EventHandler(this.lw_Tracks_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
             this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 125;
+            this.columnHeader1.Width = 115;
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Duration";
+            this.columnHeader2.Text = "Len";
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader2.Width = 51;
+            this.columnHeader2.Width = 37;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "TP";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader3.Width = 36;
+            this.columnHeader3.Width = 42;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "WP";
             this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader4.Width = 25;
+            this.columnHeader4.Width = 30;
             // 
             // contextMenu_track
             // 

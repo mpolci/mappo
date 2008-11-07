@@ -46,9 +46,21 @@ namespace MapperTools.Pollicino
 
         public void ScanDir(string path)
         {
-            Dictionary<string, int> gpxidx = new Dictionary<string, int>(gpxfiles.Count);
-            for (int i = 0; i < gpxfiles.Count; i++)
-                gpxidx.Add(gpxfiles[i].FileName, i);
+            Dictionary<string, GPXFile> gpxidx = new Dictionary<string, GPXFile>(gpxfiles.Count);
+            // uso una copia di gpxfiles per scorre la lista perché potrebbe essere modificata in corso
+            GPXFile[] lst = new GPXFile[gpxfiles.Count];
+            gpxfiles.CopyTo(lst);
+            foreach (GPXFile gpxf in lst) {
+                try {
+                    gpxidx.Add(gpxf.FileName, gpxf);
+                } catch (ArgumentException) {
+                    // la lista potrebbe essere corrotta ed avere dei duplicati
+                    System.Diagnostics.Trace.WriteLine("GPX DB contiene un duplicato: " + gpxf.FileName);
+                    // rimuove elemento precedente, considerato più vecchio
+                    gpxfiles.Remove(gpxidx[gpxf.FileName]);
+                    gpxidx[gpxf.FileName] = gpxf;
+                }
+            }
 
             DirectoryInfo di = new DirectoryInfo(path);
             FileInfo[] files = di.GetFiles("*.gpx");
@@ -64,7 +76,7 @@ namespace MapperTools.Pollicino
                         gpxfiles.Add(new GPXFile(fi.FullName, t_start, t_end, tpts, wpts));
                     else
                     {
-                        GPXFile gpxf = gpxfiles[gpxidx[fi.FullName]];
+                        GPXFile gpxf = gpxidx[fi.FullName];
                         gpxf.StartTime = t_start;
                         gpxf.EndTime = t_end;
                         gpxf.TrackPoints = tpts;
@@ -77,7 +89,7 @@ namespace MapperTools.Pollicino
                     DateTime nodate = new DateTime();
                     if (gpxidx.ContainsKey(fi.FullName))
                     {
-                        GPXFile gpxf = gpxfiles[gpxidx[fi.FullName]];
+                        GPXFile gpxf = gpxidx[fi.FullName];
                         gpxf.StartTime = nodate;
                         gpxf.EndTime = nodate;
                         gpxf.TrackPoints = -1;
@@ -99,20 +111,23 @@ namespace MapperTools.Pollicino
             SaveCollection();
         }
 
+        public void Remove(GPXFile item)
+        {
+            gpxfiles.Remove(item);
+            SaveCollection();
+        }
+
         private void SaveCollection()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<GPXFile>));
-            //using (TextWriter writer = new StringWriter())
             using (FileStream sw = new FileStream(datafilename, FileMode.Create))
             {
-                //serializer.Serialize(writer, item);
-                //sw.WriteLine(writer.ToString());
                 serializer.Serialize(sw, gpxfiles);
             }
         }
     }
 
-    //class invece che struct per problemi con la serializzazione xml
+    // class invece che struct per problemi con la serializzazione xml e perché si gestisce meglio in un List<T>.
     public class GPXFile
     {
         public string FileName;
