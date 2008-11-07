@@ -72,6 +72,14 @@ namespace MapperTools.Pollicino
             return PictureFile(logname, wptime);
         }
 
+        /// <summary>
+        /// Determina il path della directory dei dati associata al file nmea/gpx indicato.
+        /// </summary>
+        /// <remarks>
+        /// Il path restituito contiene anche la componente directory del file indicato come parametro. 
+        /// Notare ch nei link dentro il file GPX non è presente questo path completo ma solo il nome della directory dati.
+        /// </remarks>
+        /// <returns>Path della directory dati</returns>
         public static string DataDir(string nmea_log_name)
         {
             //return nmea_log_name.Substring(0, nmea_log_name.LastIndexOf('.')) + '/';

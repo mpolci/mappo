@@ -365,6 +365,55 @@ namespace MapperTools.Pollicino
                 form.TracksCollection = gpx_saver.GPXFilesDB;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    lmap.setVisibility(idx_layer_trkpnt, false);
+                    lmap.setVisibility(idx_layer_waypnt, false);
+                    if (MessageBox.Show("Merge to current data? If you press no the current track and way points will be removed from the map before loading the selected track.", "Load track", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    {
+                        this.trackpoints.clear();
+                        this.waypoints.clear();
+                    }
+                    System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+
+                    string gpxfile = form.SelectedTrackFileName;
+
+                    try
+                    {
+                        NMEA2GPX.gpx gpxdata;
+                        using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
+                        {
+                            System.Xml.Serialization.XmlSerializer xmls = new System.Xml.Serialization.XmlSerializer(typeof(NMEA2GPX.gpx));
+                            gpxdata = (NMEA2GPX.gpx)xmls.Deserialize(gpxstream);
+                        }
+                        ProjectedGeoPoint pgp = this.mapcontrol.Center; ;
+                        if (gpxdata.trk != null && gpxdata.trk.trkseg != null)
+                            foreach (NMEA2GPX.waypoint wp in gpxdata.trk.trkseg)
+                            {
+                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                                this.trackpoints.addPoint(pgp);
+                            }
+                        //TODO: calcolare lo zoom e la posizione ideale per visualizzare la traccia
+
+                        this.mapcontrol.Center = pgp;
+
+                        if (gpxdata.wpt != null)
+                            foreach (NMEA2GPX.waypoint wp in gpxdata.trk.trkseg)
+                            {
+                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                                this.waypoints.addPoint(pgp);
+                            }
+                        System.Windows.Forms.Cursor.Current = Cursors.Default;
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Trace.WriteLine(e);
+                        System.Windows.Forms.Cursor.Current = Cursors.Default;
+                        MessageBox.Show("Track load error");
+                    }
+                    finally
+                    {
+                        lmap.setVisibility(idx_layer_trkpnt, true);
+                        lmap.setVisibility(idx_layer_waypnt, true);
+                    }
                 }
             }
         }
