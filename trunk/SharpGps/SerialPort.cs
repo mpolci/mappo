@@ -150,7 +150,8 @@ namespace SharpGis.SharpGps
             {
                 try
                 {
-                    Read();
+                    //FIX: Read();
+                    AltRead();
                 }
                 catch (System.IO.IOException)
                 {
@@ -209,6 +210,39 @@ namespace SharpGis.SharpGps
 				}
 			}
 		}
+
+        private void AltRead()
+        {
+            com.ReadTimeout = _TimeOut * 1000;
+            //TODO: forse bisogna fare il detect della fine riga. \n o \r? 
+            //com.NewLine = ????
+            Open();
+            while (com.IsOpen)
+            {
+                try
+                {
+                    string strNMEA = com.ReadLine();
+                    int nStart = strNMEA.IndexOf("$"); //Position of first NMEA data
+                    if (nStart < 0 || nStart == strNMEA.Length - 2)
+                        continue;  //TODO: debug dati sconosciuti
+
+                    string strData;
+                    strData = strNMEA.Substring(nStart).Trim();
+                    if (strData.StartsWith("$"))
+                    {
+                        //HasTimedOut = false;
+                        TimeSinceLastEvent = DateTime.Now.Ticks;
+                        if (CheckSentence(strData))
+                            FireEvent(GPSHandler.String2Eventtype(strData), strData);
+                    } //TODO: else - debug dati sconosciuti
+
+                }
+                catch (TimeoutException)
+                {
+                    FireEvent(GPSEventType.TimeOut, "");
+                }
+            }
+        }
 		
 		/// <summary>
 		/// Writes data to serial port. This is useful for sending DGPS data to the device.
