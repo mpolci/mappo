@@ -367,7 +367,7 @@ namespace MapperTools.Pollicino
                 {
                     lmap.setVisibility(idx_layer_trkpnt, false);
                     lmap.setVisibility(idx_layer_waypnt, false);
-                    if (MessageBox.Show("Merge to current data? If you press no the current track and way points will be removed from the map before loading the selected track.", "Load track", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    if (MessageBox.Show("Clear current track data from the map? If you press yes the current track and way points will be removed from the map before loading the selected track.", "Load track", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         this.trackpoints.clear();
                         this.waypoints.clear();
@@ -391,12 +391,11 @@ namespace MapperTools.Pollicino
                                 pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.trackpoints.addPoint(pgp);
                             }
-                        //TODO: calcolare lo zoom e la posizione ideale per visualizzare la traccia
-
+                        // centra la mappa alla fine della traccia caricata
                         this.mapcontrol.Center = pgp;
 
                         if (gpxdata.wpt != null)
-                            foreach (NMEA2GPX.waypoint wp in gpxdata.trk.trkseg)
+                            foreach (NMEA2GPX.waypoint wp in gpxdata.wpt)
                             {
                                 pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.waypoints.addPoint(pgp);
