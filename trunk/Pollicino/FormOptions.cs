@@ -80,6 +80,8 @@ namespace MapperTools.Pollicino
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
                 _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
+                _data.Application.OSMUsername = tb_OSMUsername.Text;
+                _data.Application.OSMPassword = tb_OSMPassword.Text;
                 return _data;
             }
             set
@@ -119,6 +121,8 @@ namespace MapperTools.Pollicino
                 } catch (Exception) {}
                 cb_fullscreen.Checked = value.Application.FullScreen;
                 combo_CameraButton.SelectedItem = value.Application.CameraButton;
+                tb_OSMUsername.Text = value.Application.OSMUsername;
+                tb_OSMPassword.Text = value.Application.OSMPassword;
             }
         }
 
