@@ -29,7 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTracksManager));
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem_Close = new System.Windows.Forms.MenuItem();
@@ -39,11 +39,11 @@
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.imglist_gpxstatus = new System.Windows.Forms.ImageList();
             this.contextMenu_track = new System.Windows.Forms.ContextMenu();
             this.menuItem_Upload = new System.Windows.Forms.MenuItem();
             this.menuItem_delete = new System.Windows.Forms.MenuItem();
             this.menuItem_Info = new System.Windows.Forms.MenuItem();
-            this.imglist_gpxstatus = new System.Windows.Forms.ImageList();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -71,13 +71,13 @@
             this.lw_Tracks.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.lw_Tracks.FullRowSelect = true;
             this.lw_Tracks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            listViewItem1.ImageIndex = 0;
-            listViewItem1.Tag = "gpslog_20081105_1134.gpx";
-            listViewItem1.Text = "2008-11-05_113400";
-            listViewItem1.SubItems.Add("3:48");
-            listViewItem1.SubItems.Add("12345");
-            listViewItem1.SubItems.Add("23");
-            this.lw_Tracks.Items.Add(listViewItem1);
+            listViewItem2.ImageIndex = 0;
+            listViewItem2.Tag = "gpslog_20081105_1134.gpx";
+            listViewItem2.Text = "2008-11-05_113400";
+            listViewItem2.SubItems.Add("3:48");
+            listViewItem2.SubItems.Add("12345");
+            listViewItem2.SubItems.Add("23");
+            this.lw_Tracks.Items.Add(listViewItem2);
             this.lw_Tracks.Location = new System.Drawing.Point(0, 0);
             this.lw_Tracks.Name = "lw_Tracks";
             this.lw_Tracks.Size = new System.Drawing.Size(240, 268);
@@ -108,6 +108,9 @@
             this.columnHeader4.Text = "WP";
             this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader4.Width = 30;
+            this.imglist_gpxstatus.Images.Clear();
+            this.imglist_gpxstatus.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
+            this.imglist_gpxstatus.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
             // 
             // contextMenu_track
             // 
@@ -118,6 +121,7 @@
             // menuItem_Upload
             // 
             this.menuItem_Upload.Text = "Upload to OSM ...";
+            this.menuItem_Upload.Click += new System.EventHandler(this.menuItem_Upload_Click);
             // 
             // menuItem_delete
             // 
@@ -128,9 +132,6 @@
             // 
             this.menuItem_Info.Enabled = false;
             this.menuItem_Info.Text = "Track Info ...";
-            this.imglist_gpxstatus.Images.Clear();
-            this.imglist_gpxstatus.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
-            this.imglist_gpxstatus.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
             // 
             // FormTracksManager
             // 

@@ -65,6 +65,8 @@ namespace MapperTools.Pollicino
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
             public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
+            public string OSMUsername;
+            public string OSMPassword;
         }
 
         /// <summary>

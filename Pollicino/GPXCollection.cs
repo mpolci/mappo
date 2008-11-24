@@ -117,7 +117,7 @@ namespace MapperTools.Pollicino
             SaveCollection();
         }
 
-        private void SaveCollection()
+        public void SaveCollection()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<GPXFile>));
             using (FileStream sw = new FileStream(datafilename, FileMode.Create))
@@ -136,7 +136,18 @@ namespace MapperTools.Pollicino
         [XmlElement(typeof(DateTime))]
         public object EndTime;
         public int WayPoints, TrackPoints;
-        public bool UploadedToOSM;
+        [XmlElement(typeof(bool))]
+        public object Flag;
+        public string Description;
+        public string TagsString;
+        [XmlElement(typeof(bool))]
+        public object OSMPublic;
+        [XmlElement(typeof(int))]
+        public object OSMId;
+        // Questo campo è ridondante. La presenza di OSMId sarebbe sufficiente ad indicare se 
+        // la traccia è stata caricata su OSM. Meglio non utilizzare!
+        [XmlElement(typeof(bool))]
+        public object UploadedToOSM;  
 
         public string Name { 
             get {
@@ -150,6 +161,20 @@ namespace MapperTools.Pollicino
                     return (DateTime)EndTime - (DateTime)StartTime;
                 else
                     return TimeSpan.Zero;
+            }
+        }
+
+        public bool Public {
+            get {
+                return OSMPublic != null && (bool)OSMPublic;
+            }
+        }
+
+        public bool Uploaded
+        {
+            get
+            {
+                return OSMId != null && (int)OSMId > 0;
             }
         }
 
@@ -173,7 +198,13 @@ namespace MapperTools.Pollicino
             }
             WayPoints = wpts;
             TrackPoints = tpts;
-            UploadedToOSM = false;
+
+            Flag = null;
+            Description = null;
+            TagsString = null;
+            OSMPublic = null;
+            OSMId = null;
+            UploadedToOSM = null;
         }
 
         public GPXFile()
@@ -183,6 +214,13 @@ namespace MapperTools.Pollicino
             EndTime = null;
             WayPoints = 0;
             TrackPoints = 0;            
+
+            Flag = null;
+            Description = null;
+            TagsString = null;
+            OSMPublic = null;
+            OSMId = null;
+            UploadedToOSM = null;  
         }
     }
 }

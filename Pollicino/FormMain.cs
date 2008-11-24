@@ -362,6 +362,7 @@ namespace MapperTools.Pollicino
         {
             using (FormTracksManager form = new FormTracksManager())
             {
+                form.AppOptions = this.options;
                 form.TracksCollection = gpx_saver.GPXFilesDB;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
