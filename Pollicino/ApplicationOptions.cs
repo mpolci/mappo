@@ -62,6 +62,8 @@ namespace MapperTools.Pollicino
             public uint RecordAudioDevice;
             public WaveIn4CF.WaveFormats RecordAudioFormat;
             public bool AutoCentreMap;
+            public bool ShowPosition;
+            public bool ShowScale;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
             public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;

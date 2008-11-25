@@ -77,6 +77,38 @@ namespace MapperTools.Pollicino
             }
         }
 
+        public bool ShowPosition
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(options.Application.ShowPosition == mapcontrol.ShowPosition, @"ShowPosition inconsintence");
+                System.Diagnostics.Debug.Assert(options.Application.ShowPosition == menuItem_showpos.Checked, @"ShowPosition inconsintence");
+                return options.Application.ShowPosition; ;
+            }
+            set
+            {
+                mapcontrol.ShowPosition = value;
+                menuItem_showpos.Checked = value;
+                options.Application.ShowPosition = value;
+            }
+        }
+
+        public bool ShowScaleRef
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(options.Application.ShowScale == mapcontrol.ShowScaleRef, @"ShowPosition inconsintence");
+                System.Diagnostics.Debug.Assert(options.Application.ShowScale == menuItem_showscale.Checked, @"ShowPosition inconsintence");
+                return options.Application.ShowScale; ;
+            }
+            set
+            {
+                mapcontrol.ShowScaleRef = value;
+                menuItem_showscale.Checked = value;
+                options.Application.ShowScale = value;
+            }
+        }
+
         public Form_MapperToolMain()
         {
             InitializeComponent();
@@ -109,17 +141,18 @@ namespace MapperTools.Pollicino
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
             gpx_saver.Notifier = blinkcnGPX;
-            // TODO: quando cambio directory per i log dovrei aggiornare il db come qui sotto
-            gpx_saver.GPXFilesDB = new GPXCollection(options.GPS.LogsDir + Path.DirectorySeparatorChar + "gpxdb.xml");
-            gpx_saver.GPXFilesDB.ScanDir(options.GPS.LogsDir);
-
+            // imposta gpx_saver.GPXFilesDB
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.init_gpx_db));
+            
             // thread per il download automatico delle mappe
             downloader = new Downloader(this.blinkcnDownloader);
             downloader.startThread();
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
             // show position flag
-            menuItem_showpos.Checked = mapcontrol.ShowPosition;
+            //menuItem_showpos.Checked = mapcontrol.ShowPosition;
+            ShowPosition = options.Application.ShowPosition;
+            ShowScaleRef = options.Application.ShowScale;
 
             // mappe
             this.lmap = new LayeredMap();
@@ -159,6 +192,14 @@ namespace MapperTools.Pollicino
 
             if (options.GPS.Autostart)
                 action_StartGPS();
+        }
+
+        private void init_gpx_db(object p)
+        {
+            // TODO: quando cambio directory per i log dovrei aggiornare il db come qui sotto
+            GPXCollection gpxc = new GPXCollection(options.GPS.LogsDir + Path.DirectorySeparatorChar + "gpxdb.xml");
+            gpxc.ScanDir(options.GPS.LogsDir);
+            gpx_saver.GPXFilesDB = gpxc;
         }
 
         private uint required_buffers()
@@ -463,21 +504,18 @@ namespace MapperTools.Pollicino
 
         private void menuItem_showpos_Click(object sender, EventArgs e)
         {
-            mapcontrol.ShowPosition = !mapcontrol.ShowPosition;
-            menuItem_showpos.Checked = mapcontrol.ShowPosition;
+            ShowPosition = !ShowPosition;
         }
 
         private void menuItem_showscale_Click(object sender, EventArgs e)
         {
-            mapcontrol.ShowScaleRef = !mapcontrol.ShowScaleRef;
-            menuItem_showscale.Checked = mapcontrol.ShowScaleRef;
+            ShowScaleRef = !ShowScaleRef;
         }
 
         private void menuItem_photo_Click(object sender, EventArgs e)
         {
             action_takephoto();
         }
-
 
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
@@ -593,6 +631,8 @@ namespace MapperTools.Pollicino
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
             opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
+            opt.Application.ShowPosition = false;
+            opt.Application.ShowScale = false;
             opt.version = ApplicationOptions.CurrentVersion;
             return opt;
         }
@@ -692,7 +732,10 @@ namespace MapperTools.Pollicino
                 lastEntertime = now;
                 //System.Diagnostics.Debug.WriteLine("Key " + e.KeyCode + " tick: " + now + "last key tick: " + lastEntertime + " difference: " + intervalFromLast);
                 if (intervalFromLast > 500) 
-                    action_CreateWaypoint();
+                    if (gpsControl.Started)
+                        action_CreateWaypoint();
+                    else
+                        action_StartGPS();
                 #if DEBUG
                 else 
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
