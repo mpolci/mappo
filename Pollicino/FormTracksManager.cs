@@ -52,7 +52,7 @@ namespace MapperTools.Pollicino
                     name = name.Substring(7);  // remove "gpslog_"
                 ListViewItem lwi = new ListViewItem(name);
                 lwi.Tag = gpxf;
-                lwi.ImageIndex = (gpxf.Uploaded) ? 1 : 0;
+                lwi.ImageIndex = (gpxf.getUploaded()) ? 1 : 0;
                 // Durata della traccia
                 TimeSpan d = gpxf.Duration;
                 string duration;
@@ -234,13 +234,14 @@ namespace MapperTools.Pollicino
             GPXFile gpxf = (GPXFile)lw_Tracks.Items[selected].Tag;
 
             string msg = "This track is already uploaded. Do you want to continue?";
-            if (gpxf.Uploaded &&
+            if (gpxf.getUploaded() &&
                 MessageBox.Show(msg, "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
                 return;
             }
 
-            FormOSMUploadGPX propertiesdlg = new FormOSMUploadGPX();
+            FormGPXDetails propertiesdlg = new FormGPXDetails();
+            propertiesdlg.FullDetailsMode = false;
             propertiesdlg.gpxfile = gpxf;
 
             if (propertiesdlg.ShowDialog() == DialogResult.OK)
@@ -250,7 +251,7 @@ namespace MapperTools.Pollicino
                 {
                     string filename = gpxf.FileName;
 
-                    string s_id = OSMAPIUploadGPX(filename, gpxf.Description, gpxf.TagsString, gpxf.Public,
+                    string s_id = OSMAPIUploadGPX(filename, gpxf.Description, gpxf.TagsString, gpxf.getPublic(),
                                                   username, password);
                     try { 
                         int id = int.Parse(s_id);
@@ -277,6 +278,22 @@ namespace MapperTools.Pollicino
                 }
                 if (updatedb)
                    mTracks.SaveCollection();
+            }
+        }
+
+        private void menuItem_Info_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Trace.Assert(lw_Tracks.SelectedIndices.Count == 1, "Numero elementi selezionati non valido: " + lw_Tracks.SelectedIndices.Count);
+                int selected = lw_Tracks.SelectedIndices[0];
+                GPXFile gpxf = (GPXFile)lw_Tracks.Items[selected].Tag;
+
+            FormGPXDetails propertiesdlg = new FormGPXDetails();
+            propertiesdlg.FullDetailsMode = true;
+            propertiesdlg.gpxfile = gpxf;
+
+            if (propertiesdlg.ShowDialog() == DialogResult.OK && propertiesdlg.PropertiesModified)
+            {
+                mTracks.SaveCollection();
             }
         }
     }

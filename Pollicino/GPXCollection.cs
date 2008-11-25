@@ -146,8 +146,8 @@ namespace MapperTools.Pollicino
         public object OSMId;
         // Questo campo è ridondante. La presenza di OSMId sarebbe sufficiente ad indicare se 
         // la traccia è stata caricata su OSM. Meglio non utilizzare!
-        [XmlElement(typeof(bool))]
-        public object UploadedToOSM;  
+        //[XmlElement(typeof(bool))]
+        //public object UploadedToOSM;  
 
         public string Name { 
             get {
@@ -164,18 +164,19 @@ namespace MapperTools.Pollicino
             }
         }
 
-        public bool Public {
-            get {
-                return OSMPublic != null && (bool)OSMPublic;
-            }
+        public bool getPublic()
+        {
+            return OSMPublic != null && (bool)OSMPublic;
         }
 
-        public bool Uploaded
+        public bool getUploaded()
         {
-            get
-            {
-                return OSMId != null && (int)OSMId > 0;
-            }
+            return OSMId != null && (int)OSMId > 0;
+        }
+
+        public bool getFlag()
+        {
+            return Flag != null && (bool)Flag;
         }
 
         internal static bool NotExists(GPXFile gpxf)
@@ -204,7 +205,7 @@ namespace MapperTools.Pollicino
             TagsString = null;
             OSMPublic = null;
             OSMId = null;
-            UploadedToOSM = null;
+            //UploadedToOSM = null;
         }
 
         public GPXFile()
@@ -220,7 +221,7 @@ namespace MapperTools.Pollicino
             TagsString = null;
             OSMPublic = null;
             OSMId = null;
-            UploadedToOSM = null;  
+            //UploadedToOSM = null;  
         }
     }
 }

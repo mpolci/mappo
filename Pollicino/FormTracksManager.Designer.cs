@@ -130,8 +130,8 @@
             // 
             // menuItem_Info
             // 
-            this.menuItem_Info.Enabled = false;
             this.menuItem_Info.Text = "Track Info ...";
+            this.menuItem_Info.Click += new System.EventHandler(this.menuItem_Info_Click);
             // 
             // FormTracksManager
             // 
