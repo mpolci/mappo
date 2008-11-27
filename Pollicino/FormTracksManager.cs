@@ -296,5 +296,10 @@ namespace MapperTools.Pollicino
                 mTracks.SaveCollection();
             }
         }
+
+        private void menuItem_ImportGPX_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

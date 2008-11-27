@@ -33,7 +33,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTracksManager));
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem_Close = new System.Windows.Forms.MenuItem();
-            this.menuItem_LoadTrack = new System.Windows.Forms.MenuItem();
             this.lw_Tracks = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -44,22 +43,19 @@
             this.menuItem_Upload = new System.Windows.Forms.MenuItem();
             this.menuItem_delete = new System.Windows.Forms.MenuItem();
             this.menuItem_Info = new System.Windows.Forms.MenuItem();
+            this.menuItem_ImportGPX = new System.Windows.Forms.MenuItem();
+            this.menuItem_LoadTrack = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
+            this.mainMenu1.MenuItems.Add(this.menuItem_ImportGPX);
             this.mainMenu1.MenuItems.Add(this.menuItem_Close);
-            this.mainMenu1.MenuItems.Add(this.menuItem_LoadTrack);
             // 
             // menuItem_Close
             // 
             this.menuItem_Close.Text = "Close";
             this.menuItem_Close.Click += new System.EventHandler(this.menuItem_Close_Click);
-            // 
-            // menuItem_LoadTrack
-            // 
-            this.menuItem_LoadTrack.Text = "Load Track";
-            this.menuItem_LoadTrack.Click += new System.EventHandler(this.menuItem_LoadTrack_Click);
             // 
             // lw_Tracks
             // 
@@ -114,9 +110,10 @@
             // 
             // contextMenu_track
             // 
-            this.contextMenu_track.MenuItems.Add(this.menuItem_Upload);
+            this.contextMenu_track.MenuItems.Add(this.menuItem_LoadTrack);
             this.contextMenu_track.MenuItems.Add(this.menuItem_delete);
             this.contextMenu_track.MenuItems.Add(this.menuItem_Info);
+            this.contextMenu_track.MenuItems.Add(this.menuItem_Upload);
             // 
             // menuItem_Upload
             // 
@@ -133,12 +130,23 @@
             this.menuItem_Info.Text = "Track Info ...";
             this.menuItem_Info.Click += new System.EventHandler(this.menuItem_Info_Click);
             // 
+            // menuItem_ImportGPX
+            // 
+            this.menuItem_ImportGPX.Text = "Import gpx";
+            this.menuItem_ImportGPX.Click += new System.EventHandler(this.menuItem_ImportGPX_Click);
+            // 
+            // menuItem_LoadTrack
+            // 
+            this.menuItem_LoadTrack.Text = "Load track";
+            this.menuItem_LoadTrack.Click += new System.EventHandler(this.menuItem_LoadTrack_Click);
+            // 
             // FormTracksManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ControlBox = false;
             this.Controls.Add(this.lw_Tracks);
             this.Menu = this.mainMenu1;
             this.Name = "FormTracksManager";
@@ -155,11 +163,12 @@
         private System.Windows.Forms.MenuItem menuItem_delete;
         private System.Windows.Forms.MenuItem menuItem_Info;
         private System.Windows.Forms.MenuItem menuItem_Close;
-        private System.Windows.Forms.MenuItem menuItem_LoadTrack;
         private System.Windows.Forms.ImageList imglist_gpxstatus;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.MenuItem menuItem_ImportGPX;
+        private System.Windows.Forms.MenuItem menuItem_LoadTrack;
     }
 }
