@@ -35,7 +35,6 @@ namespace MapsLibrary
 
         [DllImport("coredll", CharSet = CharSet.Unicode)]
         private extern static int GetTextMetrics(IntPtr hDC, ref TEXTMETRICS tm);
-    }
 #else
         public static TEXTMETRICS GetTextMetrics(System.Drawing.Font font)
         {
@@ -43,6 +42,7 @@ namespace MapsLibrary
             return tm;
         }
 #endif
+    }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct TEXTMETRICS
