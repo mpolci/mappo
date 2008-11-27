@@ -26,7 +26,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+#if PocketPC
 using Microsoft.WindowsCE.Forms;
+#endif
 
 namespace MapperTools.Pollicino
 {
@@ -39,6 +41,14 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
+#if PocketPC
+			this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
+#endif
             num_recordaudioseconds.Maximum = MAXAUDIOREC;
 
             uint recdevices = WaveIn4CF.Native.waveInGetNumDevs();
@@ -79,9 +89,11 @@ namespace MapperTools.Pollicino
                 _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
-                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
-                _data.Application.OSMUsername = tb_OSMUsername.Text;
+				_data.Application.OSMUsername = tb_OSMUsername.Text;
                 _data.Application.OSMPassword = tb_OSMPassword.Text;
+#if PocketPC
+                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
+#endif
                 return _data;
             }
             set

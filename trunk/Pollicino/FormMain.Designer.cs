@@ -75,7 +75,6 @@ namespace MapperTools.Pollicino
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
             this.mapcontrol = new MapsLibrary.MapControl();
-            this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
             this.gpsControl = new MapperTools.Pollicino.GPSControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_gpx = new System.Windows.Forms.Label();
@@ -248,11 +247,6 @@ namespace MapperTools.Pollicino
             this.mapcontrol.Zoom = ((uint)(0u));
             this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
             // 
-            // hardwareButton_app3
-            // 
-            this.hardwareButton_app3.AssociatedControl = this;
-            this.hardwareButton_app3.HardwareKey = Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3;
-            // 
             // gpsControl
             // 
             this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
@@ -351,7 +345,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_downloadmaps;
         private System.Windows.Forms.MenuItem menuItem_loadtrack;
         private System.Windows.Forms.MenuItem menuItem_followGPS;
-        private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
         private System.Windows.Forms.MenuItem menuItem_exit;
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
