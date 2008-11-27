@@ -507,12 +507,6 @@ namespace MapperTools.Pollicino
             // 
             // combo_CameraButton
             // 
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
             this.combo_CameraButton.Location = new System.Drawing.Point(103, 82);
             this.combo_CameraButton.Name = "combo_CameraButton";
             this.combo_CameraButton.Size = new System.Drawing.Size(130, 22);

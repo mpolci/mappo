@@ -28,21 +28,20 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
+#if PocketPC
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
-//using System.Runtime.InteropServices;
-
-
+#endif 
 
 namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain : Form
     {
-        NotifyIcon mNotifyIcon;
-
-//        [DllImport("coredll")]
-//        extern static void SystemIdleTimerReset();
-
+#if PocketPC
+		NotifyIcon mNotifyIcon;
+        private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
+#endif
+		
         private DateTime activatedTime = DateTime.MinValue;
 
         /// <summary>
@@ -108,14 +107,35 @@ namespace MapperTools.Pollicino
                 options.Application.ShowScale = value;
             }
         }
+		
+		private string GoogleKey
+		{
+			get {
+#if PocketPC
+				return Properties.Resources.GoogleMapsKey;
+#else
+				//TODO: 
+				return "";	
+#endif
+				}
+		}
 
         public Form_MapperToolMain()
         {
             InitializeComponent();
 
-            mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
+#if PocketPC
+            // 
+            // hardwareButton_app3
+            // 
+            this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
+            this.hardwareButton_app3.AssociatedControl = this;
+            // pulsante per la fotocamera
+            this.hardwareButton_app3.HardwareKey = options.Application.CameraButton;
+			// mNotifyIcon
+			mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
             mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
-
+#endif
             // carica le opzioni dal file di configurazione
             carica_opzioni();
             // disabilito l'autodownload
@@ -123,8 +143,6 @@ namespace MapperTools.Pollicino
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
-            // pulsante per la fotocamera
-            this.hardwareButton_app3.HardwareKey = options.Application.CameraButton;
 
             // sound per nuovo waypoint
             try
@@ -162,7 +180,7 @@ namespace MapperTools.Pollicino
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new GoogleMapsSystem(Properties.Resources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
+            gmap = new SparseImagesMap(new GoogleMapsSystem(GoogleKey), options.Maps.GMaps.CachePath, 150);
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
@@ -580,7 +598,9 @@ namespace MapperTools.Pollicino
                 wpt_recorder.RecordingFormat = (WaveIn4CF.WaveFormats) newopt.Application.RecordAudioFormat;
                 //modalità full screen
                 this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
+#if PocketPC
                 this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
+#endif 
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -630,9 +650,11 @@ namespace MapperTools.Pollicino
             opt.Application.AutoCentreMap = true;
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
-            opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
             opt.Application.ShowPosition = false;
             opt.Application.ShowScale = false;
+#if PocketPC
+            opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
+#endif 
             opt.version = ApplicationOptions.CurrentVersion;
             return opt;
         }
@@ -670,6 +692,7 @@ namespace MapperTools.Pollicino
         {
             if (gpsControl.Started)
             {
+#if PocketPC
                 System.Diagnostics.Debug.Assert(logname != null, "action_takephoto() - No log file");
                 string outdir = WaypointNames.DataDir(this.logname);
                 if (!Directory.Exists(outdir))
@@ -698,6 +721,7 @@ namespace MapperTools.Pollicino
                     MessageBox.Show("Funzionalità non supportata in questo dispositivo.");
                     System.Diagnostics.Trace.WriteLine("--- Errore nell'utilizzo della fotocamera: " + e.ToString());
                 }
+#endif 
             }
         }
 
@@ -741,6 +765,7 @@ namespace MapperTools.Pollicino
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
                 #endif
             }
+#if PocketPC
             if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
             {
                 // se il tasto è stato premuto a meno di 1 secondo dall'attivazione probabilmente è stato
@@ -750,6 +775,7 @@ namespace MapperTools.Pollicino
                 if (timefromactivation.TotalSeconds > 1) 
                     action_takephoto();
             }
+#endif
         }
 
         private void notify_icon_click(object obj, EventArgs args)
@@ -764,7 +790,9 @@ namespace MapperTools.Pollicino
             if (gpsControl.Started)
                 gpsControl.stop();
             downloader.stopThread();
-            mNotifyIcon.Dispose();
+#if PocketPC
+			mNotifyIcon.Dispose();
+#endif			
             map.Dispose();
             gpx_saver.Dispose();
 
