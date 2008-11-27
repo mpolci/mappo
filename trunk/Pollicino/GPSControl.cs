@@ -108,9 +108,6 @@ namespace MapperTools.Pollicino
         }
         #endregion
 
-        [DllImport("coredll")]
-        extern static void SystemIdleTimerReset();
-
         /// <summary>
         /// Crea un nuovo waypoint nella posizione attuale e lo registra nel log
         /// </summary>
@@ -208,7 +205,7 @@ namespace MapperTools.Pollicino
                     break;
             }
 
-            SystemIdleTimerReset();
+            PlatformSpecificCode.SystemIdleTimerReset();
 
             if (swGPSLog != null)
                 lock (swGPSLog) swGPSLog.WriteLine(e.Sentence);

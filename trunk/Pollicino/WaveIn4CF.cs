@@ -17,6 +17,10 @@
  * 
  ******************************************************************************/
 
+#if !PocketPC
+    #error This module is for PocketPC only.
+#endif 
+
 using System;
 using System.Collections.Generic;
 using System.Text;

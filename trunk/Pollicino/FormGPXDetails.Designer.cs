@@ -57,8 +57,8 @@
             // 
             // mainMenu_upload
             // 
-            this.mainMenu_upload.MenuItems.Add(this.menuItem_OK);
             this.mainMenu_upload.MenuItems.Add(this.menuItem_Cancel);
+            this.mainMenu_upload.MenuItems.Add(this.menuItem_OK);
             // 
             // menuItem_OK
             // 

@@ -6,6 +6,8 @@ namespace MapsLibrary
 {
     class Tools
     {
+
+#if PocketPC
         public static TEXTMETRICS GetTextMetrics(System.Drawing.Font font)
         {
             IntPtr hDC = GetDC(IntPtr.Zero); //Screen DC
@@ -34,6 +36,13 @@ namespace MapsLibrary
         [DllImport("coredll", CharSet = CharSet.Unicode)]
         private extern static int GetTextMetrics(IntPtr hDC, ref TEXTMETRICS tm);
     }
+#else
+        public static TEXTMETRICS GetTextMetrics(System.Drawing.Font font)
+        {
+            TEXTMETRICS tm = new TEXTMETRICS();
+            return tm;
+        }
+#endif
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct TEXTMETRICS

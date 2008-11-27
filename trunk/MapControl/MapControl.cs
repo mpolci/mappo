@@ -63,6 +63,11 @@ namespace MapsLibrary
             using (Font f = getDrawingFont())
             {
                 drawingfont_height = Tools.GetTextMetrics(f).tmHeight;
+                if (drawingfont_height == 0)
+                {
+                    drawingfont_height = 10;
+                    System.Diagnostics.Trace.WriteLine("Warning: cannot determine drawing font height");
+                }
                 crossline_hlen = drawingfont_height * 3 / 2;
             }
         }
