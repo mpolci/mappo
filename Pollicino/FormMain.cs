@@ -124,6 +124,9 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
+            // carica le opzioni dal file di configurazione
+            carica_opzioni();
+
 #if PocketPC
             // 
             // hardwareButton_app3
@@ -136,8 +139,6 @@ namespace MapperTools.Pollicino
 			mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
             mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
 #endif
-            // carica le opzioni dal file di configurazione
-            carica_opzioni();
             // disabilito l'autodownload
             options.Maps.AutoDownload = false;
 
