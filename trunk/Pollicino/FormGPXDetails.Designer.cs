@@ -37,6 +37,12 @@
             this.tb_Tags = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel_ext = new System.Windows.Forms.Panel();
+            this.l_filesize = new System.Windows.Forms.Label();
+            this.l_points = new System.Windows.Forms.Label();
+            this.l_length = new System.Windows.Forms.Label();
+            this.l_duration = new System.Windows.Forms.Label();
+            this.l_end = new System.Windows.Forms.Label();
+            this.l_start = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.cb_flagged = new System.Windows.Forms.CheckBox();
@@ -46,12 +52,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cb_public = new System.Windows.Forms.CheckBox();
-            this.l_start = new System.Windows.Forms.Label();
-            this.l_end = new System.Windows.Forms.Label();
-            this.l_duration = new System.Windows.Forms.Label();
-            this.l_length = new System.Windows.Forms.Label();
-            this.l_points = new System.Windows.Forms.Label();
-            this.l_filesize = new System.Windows.Forms.Label();
             this.panel_ext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,6 +122,60 @@
             this.panel_ext.Name = "panel_ext";
             this.panel_ext.Size = new System.Drawing.Size(240, 138);
             // 
+            // l_filesize
+            // 
+            this.l_filesize.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_filesize.Location = new System.Drawing.Point(148, 100);
+            this.l_filesize.Name = "l_filesize";
+            this.l_filesize.Size = new System.Drawing.Size(89, 20);
+            this.l_filesize.Text = "1548 KB";
+            this.l_filesize.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // l_points
+            // 
+            this.l_points.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_points.Location = new System.Drawing.Point(148, 80);
+            this.l_points.Name = "l_points";
+            this.l_points.Size = new System.Drawing.Size(89, 20);
+            this.l_points.Text = "190243 / 123";
+            this.l_points.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // l_length
+            // 
+            this.l_length.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_length.Location = new System.Drawing.Point(92, 60);
+            this.l_length.Name = "l_length";
+            this.l_length.Size = new System.Drawing.Size(145, 20);
+            this.l_length.Text = "1540 m";
+            this.l_length.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // l_duration
+            // 
+            this.l_duration.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_duration.Location = new System.Drawing.Point(75, 40);
+            this.l_duration.Name = "l_duration";
+            this.l_duration.Size = new System.Drawing.Size(162, 20);
+            this.l_duration.Text = "60:23";
+            this.l_duration.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // l_end
+            // 
+            this.l_end.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_end.Location = new System.Drawing.Point(75, 20);
+            this.l_end.Name = "l_end";
+            this.l_end.Size = new System.Drawing.Size(162, 20);
+            this.l_end.Text = "10/12/2008 11:23:00";
+            this.l_end.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // l_start
+            // 
+            this.l_start.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.l_start.Location = new System.Drawing.Point(75, 0);
+            this.l_start.Name = "l_start";
+            this.l_start.Size = new System.Drawing.Size(162, 20);
+            this.l_start.Text = "10/12/2008 10:29:14";
+            this.l_start.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // label8
             // 
             this.label8.Location = new System.Drawing.Point(3, 100);
@@ -188,66 +242,13 @@
             this.cb_public.TabIndex = 24;
             this.cb_public.Text = "Public (OpenStreetMap)";
             // 
-            // l_start
-            // 
-            this.l_start.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_start.Location = new System.Drawing.Point(75, 0);
-            this.l_start.Name = "l_start";
-            this.l_start.Size = new System.Drawing.Size(162, 20);
-            this.l_start.Text = "10/12/2008 10:29:14";
-            this.l_start.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // l_end
-            // 
-            this.l_end.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_end.Location = new System.Drawing.Point(75, 20);
-            this.l_end.Name = "l_end";
-            this.l_end.Size = new System.Drawing.Size(162, 20);
-            this.l_end.Text = "10/12/2008 11:23:00";
-            this.l_end.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // l_duration
-            // 
-            this.l_duration.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_duration.Location = new System.Drawing.Point(75, 40);
-            this.l_duration.Name = "l_duration";
-            this.l_duration.Size = new System.Drawing.Size(162, 20);
-            this.l_duration.Text = "60:23";
-            this.l_duration.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // l_length
-            // 
-            this.l_length.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_length.Location = new System.Drawing.Point(92, 60);
-            this.l_length.Name = "l_length";
-            this.l_length.Size = new System.Drawing.Size(145, 20);
-            this.l_length.Text = "1540 m";
-            this.l_length.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // l_points
-            // 
-            this.l_points.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_points.Location = new System.Drawing.Point(148, 80);
-            this.l_points.Name = "l_points";
-            this.l_points.Size = new System.Drawing.Size(89, 20);
-            this.l_points.Text = "190243 / 123";
-            this.l_points.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // l_filesize
-            // 
-            this.l_filesize.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.l_filesize.Location = new System.Drawing.Point(148, 100);
-            this.l_filesize.Name = "l_filesize";
-            this.l_filesize.Size = new System.Drawing.Size(89, 20);
-            this.l_filesize.Text = "1548 KB";
-            this.l_filesize.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // FormGPXDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ControlBox = false;
             this.Controls.Add(this.cb_public);
             this.Controls.Add(this.panel_ext);
             this.Controls.Add(this.tb_Tags);
