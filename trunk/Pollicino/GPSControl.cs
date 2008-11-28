@@ -55,7 +55,11 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
+#if PocketPC
             this.pb_GPSActvity.Image = Properties.Resources.ImgGPS;
+#else 
+            //TODO: risorsa??
+#endif
 
             //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
             //gpshandler = new GPSHandler(parent); //Initialize GPS handler

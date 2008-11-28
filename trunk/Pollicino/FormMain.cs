@@ -232,7 +232,7 @@ namespace MapperTools.Pollicino
 
         private void carica_opzioni()
         {
-            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            string path = Program.GetPath();
             configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
             try
             {
@@ -364,7 +364,7 @@ namespace MapperTools.Pollicino
             string opendir = options.GPS.LogsDir,
                    file;
             if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+                opendir = Program.GetPath();
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
             {
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
@@ -629,7 +629,7 @@ namespace MapperTools.Pollicino
 
         private static ApplicationOptions DefaultOptions()
         {
-            string programpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            string programpath = Program.GetPath();
             ApplicationOptions opt = new ApplicationOptions();
             opt.GPS.PortName = "COM1";
             opt.GPS.PortSpeed = 9600;
