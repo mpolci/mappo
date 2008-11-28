@@ -142,7 +142,7 @@ namespace MapperTools.Pollicino
         {
             string opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
             if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+                opendir = Program.GetPath();
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb_SimulationFile.Text = openfiledlg.openfile;
@@ -154,7 +154,7 @@ namespace MapperTools.Pollicino
             if (!Directory.Exists(opendir)) 
                 opendir = Path.GetDirectoryName(opendir);
             if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+                opendir = Program.GetPath();
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, true))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb.Text = openfiledlg.directoty;
@@ -225,7 +225,7 @@ namespace MapperTools.Pollicino
         {
             string opendir = Path.GetDirectoryName(tb_waypointsound.Text);
             if (!Directory.Exists(opendir))
-                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+                opendir = Program.GetPath();
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb_waypointsound.Text = openfiledlg.openfile;
