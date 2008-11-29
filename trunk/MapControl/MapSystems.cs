@@ -560,7 +560,7 @@ namespace MapsLibrary
         public abstract int imagemapsize { get; }
     }
     
-    internal static class HTTPFileDownloader
+    public static class HTTPFileDownloader
     {
         /// <summary>
         /// Scarica un file da un server http e lo salva su disco
@@ -607,20 +607,19 @@ namespace MapsLibrary
                 }
             }
         }
+    }
 
+    public struct FileDownloadInfo
+    {
+        public string uri;
+        public DateTime modifiedtime;
+        public long lenght;
 
-        public struct FileDownloadInfo
+        public FileDownloadInfo(HttpWebResponse response)
         {
-            public string uri;
-            public DateTime modifiedtime;
-            public long lenght;
-
-            public FileDownloadInfo(HttpWebResponse response)
-            {
-                uri = response.ResponseUri.ToString();
-                modifiedtime = response.LastModified;
-                lenght = response.ContentLength;
-            }
+            uri = response.ResponseUri.ToString();
+            modifiedtime = response.LastModified;
+            lenght = response.ContentLength;
         }
     }
 
@@ -629,11 +628,10 @@ namespace MapsLibrary
         public GoogleMapsSystem(string apikey)
             : base()
         {
-            _gmapskey = apikey;
+            APIKey = apikey;
         }
 
-        private string _gmapskey;
-        public string APIKey { get { return _gmapskey; } set { _gmapskey = value; } }
+        public string APIKey { get; set; }
 
         public override uint MaxZoom         { get { return 19; } }
         public override uint PixelZoomFactor { get { return 8;  } }
