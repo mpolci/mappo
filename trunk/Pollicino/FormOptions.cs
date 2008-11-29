@@ -48,10 +48,9 @@ namespace MapperTools.Pollicino
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
-#endif
-            num_recordaudioseconds.Maximum = MAXAUDIOREC;
 
             uint recdevices = WaveIn4CF.Native.waveInGetNumDevs();
+
             num_RecDeviceId.Maximum = (decimal) recdevices - 1;
 
             formats = new WaveIn4CF.WaveFormats[recdevices];
@@ -60,7 +59,13 @@ namespace MapperTools.Pollicino
                 formats[i] = WaveIn4CF.WaveInRecorder.GetSupportedFormats(i);
             }
             num_RecDeviceId.Value = 0;
+
             fill_RecFormats();
+#endif
+            //TODO: registrazione in windows?
+
+            num_recordaudioseconds.Maximum = MAXAUDIOREC;
+
 
         }
 
@@ -87,13 +92,14 @@ namespace MapperTools.Pollicino
                 _data.Application.WaypointRecordAudio = !rb_audiorec_disabled.Checked;
                 _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
                 _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
-                _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
 				_data.Application.OSMUsername = tb_OSMUsername.Text;
                 _data.Application.OSMPassword = tb_OSMPassword.Text;
 #if PocketPC
                 _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
+                _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
 #endif
+                //TODO: registrazione in windows?
                 return _data;
             }
             set
