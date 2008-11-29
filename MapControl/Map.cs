@@ -272,8 +272,13 @@ namespace MapsLibrary
             using (Brush brush = new SolidBrush(Color.White))
             using (Pen pen = new Pen(Color.White))
             {
+                Rectangle r = new Rectangle(0, 0, mMapsys.tilesize, mMapsys.tilesize);
+#if !PocketPC
+                using (Brush bb = new SolidBrush(Color.Black))
+                    g.FillRectangle(bb, r);
+#endif
                 g.DrawString("Tile Not Available", font, brush, 10, 10);
-                g.DrawRectangle(pen, 0, 0, mMapsys.tilesize, mMapsys.tilesize);
+                g.DrawRectangle(pen, r);
             }
             return img;
         }
