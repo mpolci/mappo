@@ -388,6 +388,13 @@ namespace MapsLibrary
             }
         }
 
+#if !PocketPC
+        protected override void OnResize(EventArgs e)
+        {
+            Invalidate();
+            base.OnResize(e);
+        }
+#endif
         /// <summary>
         /// Indica/imposta la visualizzazione di una croce centrale e le corrispondenti coordinate geografiche
         /// </summary>
