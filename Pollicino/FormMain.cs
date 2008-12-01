@@ -726,6 +726,25 @@ namespace MapperTools.Pollicino
             }
         }
 
+#if !PocketPC
+        /// <summary>
+        /// Permette al metodo Form_MapperToolMain_KeyDown di elaborare i tasti freccia.
+        /// </summary>
+        protected override bool ProcessDialogKey(Keys key)
+        {
+            switch (key)
+            {
+                case (Keys.Left):
+                case (Keys.Right):
+                case (Keys.Up):
+                case (Keys.Down):
+                    return false;
+            }
+            return base.ProcessDialogKey(key);
+
+        }
+#endif
+
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
         { 
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
