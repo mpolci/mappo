@@ -6,7 +6,7 @@ namespace MapperTools.Pollicino
 {
     class PlatformSpecificCode
     {
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
         [DllImport("coredll")]
         extern public static void SystemIdleTimerReset();
 #else
