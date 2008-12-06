@@ -65,7 +65,7 @@ namespace MapperTools.Pollicino
             public bool ShowScale;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 			public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
 #else
 			public int CameraButton;
