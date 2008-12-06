@@ -41,6 +41,7 @@ namespace MapperTools.Pollicino
 
             public ConvertWork(IWorkNotifier worknotifier, string log, bool trackfromfirstwpt, GPXCollection gpxcoll)
             {
+                System.Diagnostics.Trace.Assert(gpxcoll != null, "ConvertWork(): gpxcollection is null");
                 notifier = worknotifier;
                 logfilename = log;
                 delaytrackstart = trackfromfirstwpt;
@@ -74,6 +75,7 @@ namespace MapperTools.Pollicino
                                                                 out tpts, out wpts, out t_start, out t_end))
                     {
                         System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + tpts + " wp: " + wpts + " start: " + t_start + " end: " + t_end);
+                        // FIXME: gpxcollection potrebbe essere null
                         gpxcollection.AddGPX(new GPXFile(outfile, t_start, t_end, tpts, wpts));
                         // archivia il file di log
                         if (!Directory.Exists(outdir))

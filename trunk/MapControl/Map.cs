@@ -273,7 +273,7 @@ namespace MapsLibrary
             using (Pen pen = new Pen(Color.White))
             {
                 Rectangle r = new Rectangle(0, 0, mMapsys.tilesize, mMapsys.tilesize);
-#if !PocketPC
+#if !(PocketPC || Smartphone || WindowsCE)
                 using (Brush bb = new SolidBrush(Color.Black))
                     g.FillRectangle(bb, r);
 #endif
