@@ -28,7 +28,7 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
 #endif 
@@ -37,7 +37,7 @@ namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain : Form
     {
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 		NotifyIcon mNotifyIcon;
         private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
 #endif
@@ -111,10 +111,11 @@ namespace MapperTools.Pollicino
 		private string GoogleKey
 		{
 			get {
-#if PocketPC
+                //TODO: sistemare l'ottenimento della chiave googke
+
+#if PocketPC || Smartphone || WindowsCE
 				return Properties.Resources.GoogleMapsKey;
 #else
-				//TODO: 
 				return "";	
 #endif
 				}
@@ -127,7 +128,7 @@ namespace MapperTools.Pollicino
             // carica le opzioni dal file di configurazione
             carica_opzioni();
 
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
             // 
             // hardwareButton_app3
             // 
@@ -205,10 +206,6 @@ namespace MapperTools.Pollicino
 
             verifica_opzioni_finale();
 
-            // processa eventuali file di log che non sono ancora stati convertiti in GPX
-            if (Directory.Exists(options.GPS.LogsDir)) 
-                gpx_saver.ParseLogsDir(options.GPS.LogsDir);
-
             if (options.GPS.Autostart)
                 action_StartGPS();
         }
@@ -217,8 +214,12 @@ namespace MapperTools.Pollicino
         {
             // TODO: quando cambio directory per i log dovrei aggiornare il db come qui sotto
             GPXCollection gpxc = new GPXCollection(options.GPS.LogsDir + Path.DirectorySeparatorChar + "gpxdb.xml");
-            gpxc.ScanDir(options.GPS.LogsDir);
             gpx_saver.GPXFilesDB = gpxc;
+            gpxc.ScanDir(options.GPS.LogsDir);
+            // processa eventuali file di log che non sono ancora stati convertiti in GPX
+            if (Directory.Exists(options.GPS.LogsDir))
+                gpx_saver.ParseLogsDir(options.GPS.LogsDir);
+
         }
 
         private uint required_buffers()
@@ -445,7 +446,7 @@ namespace MapperTools.Pollicino
                             System.Xml.Serialization.XmlSerializer xmls = new System.Xml.Serialization.XmlSerializer(typeof(NMEA2GPX.gpx));
                             gpxdata = (NMEA2GPX.gpx)xmls.Deserialize(gpxstream);
                         }
-                        ProjectedGeoPoint pgp = this.mapcontrol.Center; ;
+                        ProjectedGeoPoint pgp = this.mapcontrol.Center;
                         if (gpxdata.trk != null && gpxdata.trk.trkseg != null)
                             foreach (NMEA2GPX.waypoint wp in gpxdata.trk.trkseg)
                             {
@@ -599,7 +600,7 @@ namespace MapperTools.Pollicino
                 wpt_recorder.RecordingFormat = (WaveIn4CF.WaveFormats) newopt.Application.RecordAudioFormat;
                 //modalità full screen
                 this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
                 this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
 #endif 
                 options = newopt;
@@ -653,7 +654,7 @@ namespace MapperTools.Pollicino
             opt.Application.FullScreen = false;
             opt.Application.ShowPosition = false;
             opt.Application.ShowScale = false;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
             opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
 #endif 
             opt.version = ApplicationOptions.CurrentVersion;
@@ -693,7 +694,7 @@ namespace MapperTools.Pollicino
         {
             if (gpsControl.Started)
             {
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
                 System.Diagnostics.Debug.Assert(logname != null, "action_takephoto() - No log file");
                 string outdir = WaypointNames.DataDir(this.logname);
                 if (!Directory.Exists(outdir))
@@ -726,7 +727,7 @@ namespace MapperTools.Pollicino
             }
         }
 
-#if !PocketPC
+#if !(PocketPC || Smartphone || WindowsCE)
         /// <summary>
         /// Permette al metodo Form_MapperToolMain_KeyDown di elaborare i tasti freccia.
         /// </summary>
@@ -785,7 +786,7 @@ namespace MapperTools.Pollicino
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
                 #endif
             }
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
             if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
             {
                 // se il tasto è stato premuto a meno di 1 secondo dall'attivazione probabilmente è stato
@@ -810,7 +811,7 @@ namespace MapperTools.Pollicino
             if (gpsControl.Started)
                 gpsControl.stop();
             downloader.stopThread();
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 			mNotifyIcon.Dispose();
 #endif			
             map.Dispose();
