@@ -6,12 +6,11 @@ using System.Xml.Serialization;
 
 namespace MapperTools.Pollicino
 {
+    //TODO: Implementa solo un livello minimo di sincronizzazione con i lock
     public class GPXCollection
     {
         private string datafilename;
-        [XmlElement]
         private List<GPXFile> gpxfiles;
-        [XmlIgnore]
         public List<GPXFile> Items { get { return gpxfiles; } }
 
         public GPXCollection(string filename)
@@ -46,10 +45,15 @@ namespace MapperTools.Pollicino
 
         public void ScanDir(string path)
         {
-            Dictionary<string, GPXFile> gpxidx = new Dictionary<string, GPXFile>(gpxfiles.Count);
-            // uso una copia di gpxfiles per scorre la lista perché potrebbe essere modificata in corso
-            GPXFile[] lst = new GPXFile[gpxfiles.Count];
-            gpxfiles.CopyTo(lst);
+            GPXFile[] lst;
+            Dictionary<string, GPXFile> gpxidx;
+            lock (gpxfiles)
+            {
+                gpxidx = new Dictionary<string, GPXFile>(gpxfiles.Count);
+                // uso una copia di gpxfiles per scorre la lista perché potrebbe essere modificata in corso
+                lst = new GPXFile[gpxfiles.Count];
+                gpxfiles.CopyTo(lst);
+            }
             foreach (GPXFile gpxf in lst) {
                 try {
                     gpxidx.Add(gpxf.FileName, gpxf);
@@ -73,7 +77,8 @@ namespace MapperTools.Pollicino
                 {
                     NMEA2GPX.GPXGenerator.GetGPXInfo(fi.FullName, out tpts, out wpts, out t_start, out t_end);
                     if (!gpxidx.ContainsKey(fi.FullName))
-                        gpxfiles.Add(new GPXFile(fi.FullName, t_start, t_end, tpts, wpts));
+                        lock (gpxfiles)
+                            gpxfiles.Add(new GPXFile(fi.FullName, t_start, t_end, tpts, wpts));
                     else
                     {
                         GPXFile gpxf = gpxidx[fi.FullName];
@@ -97,53 +102,53 @@ namespace MapperTools.Pollicino
                     }
                     else
                     {
-                        gpxfiles.Add(new GPXFile(fi.FullName, nodate, nodate, -1, -1));
+                        lock (gpxfiles)
+                            gpxfiles.Add(new GPXFile(fi.FullName, nodate, nodate, -1, -1));
                     }
                 }
-
             }
             SaveCollection();
         }
 
         public void AddGPX(GPXFile item)
         {
-            gpxfiles.Add(item);
+            lock (gpxfiles)
+                gpxfiles.Add(item);
             SaveCollection();
         }
 
         public void Remove(GPXFile item)
         {
-            gpxfiles.Remove(item);
+            lock (gpxfiles)
+                gpxfiles.Remove(item);
             SaveCollection();
         }
 
         public void SaveCollection()
         {
+            //TODO: gestione eccezioni, da fare probabilmente nel metodo chiamante
             XmlSerializer serializer = new XmlSerializer(typeof(List<GPXFile>));
             using (FileStream sw = new FileStream(datafilename, FileMode.Create))
             {
-                serializer.Serialize(sw, gpxfiles);
+                lock(gpxfiles)
+                    serializer.Serialize(sw, gpxfiles);
             }
         }
     }
 
     // class invece che struct per problemi con la serializzazione xml e perché si gestisce meglio in un List<T>.
+    [Serializable]
     public class GPXFile
     {
         public string FileName;
-        [XmlElement(typeof(DateTime))]
-        public object StartTime;
-        [XmlElement(typeof(DateTime))]
-        public object EndTime;
+        public DateTime? StartTime;
+        public DateTime? EndTime;
         public int WayPoints, TrackPoints;
-        [XmlElement(typeof(bool))]
-        public object Flag;
+        public bool? Flag;
         public string Description;
         public string TagsString;
-        [XmlElement(typeof(bool))]
-        public object OSMPublic;
-        [XmlElement(typeof(int))]
-        public object OSMId;
+        public bool? OSMPublic;
+        public int? OSMId;
         public long Length;
 
         public string Name { 
@@ -207,6 +212,7 @@ namespace MapperTools.Pollicino
             TagsString = null;
             OSMPublic = null;
             OSMId = null;
+            //Length = 0;
         }
 
         public GPXFile()
@@ -222,6 +228,7 @@ namespace MapperTools.Pollicino
             TagsString = null;
             OSMPublic = null;
             OSMId = null;
+            //Length = 0;
         }
     }
 }
