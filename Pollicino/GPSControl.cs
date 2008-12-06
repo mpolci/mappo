@@ -54,13 +54,6 @@ namespace MapperTools.Pollicino
         public GPSControl()
         {
             InitializeComponent();
-
-#if PocketPC
-            this.pb_GPSActvity.Image = Properties.Resources.ImgGPS;
-#else 
-            //TODO: risorsa??
-#endif
-
             //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
             //gpshandler = new GPSHandler(parent); //Initialize GPS handler
             gpshandler = new GPSHandler(this); //Initialize GPS handler
@@ -68,6 +61,16 @@ namespace MapperTools.Pollicino
             gpshandler.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler); 
             started = false;
         }
+
+        public System.Drawing.Image Image {
+            get {
+                return pb_GPSActvity.Image;
+            }
+            set {
+                pb_GPSActvity.Image = value;
+            }
+        }
+
         private object gpsdatalock = new object();
         private GPSPosition _gpsdata;
         private GPSHandler gpshandler;
