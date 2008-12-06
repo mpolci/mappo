@@ -17,10 +17,6 @@
  * 
  ******************************************************************************/
 
-#if !PocketPC
-    #error This module is for PocketPC only.
-#endif 
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -254,8 +250,11 @@ namespace WaveIn4CF
         //public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
         public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, ref WAVEHDR dwParam1, DWORD_PTR dwParam2); 
 
+#if PocketPC || Smartphone || WindowsCE
         private const string sourcedll = "coredll.dll";    // WinCE
-        //private const string sourcedll = "winmm.dll";      // Win32
+#else 
+        private const string sourcedll = "winmm.dll";      // Win32
+#endif
 
         [DllImport(sourcedll)]
         public static extern UINT waveInGetNumDevs();
