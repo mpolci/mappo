@@ -156,13 +156,13 @@ namespace MapperTools.NMEA2GPX
         }
     }
 
-    [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1")]
+    [Serializable]
+    [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1", IsNullable = false)]
     public class gpx
     {
         [XmlAttributeAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
         public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
 
-        //[XmlElement(Type = typeof(waypoint), ElementName = "wpt")]
         [XmlElement]
         public List<waypoint> wpt;
         public track trk;
@@ -181,23 +181,80 @@ namespace MapperTools.NMEA2GPX
         }
     }
 
-    public struct waypoint
+    [Serializable]
+    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
+    public class waypoint
     {
         [XmlAttribute]
         public double lat;
         [XmlAttribute]
         public double lon;
         public string name;
-        // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
-        [XmlElement(typeof(DateTime))]
-        public object time;
         public Link link;
+        // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
+        //[XmlElement(typeof(DateTime))]
+        //public object time;
 
-        [XmlElement(typeof(double))]
-        public object ele;
+        private System.DateTime timeField;
+        private bool timeFieldSpecified;
+
+        private decimal eleField;
+        private bool eleFieldSpecified;
+
+        public decimal ele
+        {
+            get
+            {
+                return this.eleField;
+            }
+            set
+            {
+                this.eleField = value;
+            }
+        }
+
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool eleSpecified
+        {
+            get
+            {
+                return this.eleFieldSpecified;
+            }
+            set
+            {
+                this.eleFieldSpecified = value;
+            }
+        }
+
+        public DateTime time
+        {
+            get
+            {
+                return this.timeField;
+            }
+            set
+            {
+                this.timeField = value;
+            }
+        }
+
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool timeSpecified
+        {
+            get
+            {
+                return this.timeFieldSpecified;
+            }
+            set
+            {
+                this.timeFieldSpecified = value;
+            }
+        }
 
     }
 
+    [Serializable]
+    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
     public class Link
     {
         [XmlAttribute]
@@ -213,7 +270,8 @@ namespace MapperTools.NMEA2GPX
         }
     }
 
-    //[Serializable]
+    [Serializable]
+    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
     public class track
     {
         public string name;
