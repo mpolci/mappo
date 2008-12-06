@@ -26,7 +26,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsCE.Forms;
 #endif
 
@@ -41,7 +41,7 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
 			this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
@@ -95,7 +95,7 @@ namespace MapperTools.Pollicino
                 _data.Application.FullScreen = cb_fullscreen.Checked;
 				_data.Application.OSMUsername = tb_OSMUsername.Text;
                 _data.Application.OSMPassword = tb_OSMPassword.Text;
-#if PocketPC
+#if PocketPC || Smartphone || WindowsCE
                 _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
 #endif
@@ -146,7 +146,12 @@ namespace MapperTools.Pollicino
 
         private void button_SelectSimulationFile_Click(object sender, EventArgs e)
         {
-            string opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
+            string opendir;
+            try {
+                opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
+            } catch (ArgumentException) {
+                opendir = "";
+            }
             if (!Directory.Exists(opendir))
                 opendir = Program.GetPath();
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
