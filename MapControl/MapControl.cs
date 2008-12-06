@@ -65,7 +65,7 @@ namespace MapsLibrary
                 drawingfont_height = Tools.GetTextMetrics(f).tmHeight;
                 if (drawingfont_height == 0)
                 {
-                    drawingfont_height = 10;
+                    drawingfont_height = 12;
                     System.Diagnostics.Trace.WriteLine("Warning: cannot determine drawing font height");
                 }
                 crossline_hlen = drawingfont_height * 3 / 2;
@@ -388,7 +388,7 @@ namespace MapsLibrary
             }
         }
 
-#if !PocketPC
+#if !(PocketPC || Smartphone || WindowsCE)
         protected override void OnResize(EventArgs e)
         {
             Invalidate();
