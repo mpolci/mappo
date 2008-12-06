@@ -62,7 +62,7 @@ namespace MapsLibrary
 
             using (Font f = getDrawingFont())
             {
-                drawingfont_height = Tools.GetTextMetrics(f).tmHeight;
+                drawingfont_height = Tools.GetFontHeight(f);
                 if (drawingfont_height == 0)
                 {
                     drawingfont_height = 12;
