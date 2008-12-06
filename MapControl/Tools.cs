@@ -6,6 +6,14 @@ namespace MapsLibrary
 {
     class Tools
     {
+        public static int GetFontHeight(System.Drawing.Font font)
+        {
+#if PocketPC || Smartphone || WindowsCE
+            return Tools.GetTextMetrics(font).tmHeight;
+#else
+            return font.Height;
+#endif
+        }
 
         public static TEXTMETRICS GetTextMetrics(System.Drawing.Font font)
         {
