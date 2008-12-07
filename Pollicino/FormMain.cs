@@ -440,15 +440,15 @@ namespace MapperTools.Pollicino
 
                     try
                     {
-                        NMEA2GPX.gpx gpxdata;
+                        NMEA2GPX.GPXType gpxdata;
                         using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
                         {
-                            System.Xml.Serialization.XmlSerializer xmls = new System.Xml.Serialization.XmlSerializer(typeof(NMEA2GPX.gpx));
-                            gpxdata = (NMEA2GPX.gpx)xmls.Deserialize(gpxstream);
+                            System.Xml.Serialization.XmlSerializer xmls = new System.Xml.Serialization.XmlSerializer(typeof(NMEA2GPX.GPXType));
+                            gpxdata = (NMEA2GPX.GPXType)xmls.Deserialize(gpxstream);
                         }
                         ProjectedGeoPoint pgp = this.mapcontrol.Center;
                         if (gpxdata.trk != null && gpxdata.trk.trkseg != null)
-                            foreach (NMEA2GPX.waypoint wp in gpxdata.trk.trkseg)
+                            foreach (NMEA2GPX.WaypointType wp in gpxdata.trk.trkseg)
                             {
                                 pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.trackpoints.addPoint(pgp);
@@ -457,7 +457,7 @@ namespace MapperTools.Pollicino
                         this.mapcontrol.Center = pgp;
 
                         if (gpxdata.wpt != null)
-                            foreach (NMEA2GPX.waypoint wp in gpxdata.wpt)
+                            foreach (NMEA2GPX.WaypointType wp in gpxdata.wpt)
                             {
                                 pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.waypoints.addPoint(pgp);

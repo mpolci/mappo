@@ -39,7 +39,40 @@ namespace MapperTools.NMEA2GPX
         public static bool NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
                                      out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
-            gpx gpxdata = new gpx();
+            GPXType gpxdata = GPXGenerator.NMEAToGPX(nmea_input, delaytrackstart);
+            if (gpxdata == null)
+            {
+                wpts = tpts = 0;
+                begintrk = endtrk = new DateTime();
+                return false;
+            }
+            wpts = gpxdata.wpt.Count;
+            tpts = gpxdata.trk.trkseg.Count;
+            if (tpts > 0)
+            {
+                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
+                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
+            }
+            else
+            {
+                begintrk = new DateTime();
+                endtrk = new DateTime();
+            }
+            //string audiodir = WaypointNames.DataDir(nmea_input);
+            //if (wpts == 0 && tpts == 0 && !Directory.Exists(audiodir))
+            //    return false;
+            using (StreamWriter outstream = new StreamWriter(gpx_output))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(GPXType));
+                xmls.Serialize(outstream, gpxdata);
+                outstream.Close();
+            }
+            return true;
+        }
+
+        public static GPXType NMEAToGPX(string nmea_input, bool delaytrackstart)
+        {    
+            GPXType gpxdata = new GPXType();
             gpxdata.init();
             int nNMEAMsgs = 0;
             // The using statement also closes the StreamReader.
@@ -68,7 +101,7 @@ namespace MapperTools.NMEA2GPX
                                 SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
                                 if (gpmrc.Status == SharpGis.SharpGps.NMEA.GPRMC.StatusEnum.OK)
                                 {
-                                    waypoint tp = new waypoint();
+                                    WaypointType tp = new WaypointType();
                                     tp.lat = gpmrc.Position.Latitude;
                                     tp.lon = gpmrc.Position.Longitude;
                                     tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
@@ -79,7 +112,7 @@ namespace MapperTools.NMEA2GPX
                         case "$GPWPL":
                             elaboratetrack = true;
                             GPWPL gpwpl = new GPWPL(line);
-                            waypoint w = new waypoint();
+                            WaypointType w = new WaypointType();
                             w.lat = gpwpl.latitude;
                             w.lon = gpwpl.longitude;
                             w.name = gpwpl.name;
@@ -90,14 +123,14 @@ namespace MapperTools.NMEA2GPX
                                 // check for audio record
                                 string recname = WaypointNames.AudioRecFile(nmea_input, wptime);
                                 if (File.Exists(recname))
-                                    w.link = new Link(WaypointNames.AudioRecFileLink(nmea_input, wptime));
+                                    w.link = new LinkType(WaypointNames.AudioRecFileLink(nmea_input, wptime));
                                 else
                                 {
                                     // because of a josm bug, time is inserted only if an audio link doesn't exists
                                     w.time = wptime;
                                     string imagename = WaypointNames.PictureFile(nmea_input, wptime);
                                     if (File.Exists(imagename))
-                                        w.link = new Link(WaypointNames.PictureFileLink(nmea_input, wptime));
+                                        w.link = new LinkType(WaypointNames.PictureFileLink(nmea_input, wptime));
                                 }
                             }
                             catch (Exception)
@@ -110,36 +143,20 @@ namespace MapperTools.NMEA2GPX
                     }
                 }
             }
-            wpts = gpxdata.wpt.Count;
-            tpts = gpxdata.trk.trkseg.Count;
-            if (tpts > 0) {
-                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
-                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
-            }
-            else
-            {
-                begintrk = new DateTime();
-                endtrk = new DateTime();
-            }
             string audiodir = WaypointNames.DataDir(nmea_input);
-            if (wpts == 0 && tpts == 0 && !Directory.Exists(audiodir))
-                return false;
-            using (StreamWriter outstream = new StreamWriter(gpx_output))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
-                xmls.Serialize(outstream, gpxdata);
-                outstream.Close();
-            }
-            return true;
+            if (gpxdata.wpt.Count == 0 && gpxdata.trk.trkseg.Count == 0 && !Directory.Exists(audiodir))
+                return null;
+            else 
+                return gpxdata;
         }
 
         public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
-            gpx gpxdata;
+            GPXType gpxdata;
             using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
             {
-                XmlSerializer xmls = new XmlSerializer(typeof(gpx));
-                gpxdata = (gpx) xmls.Deserialize(gpxstream);
+                XmlSerializer xmls = new XmlSerializer(typeof(GPXType));
+                gpxdata = (GPXType) xmls.Deserialize(gpxstream);
             }
             tpts = gpxdata.trk != null && gpxdata.trk.trkseg != null ? gpxdata.trk.trkseg.Count : 0;
             wpts = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
@@ -157,17 +174,17 @@ namespace MapperTools.NMEA2GPX
     }
 
     [Serializable]
-    [XmlRoot(Namespace = "http://www.topografix.com/GPX/1/1", IsNullable = false)]
-    public class gpx
+    [XmlRoot("gpx", Namespace = "http://www.topografix.com/GPX/1/1", IsNullable = false)]
+    public class GPXType
     {
         [XmlAttributeAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
         public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
 
         [XmlElement]
-        public List<waypoint> wpt;
-        public track trk;
+        public List<WaypointType> wpt;
+        public TrackType trk;
 
-        public gpx()
+        public GPXType()
         {
             wpt = null;
             trk = null;
@@ -175,22 +192,22 @@ namespace MapperTools.NMEA2GPX
 
         public void init()
         {
-            wpt = new List<waypoint>();
-            trk = new track();
-            trk.trkseg = new List<waypoint>();
+            wpt = new List<WaypointType>();
+            trk = new TrackType();
+            trk.trkseg = new List<WaypointType>();
         }
     }
 
     [Serializable]
     [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
-    public class waypoint
+    public class WaypointType
     {
         [XmlAttribute]
         public double lat;
         [XmlAttribute]
         public double lon;
         public string name;
-        public Link link;
+        public LinkType link;
         // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
         //[XmlElement(typeof(DateTime))]
         //public object time;
@@ -255,16 +272,16 @@ namespace MapperTools.NMEA2GPX
 
     [Serializable]
     [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
-    public class Link
+    public class LinkType
     {
         [XmlAttribute]
         public string href;
 
-        public Link(string uri)
+        public LinkType(string uri)
         {
             href = uri;
         }
-        public Link()
+        public LinkType()
         {
             href = string.Empty;
         }
@@ -272,11 +289,11 @@ namespace MapperTools.NMEA2GPX
 
     [Serializable]
     [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
-    public class track
+    public class TrackType
     {
         public string name;
-        [XmlArrayItem(ElementName = "trkpt",Type=typeof(waypoint))]
+        [XmlArrayItem(ElementName = "trkpt",Type=typeof(WaypointType))]
         [XmlArray]
-        public List<waypoint> trkseg;
+        public List<WaypointType> trkseg;
     }
 }
