@@ -71,10 +71,10 @@ namespace MapperTools.Pollicino
             foreach (FileInfo fi in files)
             {
                 if (gpxidx.ContainsKey(fi.FullName)) continue;
-                int wpts, tpts;
-                DateTime t_start, t_end;
                 try
                 {
+                    int wpts, tpts;
+                    DateTime t_start, t_end;
                     NMEA2GPX.GPXGenerator.GetGPXInfo(fi.FullName, out tpts, out wpts, out t_start, out t_end);
                     if (!gpxidx.ContainsKey(fi.FullName))
                         lock (gpxfiles)
@@ -109,6 +109,25 @@ namespace MapperTools.Pollicino
             }
             SaveCollection();
         }
+
+        public void ImportGPX(string filename)
+        {
+            int wpts, tpts;
+            DateTime t_start, t_end;
+            NMEA2GPX.GPXGenerator.GetGPXInfo(filename, out tpts, out wpts, out t_start, out t_end);
+            GPXFile gpxf = gpxfiles.Find((GPXFile g) => g.FileName == filename);
+            if (gpxf == null)
+                lock (gpxfiles)
+                    gpxfiles.Add(new GPXFile(filename, t_start, t_end, tpts, wpts));
+            else
+            {
+                gpxf.StartTime = t_start;
+                gpxf.EndTime = t_end;
+                gpxf.TrackPoints = tpts;
+                gpxf.WayPoints = wpts;
+            }
+        }
+
 
         public void AddGPX(GPXFile item)
         {

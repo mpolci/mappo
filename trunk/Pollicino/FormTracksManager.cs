@@ -115,10 +115,6 @@ namespace MapperTools.Pollicino
                 lw_Tracks.ContextMenu = contextMenu_track;
         }
 
-
-
-
-
         private string OSMAPIUploadGPX(string uploadfile, string param_description, string param_tags, bool pblc,
                                string username, string password)
         {
@@ -297,9 +293,74 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private void menuItem_ImportGPX_Click(object sender, EventArgs e)
-        {
+        // variabile statica usata per ricordare fra utilizzi successivi l'ultimo path utilizzato.
+        private static string ImportDir = null;
 
+        private void menuItem_ImportTrack_Click(object sender, EventArgs e)
+        {
+            if (ImportDir == null)
+                ImportDir = AppOptions.GPS.LogsDir;
+            if (!Directory.Exists(ImportDir))
+                ImportDir = Program.GetPath();
+            string file;
+            using (FormOpenFile openfiledlg = new FormOpenFile(ImportDir, false))
+            {
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                {
+                    file = openfiledlg.openfile;
+                    ImportDir = openfiledlg.directoty;
+                }
+                else
+                    return;
+            }
+            try
+            {
+                if (Path.GetExtension(file).ToLower() == ".gpx")
+                {
+                    // file gpx
+                    string destfile = Path.Combine(AppOptions.GPS.LogsDir, Path.GetFileName(file));
+                    File.Copy(file, destfile);
+                    string datadir = WaypointNames.DataDir(file);
+                    if (Directory.Exists(datadir))
+                        CopyDirectory(datadir, Path.Combine(AppOptions.GPS.LogsDir, Path.GetFileName(datadir)));
+                    // TODO: caricare gpx nel db
+                    this.TracksCollection.ImportGPX(destfile);
+                    UpdateList();
+                }
+                else
+                {
+                    // probabile log NMEA
+                    // TODO: implementare importazione log nmea
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("Errore nell'importazione della traccia " + file + " - Eccezione:");
+                System.Diagnostics.Trace.WriteLine(ex);
+                MessageBox.Show("Import error!");
+            }
         }
+
+        private void CopyDirectory(string strSrceDir, string strDestDir)
+        {
+            DirectoryInfo SourceDir = new DirectoryInfo(strSrceDir);
+            DirectoryInfo DestDir = new DirectoryInfo(strDestDir);
+
+            if (!DestDir.Exists)
+                DestDir.Create();
+
+            foreach (FileInfo ChildFile in SourceDir.GetFiles())
+            {
+                ChildFile.CopyTo(Path.Combine(DestDir.FullName, ChildFile.Name), true);
+            }
+
+            foreach (DirectoryInfo SubDir in SourceDir.GetDirectories())
+            {
+                if (!SubDir.Exists)
+                    SubDir.Create();
+                CopyDirectory(SubDir.FullName, Path.Combine(DestDir.FullName, SubDir.Name));
+            }
+        }
+
     }
 }
