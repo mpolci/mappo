@@ -440,12 +440,7 @@ namespace MapperTools.Pollicino
 
                     try
                     {
-                        NMEA2GPX.GPXType gpxdata;
-                        using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
-                        {
-                            System.Xml.Serialization.XmlSerializer xmls = new System.Xml.Serialization.XmlSerializer(typeof(NMEA2GPX.GPXType));
-                            gpxdata = (NMEA2GPX.GPXType)xmls.Deserialize(gpxstream);
-                        }
+                        NMEA2GPX.GPXBaseType gpxdata = NMEA2GPX.GPXBaseType.Deserialize(gpxfile);
                         ProjectedGeoPoint pgp = this.mapcontrol.Center;
                         if (gpxdata.trk != null && gpxdata.trk.trkseg != null)
                             foreach (NMEA2GPX.WaypointType wp in gpxdata.trk.trkseg)

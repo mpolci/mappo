@@ -39,7 +39,7 @@ namespace MapperTools.NMEA2GPX
         public static bool NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
                                      out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
-            GPXType gpxdata = GPXGenerator.NMEAToGPX(nmea_input, delaytrackstart);
+            GPX11Type gpxdata = GPXGenerator.NMEAToGPX(nmea_input, delaytrackstart);
             if (gpxdata == null)
             {
                 wpts = tpts = 0;
@@ -63,16 +63,17 @@ namespace MapperTools.NMEA2GPX
             //    return false;
             using (StreamWriter outstream = new StreamWriter(gpx_output))
             {
-                XmlSerializer xmls = new XmlSerializer(typeof(GPXType));
+                // viene specificato il namespace di default a causa della diversa serializzazione su PocketPC
+                XmlSerializer xmls = new XmlSerializer(typeof(GPX11Type), GPX11Type.GPX11Namespace);
                 xmls.Serialize(outstream, gpxdata);
                 outstream.Close();
             }
             return true;
         }
 
-        public static GPXType NMEAToGPX(string nmea_input, bool delaytrackstart)
+        public static GPX11Type NMEAToGPX(string nmea_input, bool delaytrackstart)
         {    
-            GPXType gpxdata = new GPXType();
+            GPX11Type gpxdata = new GPX11Type();
             gpxdata.init();
             int nNMEAMsgs = 0;
             // The using statement also closes the StreamReader.
@@ -105,6 +106,7 @@ namespace MapperTools.NMEA2GPX
                                     tp.lat = gpmrc.Position.Latitude;
                                     tp.lon = gpmrc.Position.Longitude;
                                     tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
+                                    tp.timeSpecified = true;
                                     gpxdata.trk.trkseg.Add(tp);
                                 }
                             }
@@ -128,6 +130,7 @@ namespace MapperTools.NMEA2GPX
                                 {
                                     // because of a josm bug, time is inserted only if an audio link doesn't exists
                                     w.time = wptime;
+                                    w.timeSpecified = true;
                                     string imagename = WaypointNames.PictureFile(nmea_input, wptime);
                                     if (File.Exists(imagename))
                                         w.link = new LinkType(WaypointNames.PictureFileLink(nmea_input, wptime));
@@ -152,12 +155,8 @@ namespace MapperTools.NMEA2GPX
 
         public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
-            GPXType gpxdata;
-            using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(GPXType));
-                gpxdata = (GPXType) xmls.Deserialize(gpxstream);
-            }
+            GPXBaseType gpxdata = GPXBaseType.Deserialize(gpxfile);
+
             tpts = gpxdata.trk != null && gpxdata.trk.trkseg != null ? gpxdata.trk.trkseg.Count : 0;
             wpts = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
             if (tpts > 0)
@@ -174,17 +173,36 @@ namespace MapperTools.NMEA2GPX
     }
 
     [Serializable]
-    [XmlRoot("gpx", Namespace = "http://www.topografix.com/GPX/1/1", IsNullable = false)]
-    public class GPXType
+    [XmlRoot("gpx", Namespace = GPX10Namespace, IsNullable = false)]
+    public class GPX10Type : GPXBaseType
     {
-        [XmlAttributeAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
-        public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
+        [XmlIgnore]
+        public const string GPX10Namespace = "http://www.topografix.com/GPX/1/0";
 
+        [XmlAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
+        public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd";
+    }
+
+    [Serializable]
+    [XmlRoot("gpx", Namespace = GPX11Namespace, IsNullable = false)]
+    public class GPX11Type: GPXBaseType
+    {
+        [XmlIgnore]
+        public const string GPX11Namespace = "http://www.topografix.com/GPX/1/1";
+
+        [XmlAttribute("schemaLocation", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
+        public string xsiSchemaLocation = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
+    
+    }
+
+    [Serializable]
+    public class GPXBaseType
+    {
         [XmlElement]
         public List<WaypointType> wpt;
         public TrackType trk;
 
-        public GPXType()
+        public GPXBaseType()
         {
             wpt = null;
             trk = null;
@@ -196,10 +214,38 @@ namespace MapperTools.NMEA2GPX
             trk = new TrackType();
             trk.trkseg = new List<WaypointType>();
         }
+
+        public static GPXBaseType Deserialize(string gpxfile)
+        {
+            using (FileStream gpxstream = new FileStream(gpxfile, FileMode.Open))
+            {
+                GPXBaseType gpxdata = null;
+                try
+                {
+                    // viene specificato il namespace di default a causa della diversa serializzazione su PocketPC
+                    XmlSerializer xmls = new XmlSerializer(typeof(GPX11Type), GPX11Type.GPX11Namespace);
+                    gpxdata = (GPXBaseType)xmls.Deserialize(gpxstream);
+                }
+                catch (InvalidOperationException)
+                {
+                    // In ambiente windows viene lanciata un'eccezione se il namespace non corrisponde
+                    // mentre su PocketPC semplicemente i campi rimangono null;
+                }
+                if (gpxdata == null || gpxdata.trk == null) {
+                    // Tenta di ricaricare come GPX 1.0
+                    gpxstream.Position = 0;
+                    // viene specificato il namespace di default a causa della diversa serializzazione su PocketPC
+                    XmlSerializer xmls2 = new XmlSerializer(typeof(GPX10Type), GPX10Type.GPX10Namespace);
+                    gpxdata = (GPXBaseType)xmls2.Deserialize(gpxstream);
+                }
+                if (gpxdata == null || gpxdata.trk == null)
+                    throw new InvalidOperationException("File gpx non valido");
+                return gpxdata;
+            }
+        }
     }
 
     [Serializable]
-    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
     public class WaypointType
     {
         [XmlAttribute]
@@ -208,9 +254,6 @@ namespace MapperTools.NMEA2GPX
         public double lon;
         public string name;
         public LinkType link;
-        // oggetto di tipo DateTime, definito come object per avere un tipo riferimento e quindi opzionale
-        //[XmlElement(typeof(DateTime))]
-        //public object time;
 
         private System.DateTime timeField;
         private bool timeFieldSpecified;
@@ -267,11 +310,9 @@ namespace MapperTools.NMEA2GPX
                 this.timeFieldSpecified = value;
             }
         }
-
     }
 
     [Serializable]
-    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
     public class LinkType
     {
         [XmlAttribute]
@@ -288,7 +329,6 @@ namespace MapperTools.NMEA2GPX
     }
 
     [Serializable]
-    [XmlType(Namespace = "http://www.topografix.com/GPX/1/1")]
     public class TrackType
     {
         public string name;

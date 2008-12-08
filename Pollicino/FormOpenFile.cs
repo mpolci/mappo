@@ -57,6 +57,8 @@ namespace MapperTools.Pollicino
             }
         }
 
+        /// <param name="dir">Directory di partenza</param>
+        /// <param name="selectdir">True per selezionare una directory, false per selezionare un file</param>
         public FormOpenFile(string dir, bool selectdir)
         {
             InitializeComponent();

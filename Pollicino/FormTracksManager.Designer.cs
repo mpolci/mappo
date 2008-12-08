@@ -29,9 +29,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTracksManager));
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.menuItem_ImportTrack = new System.Windows.Forms.MenuItem();
             this.menuItem_Close = new System.Windows.Forms.MenuItem();
             this.lw_Tracks = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
@@ -40,17 +41,21 @@
             this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.imglist_gpxstatus = new System.Windows.Forms.ImageList();
             this.contextMenu_track = new System.Windows.Forms.ContextMenu();
-            this.menuItem_Upload = new System.Windows.Forms.MenuItem();
+            this.menuItem_LoadTrack = new System.Windows.Forms.MenuItem();
             this.menuItem_delete = new System.Windows.Forms.MenuItem();
             this.menuItem_Info = new System.Windows.Forms.MenuItem();
-            this.menuItem_ImportGPX = new System.Windows.Forms.MenuItem();
-            this.menuItem_LoadTrack = new System.Windows.Forms.MenuItem();
+            this.menuItem_Upload = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
-            this.mainMenu1.MenuItems.Add(this.menuItem_ImportGPX);
+            this.mainMenu1.MenuItems.Add(this.menuItem_ImportTrack);
             this.mainMenu1.MenuItems.Add(this.menuItem_Close);
+            // 
+            // menuItem_ImportTrack
+            // 
+            this.menuItem_ImportTrack.Text = "Import Track...";
+            this.menuItem_ImportTrack.Click += new System.EventHandler(this.menuItem_ImportTrack_Click);
             // 
             // menuItem_Close
             // 
@@ -67,13 +72,13 @@
             this.lw_Tracks.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
             this.lw_Tracks.FullRowSelect = true;
             this.lw_Tracks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            listViewItem2.ImageIndex = 0;
-            listViewItem2.Tag = "gpslog_20081105_1134.gpx";
-            listViewItem2.Text = "2008-11-05_113400";
-            listViewItem2.SubItems.Add("3:48");
-            listViewItem2.SubItems.Add("12345");
-            listViewItem2.SubItems.Add("23");
-            this.lw_Tracks.Items.Add(listViewItem2);
+            listViewItem1.ImageIndex = 0;
+            listViewItem1.Tag = "gpslog_20081105_1134.gpx";
+            listViewItem1.Text = "2008-11-05_113400";
+            listViewItem1.SubItems.Add("3:48");
+            listViewItem1.SubItems.Add("12345");
+            listViewItem1.SubItems.Add("23");
+            this.lw_Tracks.Items.Add(listViewItem1);
             this.lw_Tracks.Location = new System.Drawing.Point(0, 0);
             this.lw_Tracks.Name = "lw_Tracks";
             this.lw_Tracks.Size = new System.Drawing.Size(240, 268);
@@ -115,10 +120,10 @@
             this.contextMenu_track.MenuItems.Add(this.menuItem_Info);
             this.contextMenu_track.MenuItems.Add(this.menuItem_Upload);
             // 
-            // menuItem_Upload
+            // menuItem_LoadTrack
             // 
-            this.menuItem_Upload.Text = "Upload to OSM ...";
-            this.menuItem_Upload.Click += new System.EventHandler(this.menuItem_Upload_Click);
+            this.menuItem_LoadTrack.Text = "Load track";
+            this.menuItem_LoadTrack.Click += new System.EventHandler(this.menuItem_LoadTrack_Click);
             // 
             // menuItem_delete
             // 
@@ -130,15 +135,10 @@
             this.menuItem_Info.Text = "Track Info ...";
             this.menuItem_Info.Click += new System.EventHandler(this.menuItem_Info_Click);
             // 
-            // menuItem_ImportGPX
+            // menuItem_Upload
             // 
-            this.menuItem_ImportGPX.Text = "Import gpx";
-            this.menuItem_ImportGPX.Click += new System.EventHandler(this.menuItem_ImportGPX_Click);
-            // 
-            // menuItem_LoadTrack
-            // 
-            this.menuItem_LoadTrack.Text = "Load track";
-            this.menuItem_LoadTrack.Click += new System.EventHandler(this.menuItem_LoadTrack_Click);
+            this.menuItem_Upload.Text = "Upload to OSM ...";
+            this.menuItem_Upload.Click += new System.EventHandler(this.menuItem_Upload_Click);
             // 
             // FormTracksManager
             // 
@@ -168,7 +168,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.MenuItem menuItem_ImportGPX;
+        private System.Windows.Forms.MenuItem menuItem_ImportTrack;
         private System.Windows.Forms.MenuItem menuItem_LoadTrack;
     }
 }
