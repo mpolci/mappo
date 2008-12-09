@@ -442,12 +442,15 @@ namespace MapperTools.Pollicino
                     {
                         NMEA2GPX.GPXBaseType gpxdata = NMEA2GPX.GPXBaseType.Deserialize(gpxfile);
                         ProjectedGeoPoint pgp = this.mapcontrol.Center;
-                        if (gpxdata.trk != null && gpxdata.trk.trkseg != null)
-                            foreach (NMEA2GPX.WaypointType wp in gpxdata.trk.trkseg)
+                        if (gpxdata.HasTrack)
+                        {
+                            NMEA2GPX.WaypointType[] trackpoints = gpxdata.trk.GetPoints();
+                            foreach (NMEA2GPX.WaypointType wp in trackpoints)
                             {
                                 pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.trackpoints.addPoint(pgp);
                             }
+                        }
                         // centra la mappa alla fine della traccia caricata
                         this.mapcontrol.Center = pgp;
 

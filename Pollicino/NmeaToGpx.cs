@@ -47,11 +47,11 @@ namespace MapperTools.NMEA2GPX
                 return false;
             }
             wpts = gpxdata.wpt.Count;
-            tpts = gpxdata.trk.trkseg.Count;
+            tpts = gpxdata.trk.GetTotalPoints();
             if (tpts > 0)
             {
-                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
-                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
+                begintrk = (DateTime)gpxdata.trk.FirstPoint.time;
+                endtrk = (DateTime)gpxdata.trk.LastPoint.time;
             }
             else
             {
@@ -84,6 +84,9 @@ namespace MapperTools.NMEA2GPX
                 // buffer
                 String line;
                 bool elaboratetrack = !delaytrackstart;
+                //List<WaypointType> tracksegpoints = gpxdata.trk.trkseg;
+                System.Diagnostics.Debug.Assert(gpxdata.trk.trkseg.Length == 1, "Numero segmenti non valido nella traccia GPX");
+                List<WaypointType> tracksegpoints = gpxdata.trk.trkseg[0].trkpt;
                 // Read and display lines from the file until the end of 
                 // the file is reached.
                 while ((line = sr.ReadLine()) != null)
@@ -107,7 +110,7 @@ namespace MapperTools.NMEA2GPX
                                     tp.lon = gpmrc.Position.Longitude;
                                     tp.time = DateTime.SpecifyKind(gpmrc.TimeOfFix, DateTimeKind.Utc);
                                     tp.timeSpecified = true;
-                                    gpxdata.trk.trkseg.Add(tp);
+                                    tracksegpoints.Add(tp);
                                 }
                             }
                             break;
@@ -147,7 +150,7 @@ namespace MapperTools.NMEA2GPX
                 }
             }
             string audiodir = WaypointNames.DataDir(nmea_input);
-            if (gpxdata.wpt.Count == 0 && gpxdata.trk.trkseg.Count == 0 && !Directory.Exists(audiodir))
+            if (!Directory.Exists(audiodir) && gpxdata.wpt.Count == 0 && gpxdata.trk.GetTotalPoints() == 0)
                 return null;
             else 
                 return gpxdata;
@@ -157,12 +160,12 @@ namespace MapperTools.NMEA2GPX
         {
             GPXBaseType gpxdata = GPXBaseType.Deserialize(gpxfile);
 
-            tpts = gpxdata.trk != null && gpxdata.trk.trkseg != null ? gpxdata.trk.trkseg.Count : 0;
+            tpts = gpxdata.HasTrack ? gpxdata.trk.GetTotalPoints() : 0;
             wpts = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
             if (tpts > 0)
             {
-                begintrk = (DateTime)gpxdata.trk.trkseg[0].time;
-                endtrk = (DateTime)gpxdata.trk.trkseg[tpts - 1].time;
+                begintrk = (DateTime)gpxdata.trk.FirstPoint.time;
+                endtrk = (DateTime)gpxdata.trk.LastPoint.time;
             }
             else
             {
@@ -212,7 +215,16 @@ namespace MapperTools.NMEA2GPX
         {
             wpt = new List<WaypointType>();
             trk = new TrackType();
-            trk.trkseg = new List<WaypointType>();
+            //trk.trkseg = new List<WaypointType>();
+            TrksegType seg = new TrksegType();
+            seg.trkpt = new List<WaypointType>();
+            trk.trkseg = new TrksegType[] { seg };
+        }
+
+        public bool HasTrack {
+            get {
+                return this.trk != null && this.trk.trkseg != null;
+            }
         }
 
         public static GPXBaseType Deserialize(string gpxfile)
@@ -332,8 +344,56 @@ namespace MapperTools.NMEA2GPX
     public class TrackType
     {
         public string name;
-        [XmlArrayItem(ElementName = "trkpt",Type=typeof(WaypointType))]
-        [XmlArray]
-        public List<WaypointType> trkseg;
+        //[XmlArrayItem(ElementName = "trkpt",Type=typeof(WaypointType))]
+        //[XmlArray]
+        //public List<WaypointType> trkseg;
+
+        [XmlElement]
+        public TrksegType[] trkseg;
+
+        public int GetTotalPoints()
+        {
+            int total = 0;
+            foreach (TrksegType seg in trkseg)
+                total += seg.trkpt.Count;
+            return total;
+        }
+
+        public WaypointType[] GetPoints()
+        {
+            WaypointType[] aggregated = new WaypointType[GetTotalPoints()];
+            int i = 0;
+            foreach (TrksegType seg in trkseg)
+            {
+                seg.trkpt.CopyTo(aggregated, i);
+                i += seg.trkpt.Count;
+            }
+            return aggregated;
+        }
+
+        [XmlIgnore]
+        public WaypointType FirstPoint {
+            get {
+                return trkseg[0].trkpt[0]; // può lanciare un'eccezione
+            }
+        }
+
+        [XmlIgnore]
+        public WaypointType LastPoint {
+            get 
+            {
+                // può lanciare un'eccezione
+                TrksegType seg = trkseg[trkseg.Length - 1];
+                return seg.trkpt[seg.trkpt.Count - 1];
+            }
+        }
     }
+
+    [Serializable]
+    public class TrksegType
+    {
+        [XmlElement]
+        public List<WaypointType> trkpt;
+    }
+
 }
