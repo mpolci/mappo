@@ -54,7 +54,16 @@ namespace MapperTools.Pollicino
                 FileInfo fiLog = new FileInfo(logfilename);
                 if (fiLog.Length == 0)
                 {
-                    fiLog.Delete();
+                    try
+                    {
+                        fiLog.Delete();
+                    }
+                    catch (IOException e) { 
+                        System.Diagnostics.Trace.WriteLine("delete di un log vuoto " + e); 
+                        #if DEBUG 
+                        throw;
+                        #endif
+                    }
                     return;
                 }
 
