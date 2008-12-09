@@ -319,13 +319,20 @@ namespace MapperTools.Pollicino
                 {
                     // file gpx
                     string destfile = Path.Combine(AppOptions.GPS.LogsDir, Path.GetFileName(file));
-                    File.Copy(file, destfile);
-                    string datadir = WaypointNames.DataDir(file);
-                    if (Directory.Exists(datadir))
-                        CopyDirectory(datadir, Path.Combine(AppOptions.GPS.LogsDir, Path.GetFileName(datadir)));
-                    // TODO: caricare gpx nel db
-                    this.TracksCollection.ImportGPX(destfile);
-                    UpdateList();
+                    if (File.Exists(destfile))
+                        MessageBox.Show("A track with same name already exists");
+                    else
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        File.Copy(file, destfile);
+                        string datadir = WaypointNames.DataDir(file);
+                        if (Directory.Exists(datadir))
+                            CopyDirectory(datadir, Path.Combine(AppOptions.GPS.LogsDir, Path.GetFileName(datadir)));
+                        // TODO: caricare gpx nel db
+                        this.TracksCollection.ImportGPX(destfile);
+                        UpdateList();
+                        Cursor.Current = Cursors.Default;
+                    }
                 }
                 else
                 {
