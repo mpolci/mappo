@@ -331,7 +331,6 @@ namespace MapperTools.Pollicino
                         // TODO: caricare gpx nel db
                         this.TracksCollection.ImportGPX(destfile);
                         UpdateList();
-                        Cursor.Current = Cursors.Default;
                     }
                 }
                 else
@@ -345,6 +344,10 @@ namespace MapperTools.Pollicino
                 System.Diagnostics.Trace.WriteLine("Errore nell'importazione della traccia " + file + " - Eccezione:");
                 System.Diagnostics.Trace.WriteLine(ex);
                 MessageBox.Show("Import error!");
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 
