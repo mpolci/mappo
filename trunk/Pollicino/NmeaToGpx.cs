@@ -354,8 +354,12 @@ namespace MapperTools.NMEA2GPX
         public int GetTotalPoints()
         {
             int total = 0;
-            foreach (TrksegType seg in trkseg)
-                total += seg.trkpt.Count;
+            try
+            {
+                foreach (TrksegType seg in trkseg)
+                    total += seg.trkpt.Count;
+            }
+            catch (NullReferenceException) { }
             return total;
         }
 
