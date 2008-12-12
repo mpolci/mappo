@@ -17,6 +17,9 @@ namespace MapperTools.Pollicino
             InitializeComponent();
         }
 
+        // usato per ricordare il focus fra un'apertura e l'altra della finestra di dialogo
+        static string mLastSelected;
+
         public ApplicationOptions AppOptions { get;  set; }
 
         private GPXCollection mTracks;
@@ -42,6 +45,7 @@ namespace MapperTools.Pollicino
 
         private void UpdateList()
         {
+            string restoresel = mLastSelected;
             lw_Tracks.Items.Clear();
             if (mTracks == null) return;
             int idx = 0;
@@ -68,6 +72,10 @@ namespace MapperTools.Pollicino
 
                 lw_Tracks.Items.Add(lwi);
                 idx++;
+
+                // imposta il focus sull'ultima selezione 
+                if (gpxf.FileName == restoresel)
+                    lwi.Focused = true;
             }
         }
 
@@ -110,9 +118,15 @@ namespace MapperTools.Pollicino
         private void lw_Tracks_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lw_Tracks.SelectedIndices.Count == 0)
+            {
                 lw_Tracks.ContextMenu = null;
+                mLastSelected = null;
+            }
             else
+            {
                 lw_Tracks.ContextMenu = contextMenu_track;
+                mLastSelected = SelectedTrackFileName;
+            }
         }
 
         private string OSMAPIUploadGPX(string uploadfile, string param_description, string param_tags, bool pblc,
@@ -246,10 +260,11 @@ namespace MapperTools.Pollicino
                 try
                 {
                     string filename = gpxf.FileName;
-
+                    Cursor.Current = Cursors.WaitCursor;
                     string s_id = OSMAPIUploadGPX(filename, gpxf.Description, gpxf.TagsString, gpxf.getPublic(),
                                                   username, password);
-                    try { 
+                    Cursor.Current = Cursors.Default;
+                    try {
                         int id = int.Parse(s_id);
                         MessageBox.Show("Successfull uploaded");
                         gpxf.OSMId = id;
@@ -259,6 +274,7 @@ namespace MapperTools.Pollicino
                     }
                     catch (Exception e) 
                     {
+                        Cursor.Current = Cursors.Default;
                         throw new Exception("OSM Server returns error: " + s_id, e);
                     }
                 }
