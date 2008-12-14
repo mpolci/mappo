@@ -550,11 +550,15 @@ namespace MapsLibrary
         {
             return this.ToString('/');
         }
-/*
+
         public static bool operator ==(TileNum t1, TileNum t2)
         {
             return t1.uZoom == t2.uZoom && t1.X == t2.X && t1.Y == t2.Y;
         }
-*/
+        public static bool operator !=(TileNum t1, TileNum t2)
+        {
+            return t1.X != t2.X || t1.Y == t2.Y || t1.uZoom != t2.uZoom;
+        }
+
     }
 }

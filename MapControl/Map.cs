@@ -430,6 +430,11 @@ namespace MapsLibrary
 
         protected virtual void onTileChanged(TileNum tn)
         {
+            RaiseMapChangedEv(tn);
+        }
+
+        protected void RaiseMapChangedEv(TileNum tn)
+        {
             // Lancia l'evento MapChanged sull'area relativa al tile per invalidarla
             if (MapChanged != null)
             {
@@ -439,6 +444,7 @@ namespace MapsLibrary
                 MapChanged(this, tilearea);
             }
         }
+
 
         /*
         public virtual void updateTilesInArea2(ProjectedGeoArea area, uint zoom)
@@ -481,9 +487,9 @@ namespace MapsLibrary
 
     public class CachedTilesMap : TilesMap, IDisposable
     {
-        LRUQueue<TileNum, Bitmap> lruqueue;
-        uint maxitems;
-        protected Bitmap _imgTileNotFound;
+        protected LRUQueue<TileNum, Bitmap> lruqueue;
+        protected uint maxitems;
+        private Bitmap _imgTileNotFound;
 
         public CachedTilesMap(string tileCachePath, TileMapSystem ms, uint cachelen)
             : base(tileCachePath, ms)
@@ -514,7 +520,7 @@ namespace MapsLibrary
         /// <summary>
         /// Restituisce il bitmap del tile indicato
         /// </summary>
-        public Bitmap getImageTile(TileNum tn)
+        public virtual Bitmap getImageTile(TileNum tn)
         {
             Debug.Assert(lruqueue != null, "null lruqueue");
             if (lruqueue.Contains(tn))
@@ -642,6 +648,118 @@ namespace MapsLibrary
             }
             base.onTileChanged(tn);
         }
+    }
+
+    public class CachedTilesMapDL : CachedTilesMap, IDisposable
+    {
+        private System.Threading.Thread thrLoader;
+        private System.Threading.AutoResetEvent jobEvent;
+        //private Queue<TileNum> mTilesToLoad = new Queue<TileNum>();
+        private LRUQueue<TileNum> mTilesToLoad = new LRUQueue<TileNum>();
+
+
+        public CachedTilesMapDL( string tileCachePath, TileMapSystem ms, uint cachelen) :
+            base(tileCachePath, ms, cachelen)
+        {
+            jobEvent = new System.Threading.AutoResetEvent(false);
+            thrLoader = new System.Threading.Thread(new System.Threading.ThreadStart(this.LoadTileToCacheProc));
+            thrLoader.Name = "Image loader";
+            //thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
+            thrLoader.Start();
+        }
+
+        #region IDisposable Members
+
+        public override void Dispose()
+        {
+            thrLoader.Abort();
+            base.Dispose();
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Restituisce il bitmap del tile indicato
+        /// </summary>
+        public override Bitmap getImageTile(TileNum tn)
+        {
+            Bitmap retbmp = null;
+            Debug.Assert(lruqueue != null, "null lruqueue");
+            bool incache;
+            lock (lruqueue)
+            {
+                incache = lruqueue.Contains(tn);
+                if (incache)
+                {
+                    retbmp = lruqueue[tn];
+                    Trace.Assert(retbmp != null, "lruqueue contains null bitmap");
+                }
+            }
+            if (!incache)
+            {
+                lock (mTilesToLoad)
+                {
+                    //TODO: ci vorrebbe una coda lru
+                    if (!mTilesToLoad.Contains(tn))
+                    {
+                        // Elimina il tile più vecchio che non servirebbe più e 
+                        // finirebbe per entrare e uscire subito dalla coda
+                        if (mTilesToLoad.Count == maxitems)
+                            mTilesToLoad.Dequeue();
+                        mTilesToLoad.Enqueue(tn);
+                        jobEvent.Set();
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("Richiesta ripetuta del tile " + tn);
+                }
+
+                retbmp = ImgTileNotFound;
+                Trace.Assert(retbmp != null, "getImageTile will returns null");
+            }
+            return retbmp;
+        }
+
+        private void LoadTileToCacheProc()
+        {
+            //TODO: sfruttare il codice dell classe base
+            TileNum tn = new TileNum();
+            while (true)
+            {
+                bool avail;
+                lock (mTilesToLoad)
+                {
+                    avail = mTilesToLoad.Count > 0;
+                    if (avail)
+                        tn = mTilesToLoad.Dequeue();
+                }
+                if (!avail)
+                    jobEvent.WaitOne();
+                else if (!lruqueue.Contains(tn))
+                {
+                    if (lruqueue.Count >= maxitems)
+                    {
+                        // rimuove un elemento dalla coda
+                        Bitmap olderbmp;
+                        lock (lruqueue)
+                            olderbmp = lruqueue.RemoveOlder();
+                        Trace.Assert(olderbmp != null, "old bitmap in cache is null");
+                        olderbmp.Dispose();
+                    }
+                    Bitmap bmp;
+                    try
+                    {
+                        bmp = base.createImageTile(tn);
+                        Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
+                        lock (lruqueue)
+                            lruqueue.Add(tn, bmp);
+                        RaiseMapChangedEv(tn);
+                    }
+                    catch (TileNotFoundException)
+                    { }
+                }
+            }
+        }
+
     }
 
     public class LayeredMap : IMap
