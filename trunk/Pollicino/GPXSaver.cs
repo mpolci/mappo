@@ -59,9 +59,9 @@ namespace MapperTools.Pollicino
                         fiLog.Delete();
                     }
                     catch (IOException e) { 
-                        System.Diagnostics.Trace.WriteLine("delete di un log vuoto " + e); 
+                        System.Diagnostics.Trace.WriteLine("Errore durante il delete di un log vuoto " + e); 
                         #if DEBUG 
-                        throw;
+                        System.Windows.Forms.MessageBox.Show(e.ToString());
                         #endif
                     }
                     return;

@@ -177,8 +177,9 @@ namespace MapperTools.Pollicino
             // mappe
             this.lmap = new LayeredMap();
             // OSM
-            this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers());
-
+            //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(false));
+            this.map = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(true));
+            
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
@@ -222,13 +223,16 @@ namespace MapperTools.Pollicino
 
         }
 
-        private uint required_buffers()
+        private uint required_buffers(bool minimized_memory)
         {
             Size cs = this.ClientSize;
             // FIXME: il codice qui sotto dipende dalla dimensione del tile
             uint x = (uint)Math.Ceiling((double)cs.Width / 256.0 + 1);
             uint y = (uint)Math.Ceiling((double)cs.Height / 256.0 + 1);
-            return x * y + x + y - 1;
+            if (minimized_memory)
+                return x * y;
+            else 
+                return x * y + x + y - 1;
         }
 
         private void carica_opzioni()
