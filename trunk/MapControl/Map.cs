@@ -504,10 +504,10 @@ namespace MapsLibrary
             set
             {
                 if (value == 0)
-                    throw new InvalidOperationException("Cache lenght cannot be 0");
+                    throw new ArgumentOutOfRangeException("Cache lenght cannot be 0");
                 maxitems = value;
                 while (lruqueue.Count > maxitems)
-                    lruqueue.RemoveOlder().Dispose();
+                    lruqueue.Dequeue().Dispose();
             }
         }
 
@@ -547,7 +547,7 @@ namespace MapsLibrary
                 if (lruqueue.Count >= maxitems)
                 {
                     // rimuove un elemento dalla coda
-                    Bitmap olderbmp = lruqueue.RemoveOlder();
+                    Bitmap olderbmp = lruqueue.Dequeue();
                     Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                     olderbmp.Dispose();
                 }
@@ -556,7 +556,7 @@ namespace MapsLibrary
                 {
                     bmp = base.createImageTile(tn);
                     Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
-                    lruqueue.Add(tn, bmp);
+                    lruqueue.Enqueue(tn, bmp);
                 }
                 catch (TileNotFoundException)
                 {
@@ -754,7 +754,7 @@ namespace MapsLibrary
                         // rimuove un elemento dalla coda
                         Bitmap olderbmp;
                         lock (lruqueue)
-                            olderbmp = lruqueue.RemoveOlder();
+                            olderbmp = lruqueue.Dequeue();
                         Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                         olderbmp.Dispose();
                     }
@@ -769,7 +769,7 @@ namespace MapsLibrary
                         System.Diagnostics.Debug.WriteLine("Rallentato caricamento tile");
 #endif
                         lock (lruqueue)
-                            lruqueue.Add(tn, bmp);
+                            lruqueue.Enqueue(tn, bmp);
                         RaiseMapChangedEv(tn);
                     }
                     catch (TileNotFoundException)

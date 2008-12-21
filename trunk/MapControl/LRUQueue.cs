@@ -12,7 +12,7 @@ namespace MapsLibrary
 
         public bool Enqueue(T k)
         {
-            if (!keys.Contains(k))
+            if (!listnode.Contains(k))
             {
                 LinkedListNode<T> node = keys.AddFirst(k);
                 listnode.Add(k, node);
@@ -27,9 +27,9 @@ namespace MapsLibrary
 
         public T Dequeue()
         {
-            System.Diagnostics.Debug.Assert(keys.Count == listnode.Count, "data and keys count inconsistency");
+            System.Diagnostics.Debug.Assert(keys.Count == listnode.Count, "listnode and keys count inconsistency");
             T older = keys.Last.Value;
-            System.Diagnostics.Debug.Assert(listnode.Contains(older), "data doesn't contain lru.Last.Value");
+            System.Diagnostics.Debug.Assert(listnode.Contains(older), "listnode doesn't contain lru.Last.Value");
             keys.RemoveLast();
             listnode.Remove(older);
             return older;
@@ -42,6 +42,7 @@ namespace MapsLibrary
                 LinkedListNode<T> node = (LinkedListNode<T>)listnode[k];
                 System.Diagnostics.Debug.Assert(node != null, "Remove(): list node is null");
                 keys.Remove(node);
+                listnode.Remove(k);
                 return true;
             }
             else
@@ -50,7 +51,7 @@ namespace MapsLibrary
 
         public bool Contains(T k)
         {
-            bool c = keys.Contains(k);
+            bool c = listnode.Contains(k);
             if (c)
                 MoveToFirst(k);
             return c;
@@ -85,56 +86,63 @@ namespace MapsLibrary
     // quando è testata la sua presenza.
     public class LRUQueue<TKey, TData>
     {
-        private Hashtable data = new Hashtable();
-        private LinkedList<TKey> keys = new LinkedList<TKey>();
+        protected struct ListItem
+        {
+            public TKey key;
+            public TData data;
+            public ListItem(TKey k, TData d) {
+                key = k;
+                data = d;
+            }
+        }
+        private Hashtable listnode = new Hashtable();
+        private LinkedList<ListItem> keys = new LinkedList<ListItem>();
         private object accesslock = new object();
 
-        public bool Add(TKey k, TData v)
+        public void Enqueue(TKey k, TData v)
         {
             lock (accesslock)
             {
-                if (!keys.Contains(k))
+                if (!listnode.Contains(k))
                 {
-                    keys.AddFirst(k);
-                    data.Add(k, v);
-                    return true;
+                    LinkedListNode<ListItem> node = keys.AddFirst(new ListItem(k, v));
+                    listnode.Add(k, node);
                 }
-                return false;
+                else
+                {
+                    throw new InvalidOperationException("Key already present in the queue: " + k.ToString());
+                }
             }
         }
 
-        public TData Remove(TKey to_remove)
+        public TData Dequeue()
         {
             lock (accesslock)
             {
-                System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency");
-                if (Contains(to_remove))
+                System.Diagnostics.Debug.Assert(keys.Count == listnode.Count, "data and keys count inconsistency");
+                ListItem older = keys.Last.Value;
+                System.Diagnostics.Debug.Assert(listnode.Contains(older.key), "data doesn't contain lru.Last.Value");
+                keys.RemoveLast();
+                listnode.Remove(older.key);
+                return older.data;
+            }
+        }
+
+        public TData Remove(TKey k)
+        {
+            lock (accesslock)
+            {
+                System.Diagnostics.Debug.Assert(keys.Count == listnode.Count, "listnode and keys count inconsistency");
+                if (listnode.Contains(k))
                 {
-                    keys.Remove(to_remove);
-                    TData v = (TData)data[to_remove];
-                    data.Remove(to_remove);
-                    System.Diagnostics.Debug.Assert(!data.Contains(to_remove), "data contains removed item");
-                    System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency after element removing");
-                    return v;
+                    LinkedListNode<ListItem> node = (LinkedListNode<ListItem>)listnode[k];
+                    System.Diagnostics.Debug.Assert(node != null, "Remove(): list node is null");
+                    keys.Remove(node);
+                    listnode.Remove(k);
+                    return node.Value.data;
                 }
                 else
                     return default(TData);
-            }
-        }
-
-        public TData RemoveOlder()
-        {
-            lock (accesslock)
-            {
-                System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency");
-                TKey older = keys.Last.Value;
-                System.Diagnostics.Debug.Assert(data.Contains(older), "data doesn't contain lru.Last.Value");
-                keys.RemoveLast();
-                TData v = (TData)data[older];
-                data.Remove(older);
-                System.Diagnostics.Debug.Assert(!data.Contains(older), "data contains removed item");
-                System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency after element removing");
-                return v;
             }
         }
 
@@ -142,9 +150,32 @@ namespace MapsLibrary
         {
             lock (accesslock)
             {
-                System.Diagnostics.Debug.Assert(keys.Contains(k) == data.Contains(k), "data and keys collections inconsistency");
-                return data.Contains(k);
+                bool c = listnode.Contains(k);
+                //if (c)
+                //    MoveToFirst(k);
+                return c;
             }
+        }
+
+        public int Count
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(keys.Count == listnode.Count, "data and keys count inconsistency");
+                return keys.Count;
+            }
+        }
+
+        private void MoveToFirst(TKey k)
+        {
+            // il lock è preso nel metodo chiamante
+            LinkedListNode<ListItem> node = (LinkedListNode<ListItem>)listnode[k];
+            if (node != keys.First)
+            {
+                keys.Remove(node);
+                keys.AddFirst(node);
+            }
+            System.Diagnostics.Debug.Assert(node == keys.First);
         }
 
         public void Clear()
@@ -153,41 +184,34 @@ namespace MapsLibrary
             {
                 if (typeof(IDisposable).IsAssignableFrom(typeof(TData)))
                 {
-                    foreach (DictionaryEntry entry in data)
-                        ((IDisposable) entry.Value).Dispose();
+                    //foreach (LinkedListNode<ListItem> entry in keys)
+                    for (LinkedListNode<ListItem> entry = keys.First; entry != null; entry = entry.Next) 
+                        ((IDisposable) entry.Value.data).Dispose();
                 }
-                data.Clear();
-                keys.Clear();                
+                listnode.Clear();
+                keys.Clear();
             }
         }
 
-        public TData this[TKey idx]
+        public TData this[TKey k]
         {
             get
             {
                 lock (accesslock)
                 {
-                    TData value = (TData)data[idx];
-                    LinkedListNode<TKey> node = keys.Find(idx);
-                    System.Diagnostics.Debug.Assert(node != null, "lru.Find returns null");
-                    keys.Remove(node);
-                    keys.AddFirst(node);
-                    return value;
+                    if (listnode.Contains(k))
+                    {
+                        LinkedListNode<ListItem> node = (LinkedListNode<ListItem>)listnode[k];
+                        System.Diagnostics.Debug.Assert(node != null, "Remove(): list node is null");
+                        MoveToFirst(k);
+                        return node.Value.data;
+                    }
+                    else
+                        return default(TData);
                 }
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                lock (accesslock)
-                {
-                    System.Diagnostics.Debug.Assert(keys.Count == data.Count, "data and keys count inconsistency");
-                    return data.Count;
-                }
-            }
-        }
 
     }
 }
