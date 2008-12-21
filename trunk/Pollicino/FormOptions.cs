@@ -42,7 +42,8 @@ namespace MapperTools.Pollicino
             InitializeComponent();
 
 #if PocketPC || Smartphone || WindowsCE
-			this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.None);
+            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
             this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);

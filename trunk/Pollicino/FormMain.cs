@@ -142,6 +142,8 @@ namespace MapperTools.Pollicino
 #endif
             // disabilito l'autodownload
             options.Maps.AutoDownload = false;
+            // FIXME: disabilito l'autostart
+            options.GPS.Autostart = false;
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
