@@ -35,6 +35,19 @@ namespace MapsLibrary
             return older;
         }
 
+        public bool Remove(T k)
+        {
+            if (listnode.Contains(k))
+            {
+                LinkedListNode<T> node = (LinkedListNode<T>)listnode[k];
+                System.Diagnostics.Debug.Assert(node != null, "Remove(): list node is null");
+                keys.Remove(node);
+                return true;
+            }
+            else
+                return false;
+        }
+
         public bool Contains(T k)
         {
             bool c = keys.Contains(k);
@@ -67,6 +80,9 @@ namespace MapsLibrary
 
     //-------------------------------------------------------------------------------
 
+    // LRUQueue<TKey, TData> : Questa coda LRU associa una chiave ad un dato. L'elemento 
+    // è riportato in cima alla coda (rotazione LRU) solo quando è acceduto il dato, non
+    // quando è testata la sua presenza.
     public class LRUQueue<TKey, TData>
     {
         private Hashtable data = new Hashtable();

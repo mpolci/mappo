@@ -438,10 +438,7 @@ namespace MapsLibrary
             // Lancia l'evento MapChanged sull'area relativa al tile per invalidarla
             if (MapChanged != null)
             {
-                PxCoordinates corner = mMapsys.TileNumToPx(tn),
-                              limit = corner + new PxCoordinates(mMapsys.tilesize, mMapsys.tilesize);
-                ProjectedGeoArea tilearea = new ProjectedGeoArea(mMapsys.PxToPoint(corner, tn.uZoom), mMapsys.PxToPoint(limit, tn.uZoom));
-                MapChanged(this, tilearea);
+                MapChanged(this, mMapsys.TileNumToArea(tn));
             }
         }
 
@@ -496,6 +493,22 @@ namespace MapsLibrary
         {
             lruqueue = new LRUQueue<TileNum, Bitmap>();
             maxitems = cachelen;
+        }
+
+        public uint CacheLen
+        {
+            get
+            {
+                return maxitems;
+            }
+            set
+            {
+                if (value == 0)
+                    throw new InvalidOperationException("Cache lenght cannot be 0");
+                maxitems = value;
+                while (lruqueue.Count > maxitems)
+                    lruqueue.RemoveOlder().Dispose();
+            }
         }
 
         protected Bitmap ImgTileNotFound
@@ -650,6 +663,7 @@ namespace MapsLibrary
         }
     }
 
+    /// <remarks>Rispetto alla classe padre, vengono disegnati solo i tile già presenti nella cache. Quando un tile non è presente viene disegnato un tile vuoto mentre il tile vero e proprio viene fatto caricare nella cache da un thread che lavora in background.</remarks>
     public class CachedTilesMapDL : CachedTilesMap, IDisposable
     {
         private System.Threading.Thread thrLoader;
@@ -699,7 +713,6 @@ namespace MapsLibrary
             {
                 lock (mTilesToLoad)
                 {
-                    //TODO: ci vorrebbe una coda lru
                     if (!mTilesToLoad.Contains(tn))
                     {
                         // Elimina il tile più vecchio che non servirebbe più e 
@@ -750,12 +763,18 @@ namespace MapsLibrary
                     {
                         bmp = base.createImageTile(tn);
                         Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
+#if DEBUG && !(PocketPC || Smartphone || WindowsCE)
+                        // simula un caricamento lento
+                        System.Threading.Thread.Sleep(200);
+#endif
                         lock (lruqueue)
                             lruqueue.Add(tn, bmp);
                         RaiseMapChangedEv(tn);
                     }
                     catch (TileNotFoundException)
                     { }
+                } else {
+                    System.Diagnostics.Debug.WriteLine("LoadTileToCacheProc() - tile già in cache: " + tn.ToString());
                 }
             }
         }
