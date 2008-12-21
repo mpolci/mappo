@@ -86,6 +86,11 @@ namespace MapperTools.Pollicino
             this.num_recordaudioseconds = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.tabPage_Misc = new System.Windows.Forms.TabPage();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tb_OSMPassword = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.tb_OSMUsername = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.cb_delayTrackStart = new System.Windows.Forms.CheckBox();
             this.combo_CameraButton = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -100,11 +105,6 @@ namespace MapperTools.Pollicino
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.label17 = new System.Windows.Forms.Label();
-            this.tb_OSMUsername = new System.Windows.Forms.TextBox();
-            this.tb_OSMPassword = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage_Maps.SuspendLayout();
@@ -155,6 +155,7 @@ namespace MapperTools.Pollicino
             this.cb_gps_autostart.Size = new System.Drawing.Size(206, 20);
             this.cb_gps_autostart.TabIndex = 21;
             this.cb_gps_autostart.Text = "Start GPS on application load";
+            this.cb_gps_autostart.Visible = false;
             // 
             // button_gpslogpath
             // 
@@ -254,7 +255,7 @@ namespace MapperTools.Pollicino
             this.tabPage_Maps.Controls.Add(this.label4);
             this.tabPage_Maps.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Maps.Name = "tabPage_Maps";
-            this.tabPage_Maps.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_Maps.Size = new System.Drawing.Size(232, 242);
             this.tabPage_Maps.Text = "Maps";
             // 
             // combo_TileServer
@@ -372,7 +373,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.Controls.Add(this.label13);
             this.tabPage_AudioRec.Location = new System.Drawing.Point(0, 0);
             this.tabPage_AudioRec.Name = "tabPage_AudioRec";
-            this.tabPage_AudioRec.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_AudioRec.Size = new System.Drawing.Size(232, 242);
             this.tabPage_AudioRec.Text = "Audio";
             // 
             // panel1
@@ -497,6 +498,42 @@ namespace MapperTools.Pollicino
             this.tabPage_Misc.Size = new System.Drawing.Size(240, 245);
             this.tabPage_Misc.Text = "Misc.";
             // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(7, 143);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(226, 35);
+            this.label19.Text = "Specify OSM user and password if you want to upload gpx to Open Street Map";
+            // 
+            // tb_OSMPassword
+            // 
+            this.tb_OSMPassword.Location = new System.Drawing.Point(103, 208);
+            this.tb_OSMPassword.Name = "tb_OSMPassword";
+            this.tb_OSMPassword.PasswordChar = '*';
+            this.tb_OSMPassword.Size = new System.Drawing.Size(130, 21);
+            this.tb_OSMPassword.TabIndex = 45;
+            // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(7, 209);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(100, 20);
+            this.label18.Text = "OSM password";
+            // 
+            // tb_OSMUsername
+            // 
+            this.tb_OSMUsername.Location = new System.Drawing.Point(103, 181);
+            this.tb_OSMUsername.Name = "tb_OSMUsername";
+            this.tb_OSMUsername.Size = new System.Drawing.Size(130, 21);
+            this.tb_OSMUsername.TabIndex = 43;
+            // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(7, 182);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(100, 20);
+            this.label17.Text = "OSM username";
+            // 
             // cb_delayTrackStart
             // 
             this.cb_delayTrackStart.Location = new System.Drawing.Point(3, 3);
@@ -563,7 +600,7 @@ namespace MapperTools.Pollicino
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(240, 245);
+            this.tabPage1.Size = new System.Drawing.Size(232, 242);
             this.tabPage1.Text = "About";
             // 
             // textBox1
@@ -576,7 +613,7 @@ namespace MapperTools.Pollicino
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(226, 142);
+            this.textBox1.Size = new System.Drawing.Size(218, 139);
             this.textBox1.TabIndex = 7;
             this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
                 "l.html).\r\n\r\nPart of this software is based on SharpGPS (http://www.codeplex.com/" +
@@ -588,7 +625,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.Location = new System.Drawing.Point(7, 72);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(226, 20);
+            this.linkLabel1.Size = new System.Drawing.Size(218, 20);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.Text = "http://www.marcopolci.net/wiki/informatica:progetti:pollicino_en";
             // 
@@ -598,7 +635,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.Location = new System.Drawing.Point(7, 48);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(226, 20);
+            this.label16.Size = new System.Drawing.Size(218, 20);
             this.label16.Text = "Copyright (c) 2008 by Marco Polci";
             this.label16.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -608,7 +645,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.Location = new System.Drawing.Point(7, 24);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(226, 20);
+            this.label15.Size = new System.Drawing.Size(218, 20);
             this.label15.Text = "Version 0.9 for Pocket PC";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -618,45 +655,9 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.Location = new System.Drawing.Point(7, 4);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(226, 20);
+            this.label14.Size = new System.Drawing.Size(218, 20);
             this.label14.Text = "Pollicino for OpenStreetMap";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label17
-            // 
-            this.label17.Location = new System.Drawing.Point(7, 182);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(100, 20);
-            this.label17.Text = "OSM username";
-            // 
-            // tb_OSMUsername
-            // 
-            this.tb_OSMUsername.Location = new System.Drawing.Point(103, 181);
-            this.tb_OSMUsername.Name = "tb_OSMUsername";
-            this.tb_OSMUsername.Size = new System.Drawing.Size(130, 21);
-            this.tb_OSMUsername.TabIndex = 43;
-            // 
-            // tb_OSMPassword
-            // 
-            this.tb_OSMPassword.Location = new System.Drawing.Point(103, 208);
-            this.tb_OSMPassword.Name = "tb_OSMPassword";
-            this.tb_OSMPassword.PasswordChar = '*';
-            this.tb_OSMPassword.Size = new System.Drawing.Size(130, 21);
-            this.tb_OSMPassword.TabIndex = 45;
-            // 
-            // label18
-            // 
-            this.label18.Location = new System.Drawing.Point(7, 209);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(100, 20);
-            this.label18.Text = "OSM password";
-            // 
-            // label19
-            // 
-            this.label19.Location = new System.Drawing.Point(7, 143);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(226, 35);
-            this.label19.Text = "Specify OSM user and password if you want to upload gpx to Open Street Map";
             // 
             // FormOptions
             // 
