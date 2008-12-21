@@ -766,6 +766,7 @@ namespace MapsLibrary
 #if DEBUG && !(PocketPC || Smartphone || WindowsCE)
                         // simula un caricamento lento
                         System.Threading.Thread.Sleep(200);
+                        System.Diagnostics.Debug.WriteLine("Rallentato caricamento tile");
 #endif
                         lock (lruqueue)
                             lruqueue.Add(tn, bmp);
