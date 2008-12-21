@@ -50,7 +50,7 @@ namespace MapperTools.Pollicino
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_MapperToolMain));
-            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomin = new System.Windows.Forms.MenuItem();
             this.menuItem_zoomout = new System.Windows.Forms.MenuItem();
@@ -87,135 +87,164 @@ namespace MapperTools.Pollicino
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DownloaderActivity)).BeginInit();
             this.SuspendLayout();
             // 
             // mainMenu
             // 
-            this.mainMenu.MenuItems.Add(this.menuItem1);
-            this.mainMenu.MenuItems.Add(this.menuItem2);
+            this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2});
             // 
             // menuItem1
             // 
-            this.menuItem1.MenuItems.Add(this.menuItem_zoomin);
-            this.menuItem1.MenuItems.Add(this.menuItem_zoomout);
-            this.menuItem1.MenuItems.Add(this.menuItem5);
-            this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
-            this.menuItem1.MenuItems.Add(this.menuItem_photo);
-            this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
-            this.menuItem1.MenuItems.Add(this.menuItem4);
-            this.menuItem1.MenuItems.Add(this.menuItem_exit);
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_zoomin,
+            this.menuItem_zoomout,
+            this.menuItem5,
+            this.menuItem_waypoint,
+            this.menuItem_photo,
+            this.menuItem_gpsactivity,
+            this.menuItem4,
+            this.menuItem_exit});
             this.menuItem1.Text = "Commands";
             // 
             // menuItem_zoomin
             // 
+            this.menuItem_zoomin.Index = 0;
             this.menuItem_zoomin.Text = "Zoom in";
             this.menuItem_zoomin.Click += new System.EventHandler(this.menuItem_zoomin_Click);
             // 
             // menuItem_zoomout
             // 
+            this.menuItem_zoomout.Index = 1;
             this.menuItem_zoomout.Text = "Zoom out";
             this.menuItem_zoomout.Click += new System.EventHandler(this.menuItem_zoomout_Click);
             // 
             // menuItem5
             // 
+            this.menuItem5.Index = 2;
             this.menuItem5.Text = "-";
             // 
             // menuItem_waypoint
             // 
+            this.menuItem_waypoint.Index = 3;
             this.menuItem_waypoint.Text = "Mark waypoint";
             this.menuItem_waypoint.Click += new System.EventHandler(this.menuItem_waypoint_Click);
             // 
             // menuItem_photo
             // 
+            this.menuItem_photo.Index = 4;
             this.menuItem_photo.Text = "Take photo...";
             this.menuItem_photo.Click += new System.EventHandler(this.menuItem_photo_Click);
             // 
             // menuItem_gpsactivity
             // 
+            this.menuItem_gpsactivity.Index = 5;
             this.menuItem_gpsactivity.Text = "start GPS";
             this.menuItem_gpsactivity.Click += new System.EventHandler(this.menuItem_gpsactivity_Click);
             // 
             // menuItem4
             // 
-            this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
-            this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
-            this.menuItem4.MenuItems.Add(this.menuItem_TracksManager);
+            this.menuItem4.Index = 6;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_downloadmaps,
+            this.menuItem_loadtrack,
+            this.menuItem_TracksManager});
             this.menuItem4.Text = "Other";
             // 
             // menuItem_downloadmaps
             // 
+            this.menuItem_downloadmaps.Index = 0;
             this.menuItem_downloadmaps.Text = "Download maps";
             this.menuItem_downloadmaps.Click += new System.EventHandler(this.menuItem_downloadmaps_Click);
             // 
             // menuItem_loadtrack
             // 
+            this.menuItem_loadtrack.Index = 1;
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
             // 
             // menuItem_TracksManager
             // 
+            this.menuItem_TracksManager.Index = 2;
             this.menuItem_TracksManager.Text = "Tracks manager...";
             this.menuItem_TracksManager.Click += new System.EventHandler(this.menuItem_TracksManager_Click);
             // 
             // menuItem_exit
             // 
+            this.menuItem_exit.Index = 7;
             this.menuItem_exit.Text = "Exit";
             this.menuItem_exit.Click += new System.EventHandler(this.menuItem_exit_Click);
             // 
             // menuItem2
             // 
-            this.menuItem2.MenuItems.Add(this.menuItem3);
-            this.menuItem2.MenuItems.Add(this.menuItem_followGPS);
-            this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
-            this.menuItem2.MenuItems.Add(this.menuItem_config);
-            this.menuItem2.MenuItems.Add(this.menuItem8);
+            this.menuItem2.Index = 1;
+            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem3,
+            this.menuItem_followGPS,
+            this.menuItem_autodownload,
+            this.menuItem_config,
+            this.menuItem8});
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
             // 
-            this.menuItem3.MenuItems.Add(this.menuItem_map_osm);
-            this.menuItem3.MenuItems.Add(this.menuItem_map_gmaps);
+            this.menuItem3.Index = 0;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_map_osm,
+            this.menuItem_map_gmaps});
             this.menuItem3.Text = "View Map";
             // 
             // menuItem_map_osm
             // 
             this.menuItem_map_osm.Enabled = false;
+            this.menuItem_map_osm.Index = 0;
             this.menuItem_map_osm.Text = "OSM";
             this.menuItem_map_osm.Click += new System.EventHandler(this.menuItem_map_osm_Click);
             // 
             // menuItem_map_gmaps
             // 
+            this.menuItem_map_gmaps.Index = 1;
             this.menuItem_map_gmaps.Text = "GMaps";
             this.menuItem_map_gmaps.Click += new System.EventHandler(this.menuItem_map_gmaps_Click);
             // 
             // menuItem_followGPS
             // 
+            this.menuItem_followGPS.Index = 1;
             this.menuItem_followGPS.Text = "Follow GPS";
             this.menuItem_followGPS.Click += new System.EventHandler(this.menuItem_followGPS_Click);
             // 
             // menuItem_autodownload
             // 
+            this.menuItem_autodownload.Index = 2;
             this.menuItem_autodownload.Text = "Autodownload maps";
             this.menuItem_autodownload.Click += new System.EventHandler(this.menuItem_autodownload_Click);
             // 
             // menuItem_config
             // 
+            this.menuItem_config.Index = 3;
             this.menuItem_config.Text = "Configuration...";
             this.menuItem_config.Click += new System.EventHandler(this.menuItem_config_Click);
             // 
             // menuItem8
             // 
-            this.menuItem8.MenuItems.Add(this.menuItem_showpos);
-            this.menuItem8.MenuItems.Add(this.menuItem_showscale);
+            this.menuItem8.Index = 4;
+            this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_showpos,
+            this.menuItem_showscale});
             this.menuItem8.Text = "Show";
             // 
             // menuItem_showpos
             // 
+            this.menuItem_showpos.Index = 0;
             this.menuItem_showpos.Text = "Position";
             this.menuItem_showpos.Click += new System.EventHandler(this.menuItem_showpos_Click);
             // 
             // menuItem_showscale
             // 
+            this.menuItem_showscale.Index = 1;
             this.menuItem_showscale.Text = "Scale";
             this.menuItem_showscale.Click += new System.EventHandler(this.menuItem_showscale_Click);
             // 
@@ -223,20 +252,22 @@ namespace MapperTools.Pollicino
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label1.Font = new System.Drawing.Font("Tahoma", 8F);
             this.label1.Location = new System.Drawing.Point(187, 252);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 16);
+            this.label1.TabIndex = 1;
             this.label1.Text = "Zoom:";
             // 
             // label_zoom
             // 
             this.label_zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label_zoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label_zoom.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label_zoom.Font = new System.Drawing.Font("Tahoma", 8F);
             this.label_zoom.Location = new System.Drawing.Point(223, 252);
             this.label_zoom.Name = "label_zoom";
             this.label_zoom.Size = new System.Drawing.Size(17, 16);
+            this.label_zoom.TabIndex = 2;
             this.label_zoom.Text = "14";
             // 
             // mapcontrol
@@ -244,12 +275,14 @@ namespace MapperTools.Pollicino
             this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mapcontrol.Location = new System.Drawing.Point(0, 0);
+            this.mapcontrol.Map = null;
             this.mapcontrol.Name = "mapcontrol";
             this.mapcontrol.ShowPosition = false;
             this.mapcontrol.ShowScaleRef = false;
             this.mapcontrol.Size = new System.Drawing.Size(240, 268);
             this.mapcontrol.TabIndex = 0;
             this.mapcontrol.Zoom = ((uint)(0u));
+            this.mapcontrol.Resize += new System.EventHandler(this.mapcontrol_Resize);
             this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
             // 
             // gpsControl
@@ -270,13 +303,15 @@ namespace MapperTools.Pollicino
             this.panel1.Location = new System.Drawing.Point(118, 252);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(69, 16);
+            this.panel1.TabIndex = 0;
             // 
             // label_gpx
             // 
-            this.label_gpx.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.label_gpx.Font = new System.Drawing.Font("Tahoma", 8F);
             this.label_gpx.Location = new System.Drawing.Point(36, 0);
             this.label_gpx.Name = "label_gpx";
             this.label_gpx.Size = new System.Drawing.Size(32, 16);
+            this.label_gpx.TabIndex = 0;
             this.label_gpx.Text = "GPX";
             this.label_gpx.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -286,24 +321,43 @@ namespace MapperTools.Pollicino
             this.pb_DownloaderActivity.Location = new System.Drawing.Point(19, 0);
             this.pb_DownloaderActivity.Name = "pb_DownloaderActivity";
             this.pb_DownloaderActivity.Size = new System.Drawing.Size(16, 16);
+            this.pb_DownloaderActivity.TabIndex = 1;
+            this.pb_DownloaderActivity.TabStop = false;
             // 
             // blinkcnDownloader
             // 
+            this.blinkcnDownloader.Blink = false;
             this.blinkcnDownloader.BlinkingControl = this.pb_DownloaderActivity;
             this.blinkcnDownloader.BlinkingInterval = 400;
+            this.blinkcnDownloader.VisibleOnStop = false;
             // 
             // blinkcnGPX
             // 
+            this.blinkcnGPX.Blink = false;
             this.blinkcnGPX.BlinkingControl = this.label_gpx;
             this.blinkcnGPX.BlinkingInterval = 400;
             this.blinkcnGPX.VisibleOnStop = false;
             // 
+            // gpx_saver
+            // 
+            this.gpx_saver.DelayTrackStart = false;
+            this.gpx_saver.GPXFilesDB = null;
+            this.gpx_saver.Notifier = null;
+            // 
+            // gpxSaver1
+            // 
+            this.gpxSaver1.DelayTrackStart = false;
+            this.gpxSaver1.GPXFilesDB = null;
+            this.gpxSaver1.Notifier = null;
+            // 
             // menuItem6
             // 
+            this.menuItem6.Index = -1;
             this.menuItem6.Text = "Take photo...";
             // 
             // menuItem7
             // 
+            this.menuItem7.Index = -1;
             this.menuItem7.Text = "Full screen";
             // 
             // Form_MapperToolMain
@@ -323,6 +377,7 @@ namespace MapperTools.Pollicino
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form_MapperToolMain_Closing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DownloaderActivity)).EndInit();
             this.ResumeLayout(false);
 
         }

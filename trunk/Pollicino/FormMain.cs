@@ -833,5 +833,10 @@ namespace MapperTools.Pollicino
             action_TracksManager();
         }
 
+        private void mapcontrol_Resize(object sender, EventArgs e)
+        {
+            this.map.CacheLen = required_buffers(true);
+        }
+
     }
 }

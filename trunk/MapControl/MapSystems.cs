@@ -187,6 +187,15 @@ namespace MapsLibrary
             return new ProjectedGeoPoint(tn.Y << factor, tn.X << factor);
         }
 
+        public ProjectedGeoArea TileNumToArea(TileNum tn)
+        {
+            PxCoordinates corner = TileNumToPx(tn),
+                          limit = corner + new PxCoordinates(tilesize, tilesize);
+            ProjectedGeoArea tilearea = new ProjectedGeoArea(PxToPoint(corner, tn.uZoom), PxToPoint(limit, tn.uZoom));
+            tilearea.pMax.nLat--; tilearea.pMax.nLon--;
+            return tilearea;
+        }
+
         public GeoPoint PxToGeo(PxCoordinates px, uint zoom)
         {
             GeoPoint p;
