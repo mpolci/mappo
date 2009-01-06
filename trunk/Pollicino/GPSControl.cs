@@ -159,7 +159,7 @@ namespace MapperTools.Pollicino
                 if (!logfile.Directory.Exists)
                     logfile.Directory.Create();
                 lastlogname = logfile.FullName;
-                swGPSLog = new StreamWriter(lastlogname);
+                swGPSLog = new StreamWriter(lastlogname, true);     // appends if file exists
                 swGPSLog.AutoFlush = true;
             }
             gpshandler.Start(port, speed);
