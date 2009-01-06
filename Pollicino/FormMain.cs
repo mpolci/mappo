@@ -162,8 +162,10 @@ namespace MapperTools.Pollicino
 
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
+            // Sistema eventuali log rimasti in sospeso
+            string append_to_log = recover_logs();
+            // Aggiorna il DB dei GPX (imposta gpx_saver.GPXFilesDB) e converte eventuali log non ancora convertiti
             gpx_saver.Notifier = blinkcnGPX;
-            // imposta gpx_saver.GPXFilesDB
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.init_gpx_db));
             
             // thread per il download automatico delle mappe
@@ -181,7 +183,6 @@ namespace MapperTools.Pollicino
             // OSM
             //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(false));
             this.map = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(true));
-            
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
@@ -209,8 +210,12 @@ namespace MapperTools.Pollicino
 
             verifica_opzioni_finale();
 
-            if (options.GPS.Autostart)
-                action_StartGPS();
+            if (append_to_log != null) {
+                action_loadtrack(append_to_log);
+                action_StartGPS(append_to_log);
+            } 
+            else if (options.GPS.Autostart)
+                action_StartGPS(null);
         }
 
         private void init_gpx_db(object p)
@@ -311,19 +316,54 @@ namespace MapperTools.Pollicino
 
         }
 
-        private void action_StartGPS()
+        /// <summary>
+        /// Recupera e corregge eventuali log con estensione .log rimasti in sospeso
+        /// </summary>
+        /// <remarks>Se c'è un file di log da ripristinare restituisce il nome del file di log da recuperare, null altrimenti.</remarks>
+        private string recover_logs()
+        {
+            string logsdir = options.GPS.LogsDir,
+                   append_to = null;
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(options.GPS.LogsDir);
+                FileInfo[] files = di.GetFiles("*.nmea");
+                if (files.Length > 0)
+                {
+                    Array.Sort<FileInfo>(files, (FileInfo f1, FileInfo f2) => (f1.LastWriteTime < f2.LastWriteTime) ? -1 : (f1.LastWriteTime == f2.LastWriteTime ? 0 : 1));
+                    //TODO: chiedere conferma se continuare il log del file
+                    append_to = files[files.Length - 1].FullName;
+                    // Cambia l'estensione degli altri file di log rimasti in sospeso
+                    int last = files.Length - 2;
+                    for (int i = 0; i <= last; i++)
+                        File.Move(files[i].FullName, Path.ChangeExtension(files[i].FullName, ".txt"));
+                }
+            }
+            catch (DirectoryNotFoundException) { }
+            return append_to;
+        }
+
+        /// <summary>
+        /// Avvia il GPS e la registrazione dei dati sul log
+        /// </summary>
+        /// <remarks>
+        /// Il file di log creato ha inizialmente estensione ".nmea", una volta finita la registrazione l'estensione verrà  cambiata in ".txt". 
+        /// Questo serve ad evitare che la funzione di conversione in gpx dei log rimasti in sospeso possa tentare di convertire un log appena aperto e con la registrazione ancora in corso.
+        /// </remarks>
+        private void action_StartGPS(string appendlog)
         {
             logname = null;
             if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
             {
                 gpsControl.SimulationFile = options.GPS.SimulationFile;
-                //DEBUG
-                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
+                #if DEBUG
+                logname = (appendlog != null) ? appendlog : options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".nmea";
+                #endif
             }
             else
             {
                 gpsControl.SimulationFile = null;
-                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
+                logname = (appendlog != null) ?  appendlog : options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".nmea";
             }
             gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
             this.menuItem_gpsactivity.Text = "stop GPS";
@@ -333,7 +373,9 @@ namespace MapperTools.Pollicino
         {
             if (wpt_recorder.Running)
                 wpt_recorder.stop();
-            string logfile = gpsControl.stop();
+            string orglogfilename = gpsControl.stop(),
+                   logfile = Path.ChangeExtension(orglogfilename, ".txt");
+            File.Move(orglogfilename, logfile);
             // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
             gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
             gpx_saver.SaveGPX(logfile);
@@ -366,20 +408,22 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private void action_loadtrack()
+        private void action_loadtrack(string file)
         {
-            string opendir = options.GPS.LogsDir,
-                   file;
-            if (!Directory.Exists(opendir))
-                opendir = Program.GetPath();
-            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+            if (file == null)
             {
-                if (openfiledlg.ShowDialog() == DialogResult.OK)
-                    file = openfiledlg.openfile;
-                else
-                    return;
+                string opendir = options.GPS.LogsDir;
+                if (!Directory.Exists(opendir))
+                    opendir = Program.GetPath();
+                using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+                {
+                    if (openfiledlg.ShowDialog() == DialogResult.OK)
+                        file = openfiledlg.openfile;
+                    else
+                        return;
+                }
             }
-            
+
             // count: for debug
             int count = 0;
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
@@ -422,7 +466,6 @@ namespace MapperTools.Pollicino
             lmap.setVisibility(idx_layer_trkpnt, true);
             lmap.setVisibility(idx_layer_waypnt, true);
             System.Windows.Forms.Cursor.Current = Cursors.Default;
-            
         }
 
         private void action_TracksManager()
@@ -510,7 +553,7 @@ namespace MapperTools.Pollicino
 
         private void menuItem_loadtrack_Click(object sender, EventArgs e)
         {
-            action_loadtrack();
+            action_loadtrack(null);
         }
 
         private void menuItem_followGPS_Click(object sender, EventArgs e)
@@ -544,7 +587,7 @@ namespace MapperTools.Pollicino
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
             if (!this.gpsControl.Started)
-                action_StartGPS();
+                action_StartGPS(null);
             else
                 action_StopGPS();
         }
@@ -784,7 +827,7 @@ namespace MapperTools.Pollicino
                     if (gpsControl.Started)
                         action_CreateWaypoint();
                     else
-                        action_StartGPS();
+                        action_StartGPS(null);
                 #if DEBUG
                 else 
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
