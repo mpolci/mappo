@@ -36,28 +36,25 @@ namespace MapperTools.NMEA2GPX
         /// <param name="gpx_output">file GPX da salvare</param>
         /// <param name="delaytrackstart">se true la traccia gpx inizia al primo waypoint</param>
         /// <returns>True se è stato generato il file gpx. Il file GPX non viene creato nel caso il log nmea non contenga trackpoint né waypoint.</returns>
-        public static bool NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, 
-                                     out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
+        public static bool NMEAToGPX(string nmea_input, string gpx_output, bool delaytrackstart, out GPXInfo info)
+                                     //out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
         {
+            info = new GPXInfo();
             GPX11Type gpxdata = GPXGenerator.NMEAToGPX(nmea_input, delaytrackstart);
             if (gpxdata == null)
-            {
-                wpts = tpts = 0;
-                begintrk = endtrk = new DateTime();
                 return false;
-            }
-            wpts = gpxdata.wpt.Count;
-            tpts = gpxdata.trk.GetTotalPoints();
-            if (tpts > 0)
+            info.waypoints = gpxdata.wpt.Count;
+            info.trackpoints = gpxdata.trk.GetTotalPoints();
+            if (info.trackpoints > 0)
             {
-                begintrk = (DateTime)gpxdata.trk.FirstPoint.time;
-                endtrk = (DateTime)gpxdata.trk.LastPoint.time;
+                info.begin_track_time = (DateTime)gpxdata.trk.FirstPoint.time;
+                info.end_track_time = (DateTime)gpxdata.trk.LastPoint.time;
             }
-            else
-            {
-                begintrk = new DateTime();
-                endtrk = new DateTime();
-            }
+            //else
+            //{
+            //    begintrk = new DateTime();
+            //    endtrk = new DateTime();
+            //}
             //string audiodir = WaypointNames.DataDir(nmea_input);
             //if (wpts == 0 && tpts == 0 && !Directory.Exists(audiodir))
             //    return false;
@@ -156,23 +153,47 @@ namespace MapperTools.NMEA2GPX
                 return gpxdata;
         }
 
-        public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
+        public struct GPXInfo
         {
+            public string filename;
+            public int trackpoints;
+            public int waypoints;
+            public DateTime begin_track_time;
+            public DateTime end_track_time;
+            public long length;
+        }
+
+
+        //public static void GetGPXInfo(string gpxfile, out int tpts, out int wpts, out DateTime begintrk, out DateTime endtrk)
+        public static GPXInfo GetGPXInfo(string gpxfile)
+        {
+            GPXInfo info = new GPXInfo();
             GPXBaseType gpxdata = GPXBaseType.Deserialize(gpxfile);
 
-            tpts = gpxdata.HasTrack ? gpxdata.trk.GetTotalPoints() : 0;
-            wpts = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
-            if (tpts > 0)
+            info.filename = gpxfile;
+            info.trackpoints = gpxdata.HasTrack ? gpxdata.trk.GetTotalPoints() : 0;
+            info.waypoints = gpxdata.wpt != null ? gpxdata.wpt.Count : 0;
+            if (info.trackpoints > 0)
             {
-                begintrk = (DateTime)gpxdata.trk.FirstPoint.time;
-                endtrk = (DateTime)gpxdata.trk.LastPoint.time;
+                info.begin_track_time = (DateTime)gpxdata.trk.FirstPoint.time;
+                info.end_track_time = (DateTime)gpxdata.trk.LastPoint.time;
+                info.length = CalcLength(gpxdata);
             }
-            else
-            {
-                begintrk = new DateTime();
-                endtrk = new DateTime();
-            }
+            //else
+            //{
+            //    begintrk = new DateTime();
+            //    endtrk = new DateTime();
+            //}
+            return info;
         }
+
+        public static long CalcLength(GPXBaseType gpxdata)
+        {
+            //TODO: implementare il calcolo della lunghezza
+            return 0;
+        }
+
+
     }
 
     [Serializable]

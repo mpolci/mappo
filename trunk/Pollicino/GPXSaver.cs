@@ -77,15 +77,16 @@ namespace MapperTools.Pollicino
                 outfile = outdir + ".gpx";
                 try
                 {
-                    int wpts, tpts;
-                    DateTime t_start, t_end;
+                    //int wpts, tpts;
+                    //DateTime t_start, t_end;
                     string logdestdir;
-                    if (MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart,
-                                                                out tpts, out wpts, out t_start, out t_end))
+                    MapperTools.NMEA2GPX.GPXGenerator.GPXInfo info;
+                    if (MapperTools.NMEA2GPX.GPXGenerator.NMEAToGPX(logfilename, outfile, delaytrackstart, out info))
                     {
-                        System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + tpts + " wp: " + wpts + " start: " + t_start + " end: " + t_end);
+                        System.Diagnostics.Debug.WriteLine("-- " + logfilename + " tp: " + info.trackpoints + 
+                            " wp: " + info.waypoints + " start: " + info.begin_track_time + " end: " + info.end_track_time);
                         // FIXME: gpxcollection potrebbe essere null
-                        gpxcollection.AddGPX(new GPXFile(outfile, t_start, t_end, tpts, wpts));
+                        gpxcollection.AddGPX(new GPXFile(outfile, info.begin_track_time, info.end_track_time, info.trackpoints, info.waypoints));
                         // archivia il file di log
                         if (!Directory.Exists(outdir))
                             Directory.CreateDirectory(outdir);

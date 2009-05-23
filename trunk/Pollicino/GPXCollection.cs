@@ -73,19 +73,14 @@ namespace MapperTools.Pollicino
                 if (gpxidx.ContainsKey(fi.FullName)) continue;
                 try
                 {
-                    int wpts, tpts;
-                    DateTime t_start, t_end;
-                    NMEA2GPX.GPXGenerator.GetGPXInfo(fi.FullName, out tpts, out wpts, out t_start, out t_end);
+                    NMEA2GPX.GPXGenerator.GPXInfo info = NMEA2GPX.GPXGenerator.GetGPXInfo(fi.FullName);
                     if (!gpxidx.ContainsKey(fi.FullName))
                         lock (gpxfiles)
-                            gpxfiles.Add(new GPXFile(fi.FullName, t_start, t_end, tpts, wpts));
+                            gpxfiles.Add(new GPXFile(info));
                     else
                     {
                         GPXFile gpxf = gpxidx[fi.FullName];
-                        gpxf.StartTime = t_start;
-                        gpxf.EndTime = t_end;
-                        gpxf.TrackPoints = tpts;
-                        gpxf.WayPoints = wpts;
+                        gpxf.UpdateInfo(info);
                     }
                 }
                 catch (Exception e)
@@ -112,19 +107,19 @@ namespace MapperTools.Pollicino
 
         public void ImportGPX(string filename)
         {
-            int wpts, tpts;
-            DateTime t_start, t_end;
-            NMEA2GPX.GPXGenerator.GetGPXInfo(filename, out tpts, out wpts, out t_start, out t_end);
+            //int wpts, tpts;
+            //DateTime t_start, t_end;
+            NMEA2GPX.GPXGenerator.GPXInfo info = NMEA2GPX.GPXGenerator.GetGPXInfo(filename);
             GPXFile gpxf = gpxfiles.Find((GPXFile g) => g.FileName == filename);
             if (gpxf == null)
                 lock (gpxfiles)
-                    gpxfiles.Add(new GPXFile(filename, t_start, t_end, tpts, wpts));
+                    gpxfiles.Add(new GPXFile(filename, info.begin_track_time, info.end_track_time, info.trackpoints, info.waypoints));
             else
             {
-                gpxf.StartTime = t_start;
-                gpxf.EndTime = t_end;
-                gpxf.TrackPoints = tpts;
-                gpxf.WayPoints = wpts;
+                gpxf.StartTime = info.begin_track_time;
+                gpxf.EndTime = info.end_track_time;
+                gpxf.TrackPoints = info.trackpoints;
+                gpxf.WayPoints = info.waypoints;
             }
         }
 
@@ -210,7 +205,19 @@ namespace MapperTools.Pollicino
             return !File.Exists(gpxf.FileName);
         }
 
+        public GPXFile(NMEA2GPX.GPXGenerator.GPXInfo info)
+        {
+            _init(info.filename, info.begin_track_time, info.end_track_time, info.trackpoints, info.waypoints);
+            Length = info.length;
+        }
+
+        //TODO: eliminare questo costruttore
         public GPXFile(string fullpath_filename, DateTime start, DateTime end, int tpts, int wpts)
+        {
+            _init(fullpath_filename, start, end, tpts, wpts);
+        }
+
+        private void _init(string fullpath_filename, DateTime start, DateTime end, int tpts, int wpts)
         {
             FileName = fullpath_filename;
             if (tpts > 0)
@@ -232,6 +239,25 @@ namespace MapperTools.Pollicino
             OSMPublic = null;
             OSMId = null;
             //Length = 0;
+        }
+
+
+        internal void UpdateInfo(MapperTools.NMEA2GPX.GPXGenerator.GPXInfo info)
+        {
+            System.Diagnostics.Trace.Assert(info.filename == FileName, "Cannot update info from different file");
+            if (info.trackpoints > 0)
+            {
+                StartTime = info.begin_track_time;
+                EndTime = info.end_track_time;
+            }
+            else
+            {
+                StartTime = null;
+                EndTime = null;
+            }
+            WayPoints = info.waypoints;
+            TrackPoints = info.trackpoints;
+            Length = info.length;
         }
 
         public GPXFile()
