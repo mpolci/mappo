@@ -378,7 +378,7 @@ namespace MapperTools.NMEA2GPX
             try
             {
                 foreach (TrksegType seg in trkseg)
-                    total += seg.trkpt.Count;
+                    if (seg.trkpt != null) total += seg.trkpt.Count;
             }
             catch (NullReferenceException) { }
             return total;
