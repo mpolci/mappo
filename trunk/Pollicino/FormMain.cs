@@ -373,12 +373,15 @@ namespace MapperTools.Pollicino
         {
             if (wpt_recorder.Running)
                 wpt_recorder.stop();
-            string orglogfilename = gpsControl.stop(),
-                   logfile = Path.ChangeExtension(orglogfilename, ".txt");
-            File.Move(orglogfilename, logfile);
-            // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
-            gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
-            gpx_saver.SaveGPX(logfile);
+            string orglogfilename = gpsControl.stop();
+            if (orglogfilename != null)
+            {
+                string logfile = Path.ChangeExtension(orglogfilename, ".txt");
+                File.Move(orglogfilename, logfile);
+                // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
+                gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
+                gpx_saver.SaveGPX(logfile);
+            }
             this.menuItem_gpsactivity.Text = "start GPS";        
         }
 
