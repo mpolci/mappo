@@ -61,6 +61,7 @@ namespace MapperTools.Pollicino
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
+            this.menuItem_TracksManager = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -85,7 +86,6 @@ namespace MapperTools.Pollicino
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.menuItem_TracksManager = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -151,6 +151,11 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
+            // 
+            // menuItem_TracksManager
+            // 
+            this.menuItem_TracksManager.Text = "Tracks manager...";
+            this.menuItem_TracksManager.Click += new System.EventHandler(this.menuItem_TracksManager_Click);
             // 
             // menuItem_exit
             // 
@@ -250,6 +255,7 @@ namespace MapperTools.Pollicino
             // gpsControl
             // 
             this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.gpsControl.Image = ((System.Drawing.Image)(resources.GetObject("gpsControl.Image")));
             this.gpsControl.Location = new System.Drawing.Point(4, 3);
             this.gpsControl.Name = "gpsControl";
             this.gpsControl.Size = new System.Drawing.Size(12, 12);
@@ -299,11 +305,6 @@ namespace MapperTools.Pollicino
             // menuItem7
             // 
             this.menuItem7.Text = "Full screen";
-            // 
-            // menuItem_TracksManager
-            // 
-            this.menuItem_TracksManager.Text = "Tracks manager...";
-            this.menuItem_TracksManager.Click += new System.EventHandler(this.menuItem_TracksManager_Click);
             // 
             // Form_MapperToolMain
             // 
