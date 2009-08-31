@@ -653,6 +653,7 @@ namespace MapsLibrary
                          + center.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + center.dLon.ToString("F6", ci)
                          + "&size=" + imagemapsize.ToString() + 'x' + imagemapsize.ToString()
                          + "&key=" + APIKey
+                         + "&sensor = true"
                          + "&zoom=" + zoom.ToString();
 
             FileInfo fileinfo = new FileInfo(outfilename);
