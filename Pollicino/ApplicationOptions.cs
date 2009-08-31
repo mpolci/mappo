@@ -74,6 +74,14 @@ namespace MapperTools.Pollicino
             public string OSMPassword;
         }
 
+        public struct TrackingOptions
+        {
+            public string GMapsEmail;
+            public string GMapsPassword;
+            public int UpdateInterval;
+            public string TrackDescription;
+        }
+
         /// <summary>
         /// Versione attuale delle opzioni dell'applicazione
         /// </summary>
@@ -90,6 +98,7 @@ namespace MapperTools.Pollicino
         public GPSOptions GPS;
         public MapsOptions Maps;
         public InterfaceOptions Application;
+        public TrackingOptions OnlineTracking;
 
         public void SaveToFile(string filename)
         {
@@ -145,6 +154,10 @@ namespace MapperTools.Pollicino
             Maps.OSM.TileCachePath = "";
             Maps.GMaps.CachePath = "";
             Application.WaypointSoundFile = "";
+            OnlineTracking.GMapsEmail = "";
+            OnlineTracking.GMapsPassword = "";
+            OnlineTracking.UpdateInterval = 120;
+            OnlineTracking.TrackDescription = "";
         }
 
         #region ICloneable Members
@@ -157,6 +170,7 @@ namespace MapperTools.Pollicino
             cloned.GPS = this.GPS;
             cloned.Maps = this.Maps;
             cloned.Application = this.Application;
+            cloned.OnlineTracking = this.OnlineTracking;
             return cloned;
         }
 

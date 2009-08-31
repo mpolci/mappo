@@ -104,7 +104,16 @@ namespace MapperTools.Pollicino
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.tabPage_GMaps = new System.Windows.Forms.TabPage();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.tb_gmaps_password = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tb_gmaps_email = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.num_TrackingInterval = new System.Windows.Forms.NumericUpDown();
+            this.tb_onlinetrack_name = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage_Maps.SuspendLayout();
@@ -112,6 +121,7 @@ namespace MapperTools.Pollicino
             this.panel1.SuspendLayout();
             this.tabPage_Misc.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage_GMaps.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -120,6 +130,7 @@ namespace MapperTools.Pollicino
             this.tabControl1.Controls.Add(this.tabPage_Maps);
             this.tabControl1.Controls.Add(this.tabPage_AudioRec);
             this.tabControl1.Controls.Add(this.tabPage_Misc);
+            this.tabControl1.Controls.Add(this.tabPage_GMaps);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -373,7 +384,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.Controls.Add(this.label13);
             this.tabPage_AudioRec.Location = new System.Drawing.Point(0, 0);
             this.tabPage_AudioRec.Name = "tabPage_AudioRec";
-            this.tabPage_AudioRec.Size = new System.Drawing.Size(232, 242);
+            this.tabPage_AudioRec.Size = new System.Drawing.Size(240, 245);
             this.tabPage_AudioRec.Text = "Audio";
             // 
             // panel1
@@ -600,7 +611,7 @@ namespace MapperTools.Pollicino
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(232, 242);
+            this.tabPage1.Size = new System.Drawing.Size(240, 245);
             this.tabPage1.Text = "About";
             // 
             // textBox1
@@ -613,7 +624,7 @@ namespace MapperTools.Pollicino
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(218, 139);
+            this.textBox1.Size = new System.Drawing.Size(234, 145);
             this.textBox1.TabIndex = 7;
             this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
                 "l.html).\r\n\r\nPart of this software is based on SharpGPS (http://www.codeplex.com/" +
@@ -625,7 +636,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.Location = new System.Drawing.Point(7, 72);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(218, 20);
+            this.linkLabel1.Size = new System.Drawing.Size(234, 20);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.Text = "http://www.marcopolci.net/wiki/informatica:progetti:pollicino_en";
             // 
@@ -635,7 +646,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.Location = new System.Drawing.Point(7, 48);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(218, 20);
+            this.label16.Size = new System.Drawing.Size(234, 20);
             this.label16.Text = "Copyright (c) 2008 by Marco Polci";
             this.label16.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -645,7 +656,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.Location = new System.Drawing.Point(7, 24);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(218, 20);
+            this.label15.Size = new System.Drawing.Size(234, 20);
             this.label15.Text = "Version 0.9 for Pocket PC";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -655,9 +666,96 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.Location = new System.Drawing.Point(7, 4);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(218, 20);
+            this.label14.Size = new System.Drawing.Size(234, 20);
             this.label14.Text = "Pollicino for OpenStreetMap";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // tabPage_GMaps
+            // 
+            this.tabPage_GMaps.Controls.Add(this.tb_onlinetrack_name);
+            this.tabPage_GMaps.Controls.Add(this.label23);
+            this.tabPage_GMaps.Controls.Add(this.label22);
+            this.tabPage_GMaps.Controls.Add(this.num_TrackingInterval);
+            this.tabPage_GMaps.Controls.Add(this.tb_gmaps_password);
+            this.tabPage_GMaps.Controls.Add(this.label20);
+            this.tabPage_GMaps.Controls.Add(this.tb_gmaps_email);
+            this.tabPage_GMaps.Controls.Add(this.label21);
+            this.tabPage_GMaps.Location = new System.Drawing.Point(0, 0);
+            this.tabPage_GMaps.Name = "tabPage_GMaps";
+            this.tabPage_GMaps.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_GMaps.Text = "GMaps";
+            // 
+            // tb_gmaps_password
+            // 
+            this.tb_gmaps_password.Location = new System.Drawing.Point(103, 60);
+            this.tb_gmaps_password.Name = "tb_gmaps_password";
+            this.tb_gmaps_password.PasswordChar = '*';
+            this.tb_gmaps_password.Size = new System.Drawing.Size(130, 21);
+            this.tb_gmaps_password.TabIndex = 49;
+            // 
+            // label20
+            // 
+            this.label20.Location = new System.Drawing.Point(7, 61);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(100, 20);
+            this.label20.Text = "Password";
+            // 
+            // tb_gmaps_email
+            // 
+            this.tb_gmaps_email.Location = new System.Drawing.Point(103, 33);
+            this.tb_gmaps_email.Name = "tb_gmaps_email";
+            this.tb_gmaps_email.Size = new System.Drawing.Size(130, 21);
+            this.tb_gmaps_email.TabIndex = 48;
+            // 
+            // label21
+            // 
+            this.label21.Location = new System.Drawing.Point(7, 34);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(100, 20);
+            this.label21.Text = "Google Email";
+            // 
+            // label22
+            // 
+            this.label22.Location = new System.Drawing.Point(7, 113);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(141, 20);
+            this.label22.Text = "Update interval:";
+            // 
+            // num_TrackingInterval
+            // 
+            this.num_TrackingInterval.Location = new System.Drawing.Point(165, 111);
+            this.num_TrackingInterval.Maximum = new decimal(new int[] {
+            7200,
+            0,
+            0,
+            0});
+            this.num_TrackingInterval.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.num_TrackingInterval.Name = "num_TrackingInterval";
+            this.num_TrackingInterval.Size = new System.Drawing.Size(68, 22);
+            this.num_TrackingInterval.TabIndex = 54;
+            this.num_TrackingInterval.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            // 
+            // tb_onlinetrack_name
+            // 
+            this.tb_onlinetrack_name.Location = new System.Drawing.Point(103, 6);
+            this.tb_onlinetrack_name.Name = "tb_onlinetrack_name";
+            this.tb_onlinetrack_name.Size = new System.Drawing.Size(130, 21);
+            this.tb_onlinetrack_name.TabIndex = 57;
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(7, 7);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(100, 20);
+            this.label23.Text = "Track name";
             // 
             // FormOptions
             // 
@@ -676,6 +774,7 @@ namespace MapperTools.Pollicino
             this.panel1.ResumeLayout(false);
             this.tabPage_Misc.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage_GMaps.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -740,5 +839,14 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.TextBox tb_OSMUsername;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TabPage tabPage_GMaps;
+        private System.Windows.Forms.TextBox tb_gmaps_password;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox tb_gmaps_email;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.NumericUpDown num_TrackingInterval;
+        private System.Windows.Forms.TextBox tb_onlinetrack_name;
+        private System.Windows.Forms.Label label23;
     }
 }

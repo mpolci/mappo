@@ -98,6 +98,7 @@
     <Compile Include="FormTracksManager.Designer.cs">
       <DependentUpon>FormTracksManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="GMapsDataApi.cs" />
     <Compile Include="GPSControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
