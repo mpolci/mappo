@@ -100,7 +100,11 @@ namespace MapperTools.Pollicino
                 _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
 #endif
-                //TODO: registrazione in windows?
+                //TODO: registrazione audio in windows?
+                _data.OnlineTracking.TrackDescription = tb_onlinetrack_name.Text;
+                _data.OnlineTracking.GMapsEmail = tb_gmaps_email.Text;
+                _data.OnlineTracking.GMapsPassword = tb_gmaps_password.Text;
+                _data.OnlineTracking.UpdateInterval = (int) num_TrackingInterval.Value;
                 return _data;
             }
             set
@@ -142,6 +146,10 @@ namespace MapperTools.Pollicino
                 combo_CameraButton.SelectedItem = value.Application.CameraButton;
                 tb_OSMUsername.Text = value.Application.OSMUsername;
                 tb_OSMPassword.Text = value.Application.OSMPassword;
+                tb_onlinetrack_name.Text = value.OnlineTracking.TrackDescription;
+                tb_gmaps_email.Text = value.OnlineTracking.GMapsEmail;
+                tb_gmaps_password.Text = value.OnlineTracking.GMapsPassword;
+                num_TrackingInterval.Value = value.OnlineTracking.UpdateInterval;
             }
         }
 
@@ -291,6 +299,7 @@ namespace MapperTools.Pollicino
             }
 
         }
+
 
     }
 }

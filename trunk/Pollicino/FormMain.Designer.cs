@@ -58,6 +58,7 @@ namespace MapperTools.Pollicino
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
             this.menuItem_photo = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
+            this.menuItem_onlinetracking = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
@@ -102,6 +103,7 @@ namespace MapperTools.Pollicino
             this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
             this.menuItem1.MenuItems.Add(this.menuItem_photo);
             this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
+            this.menuItem1.MenuItems.Add(this.menuItem_onlinetracking);
             this.menuItem1.MenuItems.Add(this.menuItem4);
             this.menuItem1.MenuItems.Add(this.menuItem_exit);
             this.menuItem1.Text = "Commands";
@@ -132,8 +134,13 @@ namespace MapperTools.Pollicino
             // 
             // menuItem_gpsactivity
             // 
-            this.menuItem_gpsactivity.Text = "start GPS";
+            this.menuItem_gpsactivity.Text = "Start GPS";
             this.menuItem_gpsactivity.Click += new System.EventHandler(this.menuItem_gpsactivity_Click);
+            // 
+            // menuItem_onlinetracking
+            // 
+            this.menuItem_onlinetracking.Text = "Start online tracking";
+            this.menuItem_onlinetracking.Click += new System.EventHandler(this.menuItem_onlinetracking_Click);
             // 
             // menuItem4
             // 
@@ -364,6 +371,7 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem menuItem_showscale;
         private System.Windows.Forms.MenuItem menuItem_TracksManager;
+        private System.Windows.Forms.MenuItem menuItem_onlinetracking;
 
 
 
