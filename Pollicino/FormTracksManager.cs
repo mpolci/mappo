@@ -250,6 +250,7 @@ namespace MapperTools.Pollicino
                 return;
             }
 
+            // Apre la finestra di dialogo per richiedere le proprietà della traccia
             FormGPXDetails propertiesdlg = new FormGPXDetails();
             propertiesdlg.FullDetailsMode = false;
             propertiesdlg.gpxfile = gpxf;
