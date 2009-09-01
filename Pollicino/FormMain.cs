@@ -955,7 +955,7 @@ namespace MapperTools.Pollicino
             {
                 try
                 {
-                    tracking_map.AddPoint(gpsdata.position.dLat, gpsdata.position.dLon, 0, gpsdata.receivedtime.ToShortTimeString());
+                    tracking_map.AddPoint(gpsdata.position.dLat, gpsdata.position.dLon, 0, gpsdata.receivedtime.ToLongTimeString());
                     lastOnlineTrackTime = gpsdata.receivedtime;
                 }
                 catch (System.Net.WebException e)
