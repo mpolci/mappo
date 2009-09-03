@@ -46,7 +46,7 @@ namespace MapperTools.Pollicino
                 gpxf = value;
                 tb_Description.Text = value.Description;
                 tb_Tags.Text = value.TagsString;
-                cb_public.Checked = value.getPublic();
+                cb_visibility.Text = value.OSMVisibility;
                 PropertiesModified = false;
                 // questi sotto, anche se non sempre visibili vengono impostati per semplificare la procedura di controllo dei valori modificati
                 cb_flagged.Checked = value.getFlag();
@@ -78,11 +78,11 @@ namespace MapperTools.Pollicino
         {
             if (tb_Description.Text != gpxf.Description ||
                 tb_Tags.Text != gpxf.TagsString ||
-                cb_public.Checked != gpxf.getPublic())
+                cb_visibility.Text  != gpxf.OSMVisibility)
             {
                 gpxf.Description = tb_Description.Text;
                 gpxf.TagsString = tb_Tags.Text;
-                gpxf.OSMPublic = cb_public.Checked;                
+                gpxf.OSMVisibility = cb_visibility.Text;
                 PropertiesModified = true;
             }
             if (cb_flagged.Checked != gpxf.getFlag())

@@ -129,19 +129,24 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private string OSMAPIUploadGPX(string uploadfile, string param_description, string param_tags, bool pblc,
-                               string username, string password)
+        //TODO: sistemare la gestione del fine riga
+        const string http_endline = "\r\n";
+
+        private string OSMAPIUploadGPX(string uploadfile, string param_description, string param_tags, string param_visibility,
+                                       string username, string password)
         {
-            string uri = "http://www.openstreetmap.org/api/0.5/gpx/create";
+            string uri = "http://www.openstreetmap.org/api/0.6/gpx/create";
             //string uri = "http://127.0.0.1:8080/sviluppo/test_post/test1.php";
-            string param_public = pblc ? "1" : "0";
             string boundary = "----------" + DateTime.Now.Ticks.ToString("x");
             NetworkCredential netcred = new NetworkCredential(username, password);
             HttpWebRequest webreq = (HttpWebRequest)WebRequest.Create(uri);
             webreq.Credentials = netcred;
             webreq.PreAuthenticate = true;
+            // La riga qui sotto l'ho copiata da una sessione fatta con firefox, senza non funziona.
+            webreq.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            
 
-            // FIXME: AllowWriteStreamBuffering richiede un grosso uso di memoria
+            // HACK: AllowWriteStreamBuffering richiede un grosso uso di memoria ma sembra necessario per il Compact Framework insieme a Expect100Continue=false
             webreq.AllowWriteStreamBuffering = true;
 
             if (webreq.ServicePoint != null)
@@ -155,11 +160,11 @@ namespace MapperTools.Pollicino
             string postHeader = prepareMimeHeader_filepart("file", uploadfile, boundary);
             byte[] postHeaderBytes = Encoding.UTF8.GetBytes(postHeader);
 
-            // Build the trailing boundary string as a byte array ensuring the boundary appears on a line by itself
-            string postFile = prepareMimeHeader_data("description", boundary) + param_description + "\r\n" +
-                              prepareMimeHeader_data("tags", boundary) + param_tags + "\r\n" +
-                              prepareMimeHeader_data("public", boundary) + param_public +
-                              "\r\n--" + boundary + "--\r\n";
+            // Post content following the file
+            string postFile = http_endline + prepareMimeHeader_data("description", boundary) + param_description + http_endline +
+                              prepareMimeHeader_data("tags", boundary) + param_tags + http_endline +
+                              prepareMimeHeader_data("visibility", boundary) + param_visibility + http_endline +
+                              "--" + boundary + "--" + http_endline;
             byte[] postFileBytes = Encoding.ASCII.GetBytes(postFile);
 
             using (FileStream fileStream = new FileStream(uploadfile, FileMode.Open, FileAccess.Read))
@@ -193,21 +198,21 @@ namespace MapperTools.Pollicino
 
         private string prepareMimeHeader_filepart(string paramname, string filename, string boundary)
         {
+           
             StringBuilder sb = new StringBuilder();
             sb.Append("--");
             sb.Append(boundary);
-            sb.Append("\r\n");
+            sb.Append(http_endline);
             sb.Append("Content-Disposition: form-data; name=\"");
             sb.Append(paramname);
             sb.Append("\"; filename=\"");
             sb.Append(Path.GetFileName(filename));
             sb.Append("\"");
-            sb.Append("\r\n");
+            sb.Append(http_endline);
             sb.Append("Content-Type: ");
-            //sb.Append(contenttype);
             sb.Append("application/octet-stream");
-            sb.Append("\r\n");
-            sb.Append("\r\n");
+            sb.Append(http_endline);
+            sb.Append(http_endline);
 
             return sb.ToString();
         }
@@ -217,12 +222,12 @@ namespace MapperTools.Pollicino
             StringBuilder sb = new StringBuilder();
             sb.Append("--");
             sb.Append(boundary);
-            sb.Append("\r\n");
+            sb.Append(http_endline);
             sb.Append("Content-Disposition: form-data; name=\"");
             sb.Append(name);
             sb.Append("\"");
-            sb.Append("\r\n");
-            sb.Append("\r\n");
+            sb.Append(http_endline);
+            sb.Append(http_endline);
 
             return sb.ToString();
         }
@@ -262,7 +267,7 @@ namespace MapperTools.Pollicino
                 {
                     string filename = gpxf.FileName;
                     Cursor.Current = Cursors.WaitCursor;
-                    string s_id = OSMAPIUploadGPX(filename, gpxf.Description, gpxf.TagsString, gpxf.getPublic(),
+                    string s_id = OSMAPIUploadGPX(filename, gpxf.Description, gpxf.TagsString, gpxf.OSMVisibility,
                                                   username, password);
                     Cursor.Current = Cursors.Default;
                     try {

@@ -161,7 +161,7 @@ namespace MapperTools.Pollicino
         public bool? Flag;
         public string Description;
         public string TagsString;
-        public bool? OSMPublic;
+        public string OSMVisibility;  
         public int? OSMId;
         public long Length;
 
@@ -178,11 +178,6 @@ namespace MapperTools.Pollicino
                 else
                     return TimeSpan.Zero;
             }
-        }
-
-        public bool getPublic()
-        {
-            return OSMPublic != null && (bool)OSMPublic;
         }
 
         public bool getUploaded()
@@ -236,7 +231,7 @@ namespace MapperTools.Pollicino
             Flag = null;
             Description = null;
             TagsString = null;
-            OSMPublic = null;
+            OSMVisibility = null;
             OSMId = null;
             //Length = 0;
         }
@@ -271,7 +266,7 @@ namespace MapperTools.Pollicino
             Flag = null;
             Description = null;
             TagsString = null;
-            OSMPublic = null;
+            OSMVisibility = null;
             OSMId = null;
             //Length = 0;
         }

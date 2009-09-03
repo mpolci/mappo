@@ -30,8 +30,8 @@
         private void InitializeComponent()
         {
             this.mainMenu_upload = new System.Windows.Forms.MainMenu();
-            this.menuItem_OK = new System.Windows.Forms.MenuItem();
             this.menuItem_Cancel = new System.Windows.Forms.MenuItem();
+            this.menuItem_OK = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.tb_Description = new System.Windows.Forms.TextBox();
             this.tb_Tags = new System.Windows.Forms.TextBox();
@@ -51,7 +51,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.cb_public = new System.Windows.Forms.CheckBox();
+            this.cb_visibility = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel_ext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,28 +61,28 @@
             this.mainMenu_upload.MenuItems.Add(this.menuItem_Cancel);
             this.mainMenu_upload.MenuItems.Add(this.menuItem_OK);
             // 
-            // menuItem_OK
-            // 
-            this.menuItem_OK.Text = "Upload";
-            this.menuItem_OK.Click += new System.EventHandler(this.menuItem_Ok_Click);
-            // 
             // menuItem_Cancel
             // 
             this.menuItem_Cancel.Text = "Cancel";
             this.menuItem_Cancel.Click += new System.EventHandler(this.menuItem_Cancel_Click);
             // 
+            // menuItem_OK
+            // 
+            this.menuItem_OK.Text = "Upload";
+            this.menuItem_OK.Click += new System.EventHandler(this.menuItem_Ok_Click);
+            // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(3, 9);
+            this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 20);
-            this.label1.Text = "Description";
+            this.label1.Text = "Description:";
             // 
             // tb_Description
             // 
             this.tb_Description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tb_Description.Location = new System.Drawing.Point(3, 30);
+            this.tb_Description.Location = new System.Drawing.Point(3, 26);
             this.tb_Description.Name = "tb_Description";
             this.tb_Description.Size = new System.Drawing.Size(234, 21);
             this.tb_Description.TabIndex = 1;
@@ -90,17 +91,17 @@
             // 
             this.tb_Tags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tb_Tags.Location = new System.Drawing.Point(3, 77);
+            this.tb_Tags.Location = new System.Drawing.Point(3, 73);
             this.tb_Tags.Name = "tb_Tags";
             this.tb_Tags.Size = new System.Drawing.Size(234, 21);
             this.tb_Tags.TabIndex = 3;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(3, 56);
+            this.label2.Location = new System.Drawing.Point(3, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 20);
-            this.label2.Text = "Tags";
+            this.label2.Text = "Tags:";
             // 
             // panel_ext
             // 
@@ -234,13 +235,23 @@
             this.label3.Size = new System.Drawing.Size(100, 20);
             this.label3.Text = "Start time:";
             // 
-            // cb_public
+            // cb_visibility
             // 
-            this.cb_public.Location = new System.Drawing.Point(3, 104);
-            this.cb_public.Name = "cb_public";
-            this.cb_public.Size = new System.Drawing.Size(237, 20);
-            this.cb_public.TabIndex = 24;
-            this.cb_public.Text = "Public (OpenStreetMap)";
+            this.cb_visibility.Items.Add("private");
+            this.cb_visibility.Items.Add("public");
+            this.cb_visibility.Items.Add("trackable");
+            this.cb_visibility.Items.Add("identifiable");
+            this.cb_visibility.Location = new System.Drawing.Point(109, 100);
+            this.cb_visibility.Name = "cb_visibility";
+            this.cb_visibility.Size = new System.Drawing.Size(128, 22);
+            this.cb_visibility.TabIndex = 28;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(3, 104);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 20);
+            this.label9.Text = "OSM visibility:";
             // 
             // FormGPXDetails
             // 
@@ -249,7 +260,8 @@
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.ControlBox = false;
-            this.Controls.Add(this.cb_public);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.cb_visibility);
             this.Controls.Add(this.panel_ext);
             this.Controls.Add(this.tb_Tags);
             this.Controls.Add(this.label2);
@@ -286,6 +298,7 @@
         private System.Windows.Forms.Label l_duration;
         private System.Windows.Forms.Label l_end;
         private System.Windows.Forms.Label l_start;
-        private System.Windows.Forms.CheckBox cb_public;
+        private System.Windows.Forms.ComboBox cb_visibility;
+        private System.Windows.Forms.Label label9;
     }
 }
