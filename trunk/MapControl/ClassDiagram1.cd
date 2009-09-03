@@ -71,7 +71,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AQAAAAAAgAAAAEACBAAgAQCAAQAAAQBAAAIAAAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAgAAAIEACBAAgAQCAAQAAAQBAAAIAAAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -85,7 +85,7 @@
   <Class Name="MapsLibrary.CachedTilesMap">
     <Position X="3.25" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>gAAECAAABKAAAAAAAAABAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
+      <HashCode>gAAECAAABKAAAAAAAABBAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -228,7 +228,7 @@
   <Class Name="MapsLibrary.LRUQueue&lt;T&gt;">
     <Position X="9.75" Y="8.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AABAEAAAAAAIAAAAAAAAAIQAAAAABAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AABAEAAAAAAIAAAAAAAABIQAAAAABAAAAAAAAAAQAAA=</HashCode>
       <FileName>LRUQueue.cs</FileName>
     </TypeIdentifier>
   </Class>

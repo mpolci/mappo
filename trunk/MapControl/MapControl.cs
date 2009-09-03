@@ -118,7 +118,7 @@ namespace MapsLibrary
             // aggiorna il buffer
             if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
             {
-                // ATTENZIONE! qui rigenero il buffer causando delle nuove chiamate a drawImageMapAt. Sarebbe meglio 
+                // TODO: ATTENZIONE! qui rigenero il buffer causando delle nuove chiamate a drawImageMapAt. Sarebbe meglio 
                 // semplicemente trovare un meccanismo per invalidare la parte del buffer interessata e lasciare
                 // la rigenerazione al momento del Paint del controllo. In particolare in alcuni casi posso avere
                 // più invalidazioni su aree parzialmente sovrapposte prima che venga elaborato un Paint, e in tale
@@ -146,6 +146,9 @@ namespace MapsLibrary
             this.Invalidate(rect);
         }
 
+        /// <summary>
+        /// Restituisce o imposta il fattore di zoom per la visualizzazione della mappa.
+        /// </summary>
         public uint Zoom
         {
             get
@@ -163,6 +166,9 @@ namespace MapsLibrary
             }
         }
 
+        /// <summary>
+        /// Restituisce o imposta le coordinate geografiche corrispondenti al centro dell'area visibile del controllo.
+        /// </summary>
         public ProjectedGeoPoint Center
         {
             get
@@ -181,6 +187,9 @@ namespace MapsLibrary
             }
         }
 
+        /// <summary>
+        /// Restituisce l'area geografica corrispondente all'area visibile del controllo. 
+        /// </summary>
         public ProjectedGeoArea VisibleArea
         {
             get
@@ -352,12 +361,15 @@ namespace MapsLibrary
             }
         }
 
-        // Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 
-        // evita l'inutile riempimento dello sfondo
+        /// <remarks>Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 
+        /// evita l'inutile riempimento dello sfondo.
+        /// </remarks>
         protected override void OnPaintBackground(PaintEventArgs e)
         { }
 
-
+        /// <summary>
+        /// Avvia lo spostamento dell'area visibile della mappa
+        /// </summary>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -365,13 +377,17 @@ namespace MapsLibrary
             this.drag_lasty = e.Y;
             this.dragging = true;
         }
-
+        /// <summary>
+        /// Termina lo spostamento dell'area visibile della mappa
+        /// </summary>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             this.dragging = false;
             base.OnMouseUp(e);
         }
-
+        /// <summary>
+        /// Effettua lo spostamento dell'area visibile della mappa calcolando il nuovo centro.
+        /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
