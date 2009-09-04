@@ -960,6 +960,7 @@ namespace MapperTools.Pollicino
                 }
                 catch (System.Net.WebException e)
                 {
+                    lastOnlineTrackTime.AddSeconds(120);
                     System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
                 }
             }
