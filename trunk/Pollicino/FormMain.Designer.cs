@@ -74,19 +74,21 @@ namespace MapperTools.Pollicino
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem_showpos = new System.Windows.Forms.MenuItem();
             this.menuItem_showscale = new System.Windows.Forms.MenuItem();
+            this.menuItem_HiRes = new System.Windows.Forms.MenuItem();
+            this.menuItem_HiRes_customdraw = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
-            this.mapcontrol = new MapsLibrary.MapControl();
-            this.gpsControl = new MapperTools.Pollicino.GPSControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_gpx = new System.Windows.Forms.Label();
             this.pb_DownloaderActivity = new System.Windows.Forms.PictureBox();
+            this.gpsControl = new MapperTools.Pollicino.GPSControl();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.mapcontrol = new MapsLibrary.MapControl();
             this.blinkcnDownloader = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
             this.blinkcnGPX = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
             this.gpx_saver = new MapperTools.Pollicino.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -176,6 +178,8 @@ namespace MapperTools.Pollicino
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.MenuItems.Add(this.menuItem8);
+            this.menuItem2.MenuItems.Add(this.menuItem_HiRes);
+            this.menuItem2.MenuItems.Add(this.menuItem_HiRes_customdraw);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -226,6 +230,16 @@ namespace MapperTools.Pollicino
             this.menuItem_showscale.Text = "Scale";
             this.menuItem_showscale.Click += new System.EventHandler(this.menuItem_showscale_Click);
             // 
+            // menuItem_HiRes
+            // 
+            this.menuItem_HiRes.Text = "HiRes";
+            this.menuItem_HiRes.Click += new System.EventHandler(this.menuItem_HiRes_Click);
+            // 
+            // menuItem_HiRes_customdraw
+            // 
+            this.menuItem_HiRes_customdraw.Text = "HiRes mode 2";
+            this.menuItem_HiRes_customdraw.Click += new System.EventHandler(this.menuItem_HiRes_customdraw_Click);
+            // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -245,28 +259,6 @@ namespace MapperTools.Pollicino
             this.label_zoom.Name = "label_zoom";
             this.label_zoom.Size = new System.Drawing.Size(17, 16);
             this.label_zoom.Text = "14";
-            // 
-            // mapcontrol
-            // 
-            this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapcontrol.Location = new System.Drawing.Point(0, 0);
-            this.mapcontrol.Name = "mapcontrol";
-            this.mapcontrol.ShowPosition = false;
-            this.mapcontrol.ShowScaleRef = false;
-            this.mapcontrol.Size = new System.Drawing.Size(240, 268);
-            this.mapcontrol.TabIndex = 0;
-            this.mapcontrol.Zoom = ((uint)(0u));
-            this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
-            // 
-            // gpsControl
-            // 
-            this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.gpsControl.Image = ((System.Drawing.Image)(resources.GetObject("gpsControl.Image")));
-            this.gpsControl.Location = new System.Drawing.Point(4, 3);
-            this.gpsControl.Name = "gpsControl";
-            this.gpsControl.Size = new System.Drawing.Size(12, 12);
-            this.gpsControl.TabIndex = 7;
             // 
             // panel1
             // 
@@ -294,6 +286,37 @@ namespace MapperTools.Pollicino
             this.pb_DownloaderActivity.Name = "pb_DownloaderActivity";
             this.pb_DownloaderActivity.Size = new System.Drawing.Size(16, 16);
             // 
+            // gpsControl
+            // 
+            this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.gpsControl.Image = ((System.Drawing.Image)(resources.GetObject("gpsControl.Image")));
+            this.gpsControl.Location = new System.Drawing.Point(4, 3);
+            this.gpsControl.Name = "gpsControl";
+            this.gpsControl.Size = new System.Drawing.Size(12, 12);
+            this.gpsControl.TabIndex = 7;
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Text = "Take photo...";
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Text = "Full screen";
+            // 
+            // mapcontrol
+            // 
+            this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapcontrol.HiResMode = true;
+            this.mapcontrol.Location = new System.Drawing.Point(0, 0);
+            this.mapcontrol.Name = "mapcontrol";
+            this.mapcontrol.ShowPosition = false;
+            this.mapcontrol.ShowScaleRef = false;
+            this.mapcontrol.Size = new System.Drawing.Size(240, 268);
+            this.mapcontrol.TabIndex = 0;
+            this.mapcontrol.Zoom = ((uint)(0u));
+            this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
+            // 
             // blinkcnDownloader
             // 
             this.blinkcnDownloader.BlinkingControl = this.pb_DownloaderActivity;
@@ -304,14 +327,6 @@ namespace MapperTools.Pollicino
             this.blinkcnGPX.BlinkingControl = this.label_gpx;
             this.blinkcnGPX.BlinkingInterval = 400;
             this.blinkcnGPX.VisibleOnStop = false;
-            // 
-            // menuItem6
-            // 
-            this.menuItem6.Text = "Take photo...";
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Text = "Full screen";
             // 
             // Form_MapperToolMain
             // 
@@ -372,6 +387,8 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_showscale;
         private System.Windows.Forms.MenuItem menuItem_TracksManager;
         private System.Windows.Forms.MenuItem menuItem_onlinetracking;
+        private System.Windows.Forms.MenuItem menuItem_HiRes;
+        private System.Windows.Forms.MenuItem menuItem_HiRes_customdraw;
 
 
 

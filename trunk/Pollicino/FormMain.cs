@@ -181,6 +181,9 @@ namespace MapperTools.Pollicino
             //menuItem_showpos.Checked = mapcontrol.ShowPosition;
             ShowPosition = options.Application.ShowPosition;
             ShowScaleRef = options.Application.ShowScale;
+            //HiRes flags
+            menuItem_HiRes.Checked = mapcontrol.HiResMode;
+            menuItem_HiRes_customdraw.Checked = mapcontrol.HiResModeCustomDraw;
             
             // Gestore del tracking online
             tracking = new OnlineTrackingHandler();
@@ -924,6 +927,18 @@ namespace MapperTools.Pollicino
         private void menuItem_onlinetracking_Click(object sender, EventArgs e)
         {
             action_ToggleOnlineTracking();
+        }
+
+        private void menuItem_HiRes_Click(object sender, EventArgs e)
+        {
+            menuItem_HiRes.Checked = !menuItem_HiRes.Checked;
+            mapcontrol.HiResMode = menuItem_HiRes.Checked;
+        }
+
+        private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
+        {
+            menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
+            mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
         }
 
     }

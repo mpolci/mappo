@@ -121,14 +121,6 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="gpsControl.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAFdJREFUKFO9kUsK
-        ACAIRPP+hzYULb9Im4IWDW9wbGDlg0GCgmGJQET0V/VoSmBjPL4nwwjzNInM2eP48v3VMMcycfSb+j1o
-        x8JwixOAIAPG9l2P3HjX8Aa/VQEQ0P9XXwAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="pb_DownloaderActivity.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -145,6 +137,14 @@
         XILZJStK2/rQ9gwh85dx6GQ8lb1fud3Rj7ZjjNjGL0jyjyJ2cJyZBec1zjhHuxBYc3oyD3d7R6jsHqS4
         vZ/MlgF8KtKIfNaFXBE0Ac8epgmJu3ozO0oSiGrqJrJBx77HtdhcW4tj3DqkO31ZuGDB7PBfR4H9CgGO
         XiJcAjxxl0sQr3fEfLHZnOCM4+L7zzmhX0nLqH5zhn3MAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="gpsControl.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAFdJREFUKFO9kUsK
+        ACAIRPP+hzYULb9Im4IWDW9wbGDlg0GCgmGJQET0V/VoSmBjPL4nwwjzNInM2eP48v3VMMcycfSb+j1o
+        x8JwixOAIAPG9l2P3HjX8Aa/VQEQ0P9XXwAAAABJRU5ErkJggg==
 </value>
   </data>
   <metadata name="blinkcnDownloader.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
