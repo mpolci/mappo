@@ -328,7 +328,7 @@ namespace MapsLibrary
                     if (HiResModeCustomDraw)
                     {
                         if (HiResModeBuffer == null) 
-                            HiResModeBuffer = new Bitmap(Size.Width, Size.Height);
+                            HiResModeBuffer = new Bitmap(buffer.Width * 2, buffer.Height * 2);
                         ResizeImage(buffer, HiResModeBuffer);
                         e.Graphics.DrawImage(HiResModeBuffer, 0, 0);
                     }
@@ -502,7 +502,7 @@ namespace MapsLibrary
             {
                 _hiresmode = value;
                 Invalidate();
-                if (value == false)
+                if (value == false && HiResModeBuffer != null)
                 {
                     HiResModeBuffer.Dispose();
                     HiResModeBuffer = null;
