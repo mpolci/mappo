@@ -53,7 +53,7 @@
     <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
     <OutputPath>bin\Windows\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="interfaces.cs" />
     <Compile Include="NotifyIcon.cs" />
+    <Compile Include="odometer.cs" />
     <Compile Include="PlatformSpecificCode.cs" />
     <Compile Include="WaveIn4CF.cs" />
     <Compile Include="Waypoint.cs" />

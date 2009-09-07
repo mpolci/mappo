@@ -63,13 +63,17 @@ namespace MapperTools.Pollicino
             public bool AutoCentreMap;
             public bool ShowPosition;
             public bool ShowScale;
+            public bool ShowOdometer;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
+            public bool HiResDisplayMode;
+            public bool CustomHiResDisplayMode;
 #if PocketPC || Smartphone || WindowsCE
 			public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
 #else
 			public int CameraButton;
 #endif
+            // TODO: i parametri di OSM non è bene che stiano nella classe InterfaceOptions
 			public string OSMUsername;
             public string OSMPassword;
         }
