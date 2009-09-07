@@ -123,7 +123,6 @@
     </Compile>
     <Compile Include="interfaces.cs" />
     <Compile Include="NotifyIcon.cs" />
-    <Compile Include="odometer.cs" />
     <Compile Include="PlatformSpecificCode.cs" />
     <Compile Include="WaveIn4CF.cs" />
     <Compile Include="Waypoint.cs" />
