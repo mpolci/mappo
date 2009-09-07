@@ -70,6 +70,8 @@ namespace MapperTools.Pollicino
             FileInfo[] files = di.GetFiles("*.gpx");
             foreach (FileInfo fi in files)
             {
+                // HACK: controllare la scansione dei gpx. Aggiornare tutti i gpx è troppo dispendioso 
+                // quindi carica solo quelli non presenti nell'indice
                 if (gpxidx.ContainsKey(fi.FullName)) continue;
                 try
                 {
@@ -79,6 +81,7 @@ namespace MapperTools.Pollicino
                             gpxfiles.Add(new GPXFile(info));
                     else
                     {
+                        // questo codice non sarà mai eseguito
                         GPXFile gpxf = gpxidx[fi.FullName];
                         gpxf.UpdateInfo(info);
                     }
@@ -107,13 +110,11 @@ namespace MapperTools.Pollicino
 
         public void ImportGPX(string filename)
         {
-            //int wpts, tpts;
-            //DateTime t_start, t_end;
             NMEA2GPX.GPXGenerator.GPXInfo info = NMEA2GPX.GPXGenerator.GetGPXInfo(filename);
             GPXFile gpxf = gpxfiles.Find((GPXFile g) => g.FileName == filename);
-            if (gpxf == null)
-                lock (gpxfiles)
-                    gpxfiles.Add(new GPXFile(filename, info.begin_track_time, info.end_track_time, info.trackpoints, info.waypoints));
+            if (gpxf == null) 
+                lock (gpxfiles) 
+                    gpxfiles.Add(new GPXFile(info));
             else
             {
                 gpxf.StartTime = info.begin_track_time;

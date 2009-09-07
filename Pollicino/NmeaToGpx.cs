@@ -189,8 +189,29 @@ namespace MapperTools.NMEA2GPX
 
         public static long CalcLength(GPXBaseType gpxdata)
         {
-            //TODO: implementare il calcolo della lunghezza
-            return 0;
+            // calcola un'approssimazione della lunghezza della traccia su massimo 200 punti
+            double distance = 0;
+            try
+            {
+                int len = gpxdata.trk.GetTotalPoints();
+                int step = len / 200;
+                if (step == 0) step = 1;
+                WaypointType[] trackpoints = gpxdata.trk.GetPoints();
+                MapsLibrary.GeoPoint last = new MapsLibrary.GeoPoint(trackpoints[0].lat, trackpoints[0].lon);
+                MapsLibrary.GeoPoint current;
+                for (int i = step; i < len; i += step)
+                {
+                    current = new MapsLibrary.GeoPoint(trackpoints[i].lat, trackpoints[i].lon);
+                    distance += last.Distance(current);
+                    last = current;
+                }
+                WaypointType lastpoint = trackpoints[len-1];
+                distance += last.Distance(new MapsLibrary.GeoPoint(lastpoint.lat, lastpoint.lon));
+                // approssima per cercare di compensare l'errore
+                distance *= 1 + (double)(step - 1) / 5.1 / 100;  
+            }
+            catch (Exception) { }
+            return (long) distance;
         }
 
 

@@ -66,6 +66,7 @@ namespace MapperTools.Pollicino
         protected string logname;
         protected Downloader downloader;
         protected OnlineTrackingHandler tracking;
+        protected Odometer odo;
 
         protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
 
@@ -110,6 +111,23 @@ namespace MapperTools.Pollicino
                 options.Application.ShowScale = value;
             }
         }
+
+        public bool ShowOdometer
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(options.Application.ShowOdometer == menuItem_Odometer.Checked, @"ShowOdometer inconsitence");
+                System.Diagnostics.Debug.Assert(options.Application.ShowOdometer == label_odometer.Visible, @"ShowOdometer inconsitence");
+                return options.Application.ShowOdometer;
+            }
+            set
+            {
+                options.Application.ShowOdometer = value;
+                menuItem_Odometer.Checked = value;
+                label_odometer.Visible = value;
+            }
+        }
+
 
         private string GoogleKey
         {
@@ -187,6 +205,8 @@ namespace MapperTools.Pollicino
             
             // Gestore del tracking online
             tracking = new OnlineTrackingHandler();
+            // Contachilometri
+            odo = new Odometer();
 
             // mappe
             this.lmap = new LayeredMap();
@@ -328,6 +348,8 @@ namespace MapperTools.Pollicino
                 mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
 
             tracking.HandleGPSEvent(gpsdata, options.OnlineTracking.UpdateInterval);
+            odo.HandleGPSEvent(gpsdata);
+            label_odometer.Text = odo.ToString();
         }
 
         /// <summary>
@@ -397,6 +419,8 @@ namespace MapperTools.Pollicino
                 gpx_saver.SaveGPX(logfile);
             }
             this.menuItem_gpsactivity.Text = "Start GPS";
+            // stops odometer
+            odo.stop();
         }
 
         private void action_CentreMap()
@@ -939,6 +963,11 @@ namespace MapperTools.Pollicino
         {
             menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
             mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
+        }
+
+        private void menuItem_Odometer_Click(object sender, EventArgs e)
+        {
+            ShowOdometer = !ShowOdometer;
         }
 
     }

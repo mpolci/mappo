@@ -74,6 +74,7 @@ namespace MapperTools.Pollicino
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem_showpos = new System.Windows.Forms.MenuItem();
             this.menuItem_showscale = new System.Windows.Forms.MenuItem();
+            this.menuItem_Odometer = new System.Windows.Forms.MenuItem();
             this.menuItem_HiRes = new System.Windows.Forms.MenuItem();
             this.menuItem_HiRes_customdraw = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
@@ -89,6 +90,7 @@ namespace MapperTools.Pollicino
             this.blinkcnGPX = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
             this.gpx_saver = new MapperTools.Pollicino.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
+            this.label_odometer = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -218,6 +220,7 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem8.MenuItems.Add(this.menuItem_showpos);
             this.menuItem8.MenuItems.Add(this.menuItem_showscale);
+            this.menuItem8.MenuItems.Add(this.menuItem_Odometer);
             this.menuItem8.Text = "Show";
             // 
             // menuItem_showpos
@@ -229,6 +232,11 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_showscale.Text = "Scale";
             this.menuItem_showscale.Click += new System.EventHandler(this.menuItem_showscale_Click);
+            // 
+            // menuItem_Odometer
+            // 
+            this.menuItem_Odometer.Text = "Odometer";
+            this.menuItem_Odometer.Click += new System.EventHandler(this.menuItem_Odometer_Click);
             // 
             // menuItem_HiRes
             // 
@@ -328,11 +336,20 @@ namespace MapperTools.Pollicino
             this.blinkcnGPX.BlinkingInterval = 400;
             this.blinkcnGPX.VisibleOnStop = false;
             // 
+            // label_odometer
+            // 
+            this.label_odometer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_odometer.Location = new System.Drawing.Point(190, 0);
+            this.label_odometer.Name = "label_odometer";
+            this.label_odometer.Size = new System.Drawing.Size(50, 18);
+            this.label_odometer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.label_odometer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
@@ -389,6 +406,8 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_onlinetracking;
         private System.Windows.Forms.MenuItem menuItem_HiRes;
         private System.Windows.Forms.MenuItem menuItem_HiRes_customdraw;
+        private System.Windows.Forms.Label label_odometer;
+        private System.Windows.Forms.MenuItem menuItem_Odometer;
 
 
 
