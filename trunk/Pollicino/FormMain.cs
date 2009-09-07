@@ -207,6 +207,7 @@ namespace MapperTools.Pollicino
             tracking = new OnlineTrackingHandler();
             // Contachilometri
             odo = new Odometer();
+            ShowOdometer = options.Application.ShowOdometer;
 
             // mappe
             this.lmap = new LayeredMap();
@@ -761,6 +762,7 @@ namespace MapperTools.Pollicino
             opt.Application.FullScreen = false;
             opt.Application.ShowPosition = false;
             opt.Application.ShowScale = false;
+            opt.Application.ShowOdometer = false;
 #if PocketPC || Smartphone || WindowsCE
             opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
 #endif
