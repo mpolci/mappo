@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
- *  Pollicino - A tool for gps mapping.
+ *  MyTracks - A tool for gps mapping.
  *  Copyright (C) 2008  Marco Polci
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -615,7 +615,7 @@ namespace MapperTools.Pollicino
             this.label14.Location = new System.Drawing.Point(7, 4);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(226, 20);
-            this.label14.Text = "Pollicino for OpenStreetMap";
+            this.label14.Text = "MyTracks";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // FormOptions

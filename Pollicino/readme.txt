@@ -1,5 +1,5 @@
 ﻿ *******************************************************************************
- *  Pollicino - A tool for gps mapping.
+ *  MyTracks - A tool for gps mapping.
  *  Copyright (C) 2008  Marco Polci
  *
  *  This program is free software: you can redistribute it and/or modify
