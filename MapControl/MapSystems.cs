@@ -42,15 +42,13 @@ namespace MapsLibrary
     public abstract class MercatorProjectionMapSystem
     {
         public abstract uint MaxZoom { get; }
-
         /// <summary>
         /// Indica l'ulteriore fattore di zoom per determinare la dimensione dei pixel.
         /// </summary>
         /// <remarks>
-        /// Ad un qualsiasi livello di zoom, i pixel della mappa corrispondono ad un certo numero di livelli di suddivisione ulteriore, in pratica i pixel corrispondono ad un fattore di zoom uguale a:
-        /// zoom + PixelZoomFactor.
-        /// Dal punto di vista delle TilesMap i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor.
-        /// Vedere anche il concetto di zoom nella descrizione della classe.
+        /// Ad un qualsiasi livello di zoom i pixel della mappa sono dati un certo numero di livelli di suddivisione ulteriore, in pratica i pixel corrispondono ad un fattore di zoom uguale a:
+        /// zoom + PixelZoomFactor
+        /// Da un altro punto di vista i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor
         /// </remarks>
         public abstract uint PixelZoomFactor { get; }
 
@@ -151,7 +149,6 @@ namespace MapsLibrary
             Int32 pow = (Int32)1 << (Int32)zoom;    // equivale a Math.Pow(2, Zoom). Questa istruzione limita Zoom a 32.
             X = (gp.dLon + 180) / 360 * pow;
             Y = (1 - Math.Log(Math.Tan(gp.dLat * Math.PI / 180) + 1 / Math.Cos(gp.dLat * Math.PI / 180)) / Math.PI) / 2 * pow;
-            // TODO: GeoToPx può essere resa indipendente dal concetto di tile usando il pixelzoomfactor anziché tilesize
             px.xpx = (PxType)(X * tilesize);
             px.ypx = (PxType)(Y * tilesize);
             return px;
@@ -190,20 +187,11 @@ namespace MapsLibrary
             return new ProjectedGeoPoint(tn.Y << factor, tn.X << factor);
         }
 
-        public ProjectedGeoArea TileNumToArea(TileNum tn)
-        {
-            PxCoordinates corner = TileNumToPx(tn),
-                          limit = corner + new PxCoordinates(tilesize, tilesize);
-            ProjectedGeoArea tilearea = new ProjectedGeoArea(PxToPoint(corner, tn.uZoom), PxToPoint(limit, tn.uZoom));
-            tilearea.pMax.nLat--; tilearea.pMax.nLon--;
-            return tilearea;
-        }
-
         public GeoPoint PxToGeo(PxCoordinates px, uint zoom)
         {
             GeoPoint p;
             double X, Y;
-            // TODO: GeoToPx può essere resa indipendente dal concetto di tile usando il pixelzoomfactor anziché tilesize
+
             X = ((double)px.xpx /*+ 0.5*/) / (double)this.tilesize;
             Y = ((double)px.ypx /*+ 0.5*/) / (double)this.tilesize;
             //p.dLon = X * 360 / Math.Pow(2, Zoom) - 180;
@@ -572,7 +560,7 @@ namespace MapsLibrary
         public abstract int imagemapsize { get; }
     }
     
-    public static class HTTPFileDownloader
+    internal static class HTTPFileDownloader
     {
         /// <summary>
         /// Scarica un file da un server http e lo salva su disco
@@ -619,19 +607,20 @@ namespace MapsLibrary
                 }
             }
         }
-    }
 
-    public struct FileDownloadInfo
-    {
-        public string uri;
-        public DateTime modifiedtime;
-        public long lenght;
 
-        public FileDownloadInfo(HttpWebResponse response)
+        public struct FileDownloadInfo
         {
-            uri = response.ResponseUri.ToString();
-            modifiedtime = response.LastModified;
-            lenght = response.ContentLength;
+            public string uri;
+            public DateTime modifiedtime;
+            public long lenght;
+
+            public FileDownloadInfo(HttpWebResponse response)
+            {
+                uri = response.ResponseUri.ToString();
+                modifiedtime = response.LastModified;
+                lenght = response.ContentLength;
+            }
         }
     }
 
@@ -640,10 +629,11 @@ namespace MapsLibrary
         public GoogleMapsSystem(string apikey)
             : base()
         {
-            APIKey = apikey;
+            _gmapskey = apikey;
         }
 
-        public string APIKey { get; set; }
+        private string _gmapskey;
+        public string APIKey { get { return _gmapskey; } set { _gmapskey = value; } }
 
         public override uint MaxZoom         { get { return 19; } }
         public override uint PixelZoomFactor { get { return 8;  } }
@@ -656,7 +646,6 @@ namespace MapsLibrary
                          + center.dLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ',' + center.dLon.ToString("F6", ci)
                          + "&size=" + imagemapsize.ToString() + 'x' + imagemapsize.ToString()
                          + "&key=" + APIKey
-                         + "&sensor = true"
                          + "&zoom=" + zoom.ToString();
 
             FileInfo fileinfo = new FileInfo(outfilename);

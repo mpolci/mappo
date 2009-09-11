@@ -28,20 +28,20 @@ using System.IO;
 using System.Media;
 using SharpGis.SharpGps;
 using MapsLibrary;
-using GMapsDataAPI;
-#if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
-#endif 
+//using System.Runtime.InteropServices;
+
+
 
 namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain : Form
     {
-#if PocketPC || Smartphone || WindowsCE
         NotifyIcon mNotifyIcon;
-        private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
-#endif
+
+//        [DllImport("coredll")]
+//        extern static void SystemIdleTimerReset();
 
         private DateTime activatedTime = DateTime.MinValue;
 
@@ -52,9 +52,8 @@ namespace MapperTools.Pollicino
 
         SoundPlayer wpt_sound;
         AudioRecorder wpt_recorder;
-
+        
         protected ApplicationOptions options;
-                
         string configfile;
 
         protected CachedTilesMap map;
@@ -65,8 +64,6 @@ namespace MapperTools.Pollicino
         protected int idx_layer_gmaps, idx_layer_osm, idx_layer_trkpnt, idx_layer_waypnt;
         protected string logname;
         protected Downloader downloader;
-        protected OnlineTrackingHandler tracking;
-        protected Odometer odo;
 
         protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
 
@@ -80,95 +77,24 @@ namespace MapperTools.Pollicino
             }
         }
 
-        public bool ShowPosition
-        {
-            get
-            {
-                System.Diagnostics.Debug.Assert(options.Application.ShowPosition == mapcontrol.ShowPosition, @"ShowPosition inconsintence");
-                System.Diagnostics.Debug.Assert(options.Application.ShowPosition == menuItem_showpos.Checked, @"ShowPosition inconsintence");
-                return options.Application.ShowPosition; ;
-            }
-            set
-            {
-                mapcontrol.ShowPosition = value;
-                menuItem_showpos.Checked = value;
-                options.Application.ShowPosition = value;
-            }
-        }
-
-        public bool ShowScaleRef
-        {
-            get
-            {
-                System.Diagnostics.Debug.Assert(options.Application.ShowScale == mapcontrol.ShowScaleRef, @"ShowPosition inconsintence");
-                System.Diagnostics.Debug.Assert(options.Application.ShowScale == menuItem_showscale.Checked, @"ShowPosition inconsintence");
-                return options.Application.ShowScale; ;
-            }
-            set
-            {
-                mapcontrol.ShowScaleRef = value;
-                menuItem_showscale.Checked = value;
-                options.Application.ShowScale = value;
-            }
-        }
-
-        public bool ShowOdometer
-        {
-            get
-            {
-                System.Diagnostics.Debug.Assert(options.Application.ShowOdometer == menuItem_Odometer.Checked, @"ShowOdometer inconsitence");
-                System.Diagnostics.Debug.Assert(options.Application.ShowOdometer == label_odometer.Visible, @"ShowOdometer inconsitence");
-                return options.Application.ShowOdometer;
-            }
-            set
-            {
-                options.Application.ShowOdometer = value;
-                menuItem_Odometer.Checked = value;
-                label_odometer.Visible = value;
-            }
-        }
-
-
-        private string GoogleKey
-        {
-            get
-            {
-                //TODO: sistemare l'ottenimento della chiave googke
-
-#if PocketPC || Smartphone || WindowsCE
-                return Properties.Resources.GoogleMapsKey;
-#else
-				return "";	
-#endif
-            }
-        }
-
         public Form_MapperToolMain()
         {
             InitializeComponent();
 
-            // carica le opzioni dal file di configurazione
-            carica_opzioni();
-
-#if PocketPC || Smartphone || WindowsCE
-            // 
-            // hardwareButton_app3
-            // 
-            this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
-            this.hardwareButton_app3.AssociatedControl = this;
-            // pulsante per la fotocamera
-            this.hardwareButton_app3.HardwareKey = options.Application.CameraButton;
-            // mNotifyIcon
             mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
             mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
-#endif
+
+            gpx_saver.Notifier = blinkcnGPX;
+            
+            // carica le opzioni dal file di configurazione
+            carica_opzioni();
             // disabilito l'autodownload
             options.Maps.AutoDownload = false;
-            // FIXME: disabilito l'autostart
-            options.GPS.Autostart = false;
 
             //modalità full screen
             this.WindowState = options.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
+            // pulsante per la fotocamera
+            this.hardwareButton_app3.HardwareKey = options.Application.CameraButton;
 
             // sound per nuovo waypoint
             try
@@ -184,40 +110,23 @@ namespace MapperTools.Pollicino
 
             wpt_recorder = new AudioRecorder(options.Application.RecordAudioDevice);
 
-            // Sistema eventuali log rimasti in sospeso
-            string append_to_log = recover_logs();
-            // Aggiorna il DB dei GPX (imposta gpx_saver.GPXFilesDB) e converte eventuali log non ancora convertiti
-            gpx_saver.Notifier = blinkcnGPX;
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.init_gpx_db));
-
             // thread per il download automatico delle mappe
             downloader = new Downloader(this.blinkcnDownloader);
             downloader.startThread();
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
             // show position flag
-            //menuItem_showpos.Checked = mapcontrol.ShowPosition;
-            ShowPosition = options.Application.ShowPosition;
-            ShowScaleRef = options.Application.ShowScale;
-            //HiRes flags
-            menuItem_HiRes.Checked = mapcontrol.HiResMode;
-            menuItem_HiRes_customdraw.Checked = mapcontrol.HiResModeCustomDraw;
-            
-            // Gestore del tracking online
-            tracking = new OnlineTrackingHandler();
-            // Contachilometri
-            odo = new Odometer();
-            ShowOdometer = options.Application.ShowOdometer;
+            menuItem_showpos.Checked = mapcontrol.ShowPosition;
 
             // mappe
             this.lmap = new LayeredMap();
             // OSM
-            //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(false));
-            this.map = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(true));
+            this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers());
+
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new GoogleMapsSystem(GoogleKey), options.Maps.GMaps.CachePath, 150);
+            gmap = new SparseImagesMap(new GoogleMapsSystem(Properties.Resources.GoogleMapsKey), options.Maps.GMaps.CachePath, 150);
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
@@ -241,53 +150,35 @@ namespace MapperTools.Pollicino
 
             verifica_opzioni_finale();
 
-            if (append_to_log != null)
-            {
-                action_loadtrack(append_to_log);
-                action_StartGPS(append_to_log);
-            }
-            else if (options.GPS.Autostart)
-                action_StartGPS(null);
-        }
-
-        private void init_gpx_db(object p)
-        {
-            // TODO: quando cambio directory per i log dovrei aggiornare il db come qui sotto
-            GPXCollection gpxc = new GPXCollection(options.GPS.LogsDir + Path.DirectorySeparatorChar + "gpxdb.xml");
-            gpx_saver.GPXFilesDB = gpxc;
-            gpxc.ScanDir(options.GPS.LogsDir);
             // processa eventuali file di log che non sono ancora stati convertiti in GPX
-            if (Directory.Exists(options.GPS.LogsDir))
+            if (Directory.Exists(options.GPS.LogsDir)) 
                 gpx_saver.ParseLogsDir(options.GPS.LogsDir);
 
+            if (options.GPS.Autostart)
+                action_StartGPS();
         }
 
-        private uint required_buffers(bool minimized_memory)
+        private uint required_buffers()
         {
             Size cs = this.ClientSize;
             // FIXME: il codice qui sotto dipende dalla dimensione del tile
             uint x = (uint)Math.Ceiling((double)cs.Width / 256.0 + 1);
             uint y = (uint)Math.Ceiling((double)cs.Height / 256.0 + 1);
-            if (minimized_memory)
-                return x * y;
-            else
-                return x * y + x + y - 1;
+            return x * y + x + y - 1;
         }
 
         private void carica_opzioni()
         {
-            string path = Program.GetPath();
+            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             configfile = path + '\\' + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".cfg";
             try
             {
-                if (System.IO.File.Exists(configfile))
-                {
+                if (System.IO.File.Exists(configfile)) {
                     options = ApplicationOptions.FromFile(configfile);
                     // qui posso controllare il numero di versione ed effettua eventuali aggiornamenti
                     //if (options.version < ??) ...
                     // ATTENZIONE! il numero di versione verrà aggiornato in verifica_opzioni_finale()
-                }
-                else
+                } else 
                     options = DefaultOptions();
             }
             catch (Exception)
@@ -348,85 +239,40 @@ namespace MapperTools.Pollicino
             if (autocenter)
                 mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
 
-            tracking.HandleGPSEvent(gpsdata, options.OnlineTracking.UpdateInterval);
-            odo.HandleGPSEvent(gpsdata);
-            label_odometer.Text = odo.ToString();
         }
 
-        /// <summary>
-        /// Recupera e corregge eventuali log con estensione .log rimasti in sospeso
-        /// </summary>
-        /// <remarks>Se c'è un file di log da ripristinare restituisce il nome del file di log da recuperare, null altrimenti.</remarks>
-        private string recover_logs()
-        {
-            string logsdir = options.GPS.LogsDir,
-                   append_to = null;
-            try
-            {
-                DirectoryInfo di = new DirectoryInfo(options.GPS.LogsDir);
-                FileInfo[] files = di.GetFiles("*.nmea");
-                if (files.Length > 0)
-                {
-                    Array.Sort<FileInfo>(files, (FileInfo f1, FileInfo f2) => (f1.LastWriteTime < f2.LastWriteTime) ? -1 : (f1.LastWriteTime == f2.LastWriteTime ? 0 : 1));
-                    //TODO: chiedere conferma se continuare il log del file
-                    append_to = files[files.Length - 1].FullName;
-                    // Cambia l'estensione degli altri file di log rimasti in sospeso
-                    int last = files.Length - 2;
-                    for (int i = 0; i <= last; i++)
-                        File.Move(files[i].FullName, Path.ChangeExtension(files[i].FullName, ".txt"));
-                }
-            }
-            catch (DirectoryNotFoundException) { }
-            return append_to;
-        }
-
-        /// <summary>
-        /// Avvia il GPS e la registrazione dei dati sul log
-        /// </summary>
-        /// <remarks>
-        /// Il file di log creato ha inizialmente estensione ".nmea", una volta finita la registrazione l'estensione verrà  cambiata in ".txt". 
-        /// Questo serve ad evitare che la funzione di conversione in gpx dei log rimasti in sospeso possa tentare di convertire un log appena aperto e con la registrazione ancora in corso.
-        /// </remarks>
-        private void action_StartGPS(string appendlog)
+        private void action_StartGPS()
         {
             logname = null;
             if (options.GPS.Simulation && File.Exists(options.GPS.SimulationFile))
             {
                 gpsControl.SimulationFile = options.GPS.SimulationFile;
-#if DEBUG
-                logname = (appendlog != null) ? appendlog : options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".nmea";
-#endif
+                //DEBUG
+                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
             }
             else
             {
                 gpsControl.SimulationFile = null;
-                logname = (appendlog != null) ? appendlog : options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".nmea";
+                logname = options.GPS.LogsDir + "\\gpslog_" + DateTime.Now.ToString(DateOnFilenameFormat) + ".txt";
             }
             gpsControl.start(options.GPS.PortName, options.GPS.PortSpeed, logname);
-            this.menuItem_gpsactivity.Text = "Stop GPS";
+            this.menuItem_gpsactivity.Text = "stop GPS";
         }
 
         private void action_StopGPS()
         {
             if (wpt_recorder.Running)
                 wpt_recorder.stop();
-            string orglogfilename = gpsControl.stop();
-            if (orglogfilename != null)
-            {
-                string logfile = Path.ChangeExtension(orglogfilename, ".txt");
-                File.Move(orglogfilename, logfile);
-                // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
-                gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
-                gpx_saver.SaveGPX(logfile);
-            }
-            this.menuItem_gpsactivity.Text = "Start GPS";
-            // stops odometer
-            odo.stop();
+            string logfile = gpsControl.stop();
+            // sarebbe più sensato impostare DelayTrackStart quando cambio l'opzione relativa
+            gpx_saver.DelayTrackStart = options.Application.DelayGPXTrackStart;
+            gpx_saver.SaveGPX(logfile);
+            this.menuItem_gpsactivity.Text = "start GPS";        
         }
 
         private void action_CentreMap()
         {
-            if (gpsControl.Started)
+            if (gpsControl.Started) 
                 mapcontrol.Center = map.mapsystem.CalcProjection(this.gpsControl.PositionData.position);
         }
 
@@ -450,22 +296,20 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private void action_loadtrack(string file)
+        private void action_loadtrack()
         {
-            if (file == null)
+            string opendir = options.GPS.LogsDir,
+                   file;
+            if (!Directory.Exists(opendir))
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
             {
-                string opendir = options.GPS.LogsDir;
-                if (!Directory.Exists(opendir))
-                    opendir = Program.GetPath();
-                using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
-                {
-                    if (openfiledlg.ShowDialog() == DialogResult.OK)
-                        file = openfiledlg.openfile;
-                    else
-                        return;
-                }
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
+                    file = openfiledlg.openfile;
+                else
+                    return;
             }
-
+            
             // count: for debug
             int count = 0;
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
@@ -483,8 +327,7 @@ namespace MapperTools.Pollicino
                     // the file is reached.
                     while ((line = sr.ReadLine()) != null)
                     {
-                        switch (line.Substring(0, 6))
-                        {
+                        switch (line.Substring(0,6)) {
                             case "$GPRMC":
                                 SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
                                 gp = new GeoPoint(gpmrc.Position.Latitude, gpmrc.Position.Longitude);
@@ -509,82 +352,7 @@ namespace MapperTools.Pollicino
             lmap.setVisibility(idx_layer_trkpnt, true);
             lmap.setVisibility(idx_layer_waypnt, true);
             System.Windows.Forms.Cursor.Current = Cursors.Default;
-        }
-
-        private void action_TracksManager()
-        {
-            using (FormTracksManager form = new FormTracksManager())
-            {
-                form.AppOptions = this.options;
-                form.TracksCollection = gpx_saver.GPXFilesDB;
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    lmap.setVisibility(idx_layer_trkpnt, false);
-                    lmap.setVisibility(idx_layer_waypnt, false);
-                    if (MessageBox.Show("Clear current track data from the map? If you press yes the current track and way points will be removed from the map before loading the selected track.", "Load track", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                    {
-                        this.trackpoints.clear();
-                        this.waypoints.clear();
-                    }
-                    System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
-
-                    string gpxfile = form.SelectedTrackFileName;
-
-                    try
-                    {
-                        NMEA2GPX.GPXBaseType gpxdata = NMEA2GPX.GPXBaseType.Deserialize(gpxfile);
-                        ProjectedGeoPoint pgp = this.mapcontrol.Center;
-                        if (gpxdata.HasTrack)
-                        {
-                            NMEA2GPX.WaypointType[] trackpoints = gpxdata.trk.GetPoints();
-                            foreach (NMEA2GPX.WaypointType wp in trackpoints)
-                            {
-                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
-                                this.trackpoints.addPoint(pgp);
-                            }
-                        }
-                        // centra la mappa alla fine della traccia caricata
-                        this.mapcontrol.Center = pgp;
-
-                        if (gpxdata.wpt != null)
-                            foreach (NMEA2GPX.WaypointType wp in gpxdata.wpt)
-                            {
-                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
-                                this.waypoints.addPoint(pgp);
-                            }
-                        System.Windows.Forms.Cursor.Current = Cursors.Default;
-                    }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Trace.WriteLine(e);
-                        System.Windows.Forms.Cursor.Current = Cursors.Default;
-                        MessageBox.Show("Track load error");
-                    }
-                    finally
-                    {
-                        lmap.setVisibility(idx_layer_trkpnt, true);
-                        lmap.setVisibility(idx_layer_waypnt, true);
-                    }
-                }
-            }
-        }
-
-        private void action_ToggleOnlineTracking()
-        {
-            try
-            {
-                if (!tracking.initialized) 
-                    tracking.InitSession(options.OnlineTracking.TrackDescription, options.OnlineTracking.GMapsEmail, options.OnlineTracking.GMapsPassword);
-                tracking.active = !tracking.active;
-                if (tracking.active)
-                    menuItem_onlinetracking.Text = "Stop online tracking";
-                else
-                    menuItem_onlinetracking.Text = "Start online tracking";
-            }
-            catch (System.Net.WebException e)
-            {
-                System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
-            }
+            
         }
 
         private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
@@ -614,7 +382,7 @@ namespace MapperTools.Pollicino
 
         private void menuItem_loadtrack_Click(object sender, EventArgs e)
         {
-            action_loadtrack(null);
+            action_loadtrack();
         }
 
         private void menuItem_followGPS_Click(object sender, EventArgs e)
@@ -632,12 +400,14 @@ namespace MapperTools.Pollicino
 
         private void menuItem_showpos_Click(object sender, EventArgs e)
         {
-            ShowPosition = !ShowPosition;
+            mapcontrol.ShowPosition = !mapcontrol.ShowPosition;
+            menuItem_showpos.Checked = mapcontrol.ShowPosition;
         }
 
         private void menuItem_showscale_Click(object sender, EventArgs e)
         {
-            ShowScaleRef = !ShowScaleRef;
+            mapcontrol.ShowScaleRef = !mapcontrol.ShowScaleRef;
+            menuItem_showscale.Checked = mapcontrol.ShowScaleRef;
         }
 
         private void menuItem_photo_Click(object sender, EventArgs e)
@@ -645,10 +415,11 @@ namespace MapperTools.Pollicino
             action_takephoto();
         }
 
+
         private void menuItem_gpsactivity_Click(object sender, EventArgs e)
         {
             if (!this.gpsControl.Started)
-                action_StartGPS(null);
+                action_StartGPS();
             else
                 action_StopGPS();
         }
@@ -657,47 +428,47 @@ namespace MapperTools.Pollicino
         {
             ProjectedGeoArea area = mapcontrol.VisibleArea;
             int end = (mapcontrol.Zoom > 1) ? -1 : 0;
-            for (int i = options.Maps.OSM.DownloadDepth; i >= end; i--)
+            for (int i = options.Maps.OSM.DownloadDepth; i >=  end ; i--)
             {
-                uint z = (uint)(mapcontrol.Zoom + i);
+                uint z = (uint) (mapcontrol.Zoom + i);
                 downloader.addDownloadArea(map, area, z);
                 if (i <= 2)
                     downloader.addDownloadArea(gmap, area, z);
             }
         }
-        /*
-                private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
-                {
+/*
+        private void menuItem_refreshTileCache_Click(object sender, EventArgs e)
+        {
 
-                    if (MessageBox.Show("Maybe it will takes long time. Do you want to continue?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
-                        return;
+            if (MessageBox.Show("Maybe it will takes long time. Do you want to continue?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
 
-                    System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
 
-                    ProjectedGeoArea area = mapcontrol.VisibleArea;
-                    uint maxzoom = Math.Min(mapcontrol.Zoom + 6, map.mapsystem.MaxZoom);
-                    int errors = 0;
-                    for (uint i = mapcontrol.Zoom; i <= maxzoom ; i++)
-                    {
-                        try {
-                            map.updateTilesInArea(area, i); 
-                        } catch (Exception ex) {
-                            System.Diagnostics.Trace.WriteLine("----\n" + ex.ToString() + "\n----");
-                            if (++errors >= 10) break;
-                        }
-                    }
-                    if (errors > 0) {
-                        MessageBox.Show("There was problems to get some tiles.");
-                    }
-
-                    System.Windows.Forms.Cursor.Current = Cursors.Default;
+            ProjectedGeoArea area = mapcontrol.VisibleArea;
+            uint maxzoom = Math.Min(mapcontrol.Zoom + 6, map.mapsystem.MaxZoom);
+            int errors = 0;
+            for (uint i = mapcontrol.Zoom; i <= maxzoom ; i++)
+            {
+                try {
+                    map.updateTilesInArea(area, i); 
+                } catch (Exception ex) {
+                    System.Diagnostics.Trace.WriteLine("----\n" + ex.ToString() + "\n----");
+                    if (++errors >= 10) break;
                 }
-        */
+            }
+            if (errors > 0) {
+                MessageBox.Show("There was problems to get some tiles.");
+            }
+
+            System.Windows.Forms.Cursor.Current = Cursors.Default;
+        }
+*/
         private void menuItem_config_Click(object sender, EventArgs e)
         {
             using (FormOptions opt = new FormOptions())
             {
-                opt.data = (ApplicationOptions)this.options.Clone();
+                opt.data = (ApplicationOptions) this.options.Clone();
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
                 if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
@@ -705,12 +476,10 @@ namespace MapperTools.Pollicino
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
-                wpt_recorder.RecordingFormat = (WaveIn4CF.WaveFormats)newopt.Application.RecordAudioFormat;
+                wpt_recorder.RecordingFormat = (WaveIn4CF.WaveFormats) newopt.Application.RecordAudioFormat;
                 //modalità full screen
                 this.WindowState = newopt.Application.FullScreen ? FormWindowState.Maximized : FormWindowState.Normal;
-#if PocketPC || Smartphone || WindowsCE
                 this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
-#endif
                 options = newopt;
                 options.SaveToFile(this.configfile);
             }
@@ -723,7 +492,7 @@ namespace MapperTools.Pollicino
 
         private void menuItem_exit_Click(object sender, EventArgs e)
         {
-            if (!gpsControl.Started || MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show("Close application. Are you sure?", "", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 this.Close();
         }
 
@@ -738,7 +507,7 @@ namespace MapperTools.Pollicino
 
         private static ApplicationOptions DefaultOptions()
         {
-            string programpath = Program.GetPath();
+            string programpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             ApplicationOptions opt = new ApplicationOptions();
             opt.GPS.PortName = "COM1";
             opt.GPS.PortSpeed = 9600;
@@ -760,16 +529,7 @@ namespace MapperTools.Pollicino
             opt.Application.AutoCentreMap = true;
             opt.Application.InitialMapPosition = new GeoPoint(44.1429, 12.2618);
             opt.Application.FullScreen = false;
-            opt.Application.ShowPosition = false;
-            opt.Application.ShowScale = false;
-            opt.Application.ShowOdometer = false;
-#if PocketPC || Smartphone || WindowsCE
             opt.Application.CameraButton = HardwareKeys.ApplicationKey3;
-#endif
-            opt.OnlineTracking.GMapsEmail = "";
-            opt.OnlineTracking.GMapsPassword = "";
-            opt.OnlineTracking.UpdateInterval = 120;
-            opt.OnlineTracking.TrackDescription = "Track";
             opt.version = ApplicationOptions.CurrentVersion;
             return opt;
         }
@@ -788,8 +548,7 @@ namespace MapperTools.Pollicino
 
         private void action_CreateWaypoint()
         {
-            if (gpsControl.Started)
-            {
+            if (gpsControl.Started) {
                 GPSControl.GPSPosition? gpsdata = gpsControl.saveWaypoint(WaypointNames.WPNameFormatString, 5);
                 waypoint_created(gpsdata);
                 //record audio
@@ -808,7 +567,6 @@ namespace MapperTools.Pollicino
         {
             if (gpsControl.Started)
             {
-#if PocketPC || Smartphone || WindowsCE
                 System.Diagnostics.Debug.Assert(logname != null, "action_takephoto() - No log file");
                 string outdir = WaypointNames.DataDir(this.logname);
                 if (!Directory.Exists(outdir))
@@ -837,31 +595,11 @@ namespace MapperTools.Pollicino
                     MessageBox.Show("Funzionalità non supportata in questo dispositivo.");
                     System.Diagnostics.Trace.WriteLine("--- Errore nell'utilizzo della fotocamera: " + e.ToString());
                 }
-#endif
             }
         }
-
-#if !(PocketPC || Smartphone || WindowsCE)
-        /// <summary>
-        /// Permette al metodo Form_MapperToolMain_KeyDown di elaborare i tasti freccia.
-        /// </summary>
-        protected override bool ProcessDialogKey(Keys key)
-        {
-            switch (key)
-            {
-                case (Keys.Left):
-                case (Keys.Right):
-                case (Keys.Up):
-                case (Keys.Down):
-                    return false;
-            }
-            return base.ProcessDialogKey(key);
-
-        }
-#endif
 
         private void Form_MapperToolMain_KeyDown(object sender, KeyEventArgs e)
-        {
+        { 
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
                 // Up
@@ -890,27 +628,22 @@ namespace MapperTools.Pollicino
                     intervalFromLast = now - lastEntertime;
                 lastEntertime = now;
                 //System.Diagnostics.Debug.WriteLine("Key " + e.KeyCode + " tick: " + now + "last key tick: " + lastEntertime + " difference: " + intervalFromLast);
-                if (intervalFromLast > 500)
-                    if (gpsControl.Started)
-                        action_CreateWaypoint();
-                    else
-                        action_StartGPS(null);
-#if DEBUG
+                if (intervalFromLast > 500) 
+                    action_CreateWaypoint();
+                #if DEBUG
                 else 
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
-#endif
+                #endif
             }
-#if PocketPC || Smartphone || WindowsCE
             if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
             {
                 // se il tasto è stato premuto a meno di 1 secondo dall'attivazione probabilmente è stato
                 // la causa stessa dell'attivazione quindi non scatto la foto
                 TimeSpan timefromactivation = DateTime.Now - activatedTime;
                 System.Diagnostics.Debug.WriteLine("--- HardwareKey pressed - activation time: " + timefromactivation);
-                if (timefromactivation.TotalSeconds > 1)
+                if (timefromactivation.TotalSeconds > 1) 
                     action_takephoto();
             }
-#endif
         }
 
         private void notify_icon_click(object obj, EventArgs args)
@@ -925,9 +658,7 @@ namespace MapperTools.Pollicino
             if (gpsControl.Started)
                 gpsControl.stop();
             downloader.stopThread();
-#if PocketPC || Smartphone || WindowsCE
             mNotifyIcon.Dispose();
-#endif
             map.Dispose();
             gpx_saver.Dispose();
 
@@ -938,78 +669,6 @@ namespace MapperTools.Pollicino
         private void Form_MapperToolMain_Activated(object sender, EventArgs e)
         {
             activatedTime = DateTime.Now;
-        }
-
-        private void menuItem_TracksManager_Click(object sender, EventArgs e)
-        {
-            action_TracksManager();
-        }
-
-        private void mapcontrol_Resize(object sender, EventArgs e)
-        {
-            this.map.CacheLen = required_buffers(true);
-        }
-
-        private void menuItem_onlinetracking_Click(object sender, EventArgs e)
-        {
-            action_ToggleOnlineTracking();
-        }
-
-        private void menuItem_HiRes_Click(object sender, EventArgs e)
-        {
-            menuItem_HiRes.Checked = !menuItem_HiRes.Checked;
-            mapcontrol.HiResMode = menuItem_HiRes.Checked;
-        }
-
-        private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
-        {
-            menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
-            mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
-        }
-
-        private void menuItem_Odometer_Click(object sender, EventArgs e)
-        {
-            ShowOdometer = !ShowOdometer;
-        }
-
-    }
-
-    public class OnlineTrackingHandler
-    {
-        DateTime lastOnlineTrackTime = new DateTime(0);
-        GMapsDataAPI.GMAPSMap tracking_map;
-        public bool active { get; set; }
-        public bool initialized { get { return tracking_map != null; } }
-
-        public void InitSession(string name, string email, string pw)
-        {
-            if (string.IsNullOrEmpty(name)) name = "Tracking";
-            name += " " + DateTime.Now.ToString();
-            tracking_map = new GMAPSMap(name, name,
-                       GMAPSService.Login(email,pw));
-        }
-
-        public void StopSession()
-        {
-            tracking_map = null;
-        }
-
-        public void HandleGPSEvent(GPSControl.GPSPosition gpsdata, int updateinterval)
-        {
-            if (active && tracking_map != null &&
-                (gpsdata.receivedtime - lastOnlineTrackTime).TotalSeconds >= updateinterval)
-            {
-                try
-                {
-                    tracking_map.AddPoint(gpsdata.position.dLat, gpsdata.position.dLon, 0, gpsdata.receivedtime.ToLongTimeString());
-                    lastOnlineTrackTime = gpsdata.receivedtime;
-                }
-                catch (System.Net.WebException e)
-                {
-                    lastOnlineTrackTime.AddSeconds(120);
-                    System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
-                }
-            }
         }
     }
 }

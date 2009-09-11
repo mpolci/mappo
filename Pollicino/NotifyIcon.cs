@@ -110,17 +110,11 @@ namespace MapperTools.Pollicino
             //internal char[] szTip; 
         }
 
-#if PocketPC
-
         [DllImport("coredll.dll")]
         internal static extern int Shell_NotifyIcon(int dwMessage, ref NOTIFYICONDATA pnid);
 
-#else
-        internal static int Shell_NotifyIcon(int dwMessage, ref NOTIFYICONDATA pnid);
-        {}
-#endif
-
         #endregion
+
 
     }
 }

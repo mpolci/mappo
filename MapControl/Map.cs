@@ -272,13 +272,8 @@ namespace MapsLibrary
             using (Brush brush = new SolidBrush(Color.White))
             using (Pen pen = new Pen(Color.White))
             {
-                Rectangle r = new Rectangle(0, 0, mMapsys.tilesize, mMapsys.tilesize);
-#if !(PocketPC || Smartphone || WindowsCE)
-                using (Brush bb = new SolidBrush(Color.Black))
-                    g.FillRectangle(bb, r);
-#endif
                 g.DrawString("Tile Not Available", font, brush, 10, 10);
-                g.DrawRectangle(pen, r);
+                g.DrawRectangle(pen, 0, 0, mMapsys.tilesize, mMapsys.tilesize);
             }
             return img;
         }
@@ -430,18 +425,15 @@ namespace MapsLibrary
 
         protected virtual void onTileChanged(TileNum tn)
         {
-            RaiseMapChangedEv(tn);
-        }
-
-        protected void RaiseMapChangedEv(TileNum tn)
-        {
             // Lancia l'evento MapChanged sull'area relativa al tile per invalidarla
             if (MapChanged != null)
             {
-                MapChanged(this, mMapsys.TileNumToArea(tn));
+                PxCoordinates corner = mMapsys.TileNumToPx(tn),
+                              limit = corner + new PxCoordinates(mMapsys.tilesize, mMapsys.tilesize);
+                ProjectedGeoArea tilearea = new ProjectedGeoArea(mMapsys.PxToPoint(corner, tn.uZoom), mMapsys.PxToPoint(limit, tn.uZoom));
+                MapChanged(this, tilearea);
             }
         }
-
 
         /*
         public virtual void updateTilesInArea2(ProjectedGeoArea area, uint zoom)
@@ -484,31 +476,15 @@ namespace MapsLibrary
 
     public class CachedTilesMap : TilesMap, IDisposable
     {
-        protected LRUQueue<TileNum, Bitmap> lruqueue;
-        protected uint maxitems;
-        private Bitmap _imgTileNotFound;
+        LRUQueue<TileNum, Bitmap> lruqueue;
+        uint maxitems;
+        protected Bitmap _imgTileNotFound;
 
         public CachedTilesMap(string tileCachePath, TileMapSystem ms, uint cachelen)
             : base(tileCachePath, ms)
         {
             lruqueue = new LRUQueue<TileNum, Bitmap>();
             maxitems = cachelen;
-        }
-
-        public uint CacheLen
-        {
-            get
-            {
-                return maxitems;
-            }
-            set
-            {
-                if (value == 0)
-                    throw new ArgumentOutOfRangeException("Cache lenght cannot be 0");
-                maxitems = value;
-                while (lruqueue.Count > maxitems)
-                    lruqueue.Dequeue().Dispose();
-            }
         }
 
         protected Bitmap ImgTileNotFound
@@ -533,7 +509,7 @@ namespace MapsLibrary
         /// <summary>
         /// Restituisce il bitmap del tile indicato
         /// </summary>
-        public virtual Bitmap getImageTile(TileNum tn)
+        public Bitmap getImageTile(TileNum tn)
         {
             Debug.Assert(lruqueue != null, "null lruqueue");
             if (lruqueue.Contains(tn))
@@ -547,7 +523,7 @@ namespace MapsLibrary
                 if (lruqueue.Count >= maxitems)
                 {
                     // rimuove un elemento dalla coda
-                    Bitmap olderbmp = lruqueue.Dequeue();
+                    Bitmap olderbmp = lruqueue.RemoveOlder();
                     Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                     olderbmp.Dispose();
                 }
@@ -556,7 +532,7 @@ namespace MapsLibrary
                 {
                     bmp = base.createImageTile(tn);
                     Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
-                    lruqueue.Enqueue(tn, bmp);
+                    lruqueue.Add(tn, bmp);
                 }
                 catch (TileNotFoundException)
                 {
@@ -661,125 +637,6 @@ namespace MapsLibrary
             }
             base.onTileChanged(tn);
         }
-    }
-
-    /// <remarks>Rispetto alla classe padre, vengono disegnati solo i tile già presenti nella cache. Quando un tile non è presente viene disegnato un tile vuoto mentre il tile vero e proprio viene fatto caricare nella cache da un thread che lavora in background.</remarks>
-    public class CachedTilesMapDL : CachedTilesMap, IDisposable
-    {
-        private System.Threading.Thread thrLoader;
-        private System.Threading.AutoResetEvent jobEvent;
-        //private Queue<TileNum> mTilesToLoad = new Queue<TileNum>();
-        private LRUQueue<TileNum> mTilesToLoad = new LRUQueue<TileNum>();
-
-
-        public CachedTilesMapDL( string tileCachePath, TileMapSystem ms, uint cachelen) :
-            base(tileCachePath, ms, cachelen)
-        {
-            jobEvent = new System.Threading.AutoResetEvent(false);
-            thrLoader = new System.Threading.Thread(new System.Threading.ThreadStart(this.LoadTileToCacheProc));
-            thrLoader.Name = "Image loader";
-            //thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
-            thrLoader.Start();
-        }
-
-        #region IDisposable Members
-
-        public override void Dispose()
-        {
-            thrLoader.Abort();
-            base.Dispose();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Restituisce il bitmap del tile indicato
-        /// </summary>
-        public override Bitmap getImageTile(TileNum tn)
-        {
-            Bitmap retbmp = null;
-            Debug.Assert(lruqueue != null, "null lruqueue");
-            bool incache;
-            lock (lruqueue)
-            {
-                incache = lruqueue.Contains(tn);
-                if (incache)
-                {
-                    retbmp = lruqueue[tn];
-                    Trace.Assert(retbmp != null, "lruqueue contains null bitmap");
-                }
-            }
-            if (!incache)
-            {
-                lock (mTilesToLoad)
-                {
-                    if (!mTilesToLoad.Contains(tn))
-                    {
-                        // Elimina il tile più vecchio che non servirebbe più e 
-                        // finirebbe per entrare e uscire subito dalla coda
-                        if (mTilesToLoad.Count == maxitems)
-                            mTilesToLoad.Dequeue();
-                        mTilesToLoad.Enqueue(tn);
-                        jobEvent.Set();
-                    }
-                    else
-                        System.Diagnostics.Debug.WriteLine("Richiesta ripetuta del tile " + tn);
-                }
-
-                retbmp = ImgTileNotFound;
-                Trace.Assert(retbmp != null, "getImageTile will returns null");
-            }
-            return retbmp;
-        }
-
-        private void LoadTileToCacheProc()
-        {
-            //TODO: sfruttare il codice dell classe base
-            TileNum tn = new TileNum();
-            while (true)
-            {
-                bool avail;
-                lock (mTilesToLoad)
-                {
-                    avail = mTilesToLoad.Count > 0;
-                    if (avail)
-                        tn = mTilesToLoad.Dequeue();
-                }
-                if (!avail)
-                    jobEvent.WaitOne();
-                else if (!lruqueue.Contains(tn))
-                {
-                    if (lruqueue.Count >= maxitems)
-                    {
-                        // rimuove un elemento dalla coda
-                        Bitmap olderbmp;
-                        lock (lruqueue)
-                            olderbmp = lruqueue.Dequeue();
-                        Trace.Assert(olderbmp != null, "old bitmap in cache is null");
-                        olderbmp.Dispose();
-                    }
-                    Bitmap bmp;
-                    try
-                    {
-                        bmp = base.createImageTile(tn);
-                        Trace.Assert(bmp != null, "getImageTile(): createImageTile(tn) returns null");
-#if DEBUG && !(PocketPC || Smartphone || WindowsCE)
-                        // simula un caricamento lento
-                        System.Threading.Thread.Sleep(200);
-                        System.Diagnostics.Debug.WriteLine("Rallentato caricamento tile");
-#endif
-                        lock (lruqueue)
-                            lruqueue.Enqueue(tn, bmp);
-                        RaiseMapChangedEv(tn);
-                    }
-                    catch (TileNotFoundException)
-                    { }
-                } else {
-                    System.Diagnostics.Debug.WriteLine("LoadTileToCacheProc() - tile già in cache: " + tn.ToString());
-                }
-            }
-        }
-
     }
 
     public class LayeredMap : IMap

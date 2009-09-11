@@ -38,9 +38,7 @@ namespace MapsLibrary
         fullContains,
         fullContained,
     }
-    /// <summary>
-    /// Punto geografico identificato da latitudine e longitudine espresse in gradi.
-    /// </summary>
+
     public struct GeoPoint
     {
         public double dLat;
@@ -92,9 +90,6 @@ namespace MapsLibrary
 
     }
     
-    /// <summary>
-    /// Area rettangolare identificata da due punti geografici.
-    /// </summary>
     public struct GeoArea
     {
 
@@ -282,9 +277,6 @@ namespace MapsLibrary
 
     }
 
-    /// <summary>
-    /// Rappresentazione con numeri interi, attraverso due ProjectedGeoPoint, della proiezione di un'area geografica rettangolare.
-    /// </summary>
     public struct ProjectedGeoArea
     {
 
@@ -342,7 +334,8 @@ namespace MapsLibrary
             }
         }
 
-        
+        /// <summary>
+        /// </summary>
         public bool contains(ProjectedGeoPoint point)
         {
             return (pMin.nLat <= point.nLat && point.nLat <= pMax.nLat) &&
@@ -495,9 +488,6 @@ namespace MapsLibrary
         }
     }
 
-    /// <summary>
-    /// Rappresentazione in pixel della proiezione di una coordinata geografica.
-    /// </summary>
     public struct PxCoordinates
     {
         public PxType xpx;
@@ -540,9 +530,7 @@ namespace MapsLibrary
             return "(x: " + this.xpx.ToString() + " y: " + this.ypx.ToString() + ")"; 
         }
     }
-    /// <summary>
-    /// Identificatore di un tile. 
-    /// </summary>
+
     public struct TileNum
     {
         public TileIdxType X, Y;
@@ -562,15 +550,11 @@ namespace MapsLibrary
         {
             return this.ToString('/');
         }
-
+/*
         public static bool operator ==(TileNum t1, TileNum t2)
         {
             return t1.uZoom == t2.uZoom && t1.X == t2.X && t1.Y == t2.Y;
         }
-        public static bool operator !=(TileNum t1, TileNum t2)
-        {
-            return t1.X != t2.X || t1.Y == t2.Y || t1.uZoom != t2.uZoom;
-        }
-
+*/
     }
 }

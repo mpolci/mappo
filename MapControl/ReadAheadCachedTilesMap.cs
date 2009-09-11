@@ -32,7 +32,7 @@ namespace MapsLibrary
             threadrun = true;
             thrReadAhead = new Thread(new ThreadStart(this.RedAheadThreadProc));
             thrReadAhead.Priority = ThreadPriority.BelowNormal;
-            thrReadAhead.Name = "Tiles predownloader";
+            thrReadAhead.Name = "Tiles preloader";
             thrReadAhead.Start();
         }
 
@@ -92,7 +92,6 @@ namespace MapsLibrary
             threadrun = false;
             jobEvent.Set();
             thrReadAhead.Join();
-            base.Dispose();
         }
 
         #endregion

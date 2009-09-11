@@ -58,7 +58,7 @@ namespace MapperTools.Pollicino.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar ... .
+        ///   Looks up a localized string similar to ABQIAAAAh1PZgzRL2L5R0KjFvh5Q8RSpRh2vAE_NR2zRhX5ZJ3rp2ZZDExTpIUr3qM9vMNqCFi7gF1XEEyaRAA.
         /// </summary>
         internal static string GoogleMapsKey {
             get {

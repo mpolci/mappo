@@ -32,6 +32,9 @@ namespace MapperTools.Pollicino
 {
     class AudioRecorder
     {
+        [DllImport("coredll")]
+        extern static void SystemIdleTimerReset();
+        
         private DateTime dtime_StartRec;
 
         private bool _running = false;
@@ -180,7 +183,7 @@ namespace MapperTools.Pollicino
 
         private void timerTick(Object state)
         {
-            PlatformSpecificCode.SystemIdleTimerReset();
+            SystemIdleTimerReset();
             lock (runninglock)
             {
                 if (timer1 != null)

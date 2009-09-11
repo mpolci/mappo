@@ -250,11 +250,8 @@ namespace WaveIn4CF
         //public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
         public delegate void waveInProc_delegate(HANDLE hwi, UINTMSG uMsg, DWORD_PTR dwInstance, ref WAVEHDR dwParam1, DWORD_PTR dwParam2); 
 
-#if PocketPC || Smartphone || WindowsCE
         private const string sourcedll = "coredll.dll";    // WinCE
-#else 
-        private const string sourcedll = "winmm.dll";      // Win32
-#endif
+        //private const string sourcedll = "winmm.dll";      // Win32
 
         [DllImport(sourcedll)]
         public static extern UINT waveInGetNumDevs();

@@ -27,7 +27,6 @@ using System.Collections;
 using System.Text;
 using System.Threading;
 using System.IO.Ports;
-using System.IO;
 
 namespace SharpGis.SharpGps
 {
@@ -41,9 +40,6 @@ namespace SharpGis.SharpGps
 		private bool HasTimedOut;
 		private const int _receivedBytesThreshold = 200;
 		private System.IO.Ports.SerialPort com;
-        // Use a StremReader to read com.BaseStream instead of read using com.ReadLine resolves problem 
-        // using gps intermediate driver in HTC Touch Diamond        
-        private StreamReader comReader;    
 		private bool disposed = false;
         private bool stopped = false;
 		
@@ -122,11 +118,8 @@ namespace SharpGis.SharpGps
 			try
 			{
 				com.Open();
-                com.ReadTimeout = _TimeOut * 1000;
-                if (comReader != null) comReader.Dispose();
-                comReader = com.IsOpen ? new StreamReader(com.BaseStream) : null;
 			}
-			catch (System.IO.IOException)
+			catch (System.IO.IOException ex)
 			{
 				//Some devices (like iPAQ H4100 among others) throws an IOException for no reason
 				//Let's just ignore it and run along
@@ -157,8 +150,7 @@ namespace SharpGis.SharpGps
             {
                 try
                 {
-                    //FIX: Read();
-                    AltRead();
+                    Read();
                 }
                 catch (System.IO.IOException)
                 {
@@ -180,8 +172,7 @@ namespace SharpGis.SharpGps
                 }
             }
 		}
-  
-        /*
+
 		/// <summary>
 		/// Check the serial port for data. If data is available, data is read and parsed.
 		/// This is a loop the keeps running until the port is closed.
@@ -218,40 +209,6 @@ namespace SharpGis.SharpGps
 				}
 			}
 		}
-        */
-
-        private void AltRead()
-        {
-            //TODO: forse bisogna fare il detect della fine riga. \n o \r? 
-            //com.NewLine = ????
-            Open();
-            while (com.IsOpen)
-            {
-                try
-                {
-                    //string strNMEA = com.ReadLine();
-                    string strNMEA = comReader.ReadLine();
-                    int nStart = strNMEA.IndexOf("$"); //Position of first NMEA data
-                    if (nStart < 0 || nStart == strNMEA.Length - 2)
-                        continue;  //TODO: debug dati sconosciuti
-
-                    string strData;
-                    strData = strNMEA.Substring(nStart).Trim();
-                    if (strData.StartsWith("$"))
-                    {
-                        //HasTimedOut = false;
-                        TimeSinceLastEvent = DateTime.Now.Ticks;
-                        if (CheckSentence(strData))
-                            FireEvent(GPSHandler.String2Eventtype(strData), strData);
-                    } //TODO: else - debug dati sconosciuti
-
-                }
-                catch (TimeoutException)
-                {
-                    FireEvent(GPSEventType.TimeOut, "");
-                }
-            }
-        }
 		
 		/// <summary>
 		/// Writes data to serial port. This is useful for sending DGPS data to the device.

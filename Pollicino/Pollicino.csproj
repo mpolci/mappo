@@ -47,15 +47,6 @@
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Windows|AnyCPU' ">
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
-    <OutputPath>bin\Windows\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="Microsoft.WindowsMobile.Forms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
@@ -95,26 +86,12 @@
       <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationOptions.cs" />
-    <Compile Include="FormGPXDetails.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormGPXDetails.Designer.cs">
-      <DependentUpon>FormGPXDetails.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormTracksManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormTracksManager.Designer.cs">
-      <DependentUpon>FormTracksManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GMapsDataApi.cs" />
     <Compile Include="GPSControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GPSControl.Designer.cs">
       <DependentUpon>GPSControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPXCollection.cs" />
     <Compile Include="GPXSaver.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -123,8 +100,6 @@
     </Compile>
     <Compile Include="interfaces.cs" />
     <Compile Include="NotifyIcon.cs" />
-    <Compile Include="Odometer.cs" />
-    <Compile Include="PlatformSpecificCode.cs" />
     <Compile Include="WaveIn4CF.cs" />
     <Compile Include="Waypoint.cs" />
     <Compile Include="NmeaToGpx.cs" />
@@ -144,14 +119,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormGPXDetails.resx">
-      <DependentUpon>FormGPXDetails.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormTracksManager.resx">
-      <DependentUpon>FormTracksManager.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GPSControl.resx">

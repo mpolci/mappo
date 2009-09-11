@@ -25,7 +25,6 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
 
 namespace MapsLibrary
 {
@@ -63,12 +62,7 @@ namespace MapsLibrary
 
             using (Font f = getDrawingFont())
             {
-                drawingfont_height = Tools.GetFontHeight(f);
-                if (drawingfont_height == 0)
-                {
-                    drawingfont_height = 12;
-                    System.Diagnostics.Trace.WriteLine("Warning: cannot determine drawing font height");
-                }
+                drawingfont_height = Tools.GetTextMetrics(f).tmHeight;
                 crossline_hlen = drawingfont_height * 3 / 2;
             }
         }
@@ -119,7 +113,7 @@ namespace MapsLibrary
             // aggiorna il buffer
             if (buffer != null && buffer_area.testIntersection(area) != AreaIntersectionType.noItersection)
             {
-                // TODO: ATTENZIONE! qui rigenero il buffer causando delle nuove chiamate a drawImageMapAt. Sarebbe meglio 
+                // ATTENZIONE! qui rigenero il buffer causando delle nuove chiamate a drawImageMapAt. Sarebbe meglio 
                 // semplicemente trovare un meccanismo per invalidare la parte del buffer interessata e lasciare
                 // la rigenerazione al momento del Paint del controllo. In particolare in alcuni casi posso avere
                 // più invalidazioni su aree parzialmente sovrapposte prima che venga elaborato un Paint, e in tale
@@ -137,26 +131,16 @@ namespace MapsLibrary
             // invalida l'area del controllo (tenendo un margine di 2 pixel)
             const int marg = 2;
             PxCoordinates c = map.mapsystem.PointToPx(pgpCenter, uZoom);
-            c.xpx -= this.MapViewportSize.Width / 2;
-            c.ypx -= this.MapViewportSize.Height / 2;
+            c.xpx -= this.Size.Width / 2;
+            c.ypx -= this.Size.Height / 2;
             ProjectedGeoArea invalidarea = ProjectedGeoArea.Intersection(this.VisibleArea, area);
             PxCoordinates px1 = map.mapsystem.PointToPx(invalidarea.pMin, uZoom),
                           px2 = map.mapsystem.PointToPx(invalidarea.pMax, uZoom);  // CONTROLLARE è compreso nell'area da invalidare ????
             Rectangle rect = new Rectangle((int)(px1.xpx - c.xpx - marg), (int)(px1.ypx - c.ypx - marg),
                                            (int)(px2.xpx - px1.xpx + 1 + 2 * marg), (int)(px2.ypx - px1.ypx + 1 + 2 * marg));
-            if (HiResMode)
-            {
-                rect.X *= 2;
-                rect.Y *= 2;
-                rect.Width *= 2;
-                rect.Height *= 2;
-            }
             this.Invalidate(rect);
         }
 
-        /// <summary>
-        /// Restituisce o imposta il fattore di zoom per la visualizzazione della mappa.
-        /// </summary>
         public uint Zoom
         {
             get
@@ -174,9 +158,6 @@ namespace MapsLibrary
             }
         }
 
-        /// <summary>
-        /// Restituisce o imposta le coordinate geografiche corrispondenti al centro dell'area visibile del controllo.
-        /// </summary>
         public ProjectedGeoPoint Center
         {
             get
@@ -195,9 +176,6 @@ namespace MapsLibrary
             }
         }
 
-        /// <summary>
-        /// Restituisce l'area geografica corrispondente all'area visibile del controllo. 
-        /// </summary>
         public ProjectedGeoArea VisibleArea
         {
             get
@@ -211,11 +189,11 @@ namespace MapsLibrary
                 {
                     PxCoordinates c1, c2;
                     c1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom);
-                    c1.xpx -= this.MapViewportSize.Width / 2;
-                    c1.ypx -= this.MapViewportSize.Height / 2;
+                    c1.xpx -= this.Size.Width / 2;
+                    c1.ypx -= this.Size.Height / 2;
                     c2 = c1;
-                    c2.xpx += this.MapViewportSize.Width;
-                    c2.ypx += this.MapViewportSize.Height;
+                    c2.xpx += this.Size.Width;
+                    c2.ypx += this.Size.Height;
                     return new ProjectedGeoArea(map.mapsystem.PxToPoint(c1, this.Zoom), map.mapsystem.PxToPoint(c2, this.Zoom));
                 }
             }
@@ -232,7 +210,7 @@ namespace MapsLibrary
                 ProjectedGeoArea[] zones;
                 PxCoordinates pxcWinCorner = map.mapsystem.PointToPx(drawarea.pMin, this.Zoom);
 
-                Bitmap newbuffer = new Bitmap(this.MapViewportSize.Width, this.MapViewportSize.Height);
+                Bitmap newbuffer = new Bitmap(this.Size.Width, this.Size.Height);
 #if DEBUG
                 System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
                 watch.Start();
@@ -274,7 +252,6 @@ namespace MapsLibrary
                 // TODO: e se il font lo tenessi sempre, invece di rigenerarlo ad ogni paint?
                 Font drawFont = getDrawingFont();
 
-                // FIXME: la lunghezza del riferimento di scala varia se HiResMode
                 // croce centrale con coordinate - preparazione 
                 // HACK: devo assegnare le seguenti variabili anche se non mi servono sempre. Il problema è causato dalla divisione in 2 dell'if
                 int scr_cent_x = 0, scr_cent_y = 0;
@@ -284,24 +261,19 @@ namespace MapsLibrary
                     scr_cent_y = this.Size.Height / 2;
                 }
                 // riferimento di scala - preparazione
-                // scalerefhlen è la lunghezza del riferimento di scala. Viene inizialmente in base all'altezza del font e poi approssimato
-                // alla lunghezza inferiore più vicina che corrisponde ad una lunghezza in metri che è multiplo di una potenza di 10
                 int scalerefhlen = drawingfont_height * 3;
                 // HACK: devo assegnare le seguenti variabili anche se non mi servono sempre. Il problema è causato dalla divisione in 2 dell'if
                 string strRefLen = null;
                 if (_showscale)
                 {
-                    // p1 e p2 sono gli estremi di un ipotetico riferimento di scala preso al centro della finestra di visualizazione
                     PxCoordinates p1 = this.map.mapsystem.PointToPx(this.Center, this.Zoom),
                                   p2 = p1;
                     p1.xpx -= scalerefhlen; p2.xpx += scalerefhlen;
                     GeoPoint g1 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p1, Zoom)),
                              g2 = map.mapsystem.CalcInverseProjection(map.mapsystem.PxToPoint(p2, Zoom));
                     double len = g1.Distance(g2);
-                    if (HiResMode)
-                        len /= 2;
                     int reflen_meters = (len < int.MaxValue) ? (int)len : 0;
-                    // calcolo di una lunghezza in metri "comoda" che sia vicina a quella ottenuta
+                    // approssimazione
                     int aprox = ((int)Math.Log10(len));
                     if (aprox > 0)
                     {
@@ -318,41 +290,19 @@ namespace MapsLibrary
 
                 }
 
-#if DEBUG
-                    System.Diagnostics.Stopwatch watch2 = new System.Diagnostics.Stopwatch();
-                    watch2.Start();
-#endif
                 //----- Procede con il disegno effettivo. Prima il buffer con la mappa, poi le scritte sovrapposte.
-                if (HiResMode)
-                {
-                    if (HiResModeCustomDraw)
-                    {
-                        if (HiResModeBuffer == null) 
-                            HiResModeBuffer = new Bitmap(buffer.Width * 2, buffer.Height * 2);
-                        ResizeImage(buffer, HiResModeBuffer);
-                        e.Graphics.DrawImage(HiResModeBuffer, 0, 0);
-                    }
-                    else
-                    {
-                        // FIXME: Non c'è bisogno di ricalcolare questi rettangoli ogni volta
-                        Rectangle dst_r = new Rectangle(0, 0, Size.Width, Size.Height);
-                        Rectangle src_r = new Rectangle(0, 0, MapViewportSize.Width, MapViewportSize.Height);
-                        e.Graphics.DrawImage(buffer, dst_r, src_r, GraphicsUnit.Pixel);
-                    }
-                }
-                else
-                    e.Graphics.DrawImage(buffer, 0, 0);
-#if DEBUG
-                watch2.Stop();
-#endif
+                e.Graphics.DrawImage(buffer, 0, 0);
+
                 // croce centrale con coordinate - disegno 
                 if (_showpos)
                 {
                     GeoPoint gpCenter = map.mapsystem.CalcInverseProjection(this.Center);
                     using (Pen pen = new Pen(Color.Black))
+                    //using ()
                     using (SolidBrush blackBrush = new SolidBrush(Color.Black))
                     using (SolidBrush whiteBrush = new SolidBrush(Color.White))
                     {
+                        //e.Graphics.DrawImage(buffer, 0, 0);
                         e.Graphics.DrawLine(pen, scr_cent_x - crossline_hlen, scr_cent_y, scr_cent_x + crossline_hlen, scr_cent_y);
                         e.Graphics.DrawLine(pen, scr_cent_x, scr_cent_y - crossline_hlen, scr_cent_x, scr_cent_y + crossline_hlen);
                         e.Graphics.DrawString(gpCenter.ToString(), drawFont, whiteBrush, 1, 1);
@@ -382,8 +332,7 @@ namespace MapsLibrary
 
 #if DEBUG
                 int ptime_base_y = drawingfont_height * 2;
-                string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms" +
-                             " / " + watch2.ElapsedMilliseconds + " ms"; 
+                string msg = "Paint time: " + watch.Elapsed.TotalMilliseconds.ToString() + " ms";
                 //using (Font drawFont = new Font("Arial", 8, FontStyle.Regular))
                 using (SolidBrush drawBrush = new SolidBrush(Color.Black))
                     e.Graphics.DrawString(msg, drawFont, drawBrush, 0, ptime_base_y);
@@ -398,15 +347,12 @@ namespace MapsLibrary
             }
         }
 
-        /// <remarks>Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 
-        /// evita l'inutile riempimento dello sfondo.
-        /// </remarks>
+        // Questo metodo vuoto evita il flickering quando non c'è double-buffering e comunque 
+        // evita l'inutile riempimento dello sfondo
         protected override void OnPaintBackground(PaintEventArgs e)
         { }
 
-        /// <summary>
-        /// Avvia lo spostamento dell'area visibile della mappa
-        /// </summary>
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -414,17 +360,13 @@ namespace MapsLibrary
             this.drag_lasty = e.Y;
             this.dragging = true;
         }
-        /// <summary>
-        /// Termina lo spostamento dell'area visibile della mappa
-        /// </summary>
+
         protected override void OnMouseUp(MouseEventArgs e)
         {
             this.dragging = false;
             base.OnMouseUp(e);
         }
-        /// <summary>
-        /// Effettua lo spostamento dell'area visibile della mappa calcolando il nuovo centro.
-        /// </summary>
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -441,18 +383,6 @@ namespace MapsLibrary
             }
         }
 
-#if !(PocketPC || Smartphone || WindowsCE)
-        protected override void OnResize(EventArgs e)
-        {
-            Invalidate();
-            base.OnResize(e);
-            if (HiResModeBuffer != null) 
-            {
-                HiResModeBuffer.Dispose();
-                HiResModeBuffer = null;
-            }
-        }
-#endif
         /// <summary>
         /// Indica/imposta la visualizzazione di una croce centrale e le corrispondenti coordinate geografiche
         /// </summary>
@@ -487,84 +417,6 @@ namespace MapsLibrary
                     _showscaleref = value;
                     Invalidate();
                 }
-            }
-        }
-
-        private bool _hiresmode;
-        /// <summary>
-        /// Modalità schermo ad alta risoluzione
-        /// </summary>
-        /// <remarks>Nella modalità ad alta risoluzione le mappe vengono ingrandite di un fattore 2 per migliorare la leggibilità</remarks>
-        public bool HiResMode
-        {
-            get { return _hiresmode; }
-            set
-            {
-                _hiresmode = value;
-                Invalidate();
-                if (value == false && HiResModeBuffer != null)
-                {
-                    HiResModeBuffer.Dispose();
-                    HiResModeBuffer = null;
-                }
-            }
-        }
-
-        public bool HiResModeCustomDraw { get; set; }
-
-        private Bitmap HiResModeBuffer;
-
-        /// <summary>
-        /// Dimensione in pixel dell'aria di visualizzazione della mappa. 
-        /// Normalmente corrisponde alla dimensione del controllo stesso, più piccola se HiResMode è true.
-        /// </summary>
-        public Size MapViewportSize
-        {
-            get
-            {
-                return HiResMode ? new Size(this.Size.Width / 2, this.Size.Height / 2) : this.Size;
-            }
-        }
-
-        public static void ResizeImage(Bitmap originalBitmap, Bitmap resultBitmap)
-        {
-            int originalWidth = originalBitmap.Width;
-            int originalHeight = originalBitmap.Height;
-
-            BitmapData originalData = originalBitmap.LockBits(
-                new Rectangle(0, 0, originalWidth, originalHeight),
-                ImageLockMode.ReadOnly,
-                PixelFormat.Format32bppRgb);
-            BitmapData resultData = resultBitmap.LockBits(
-                new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
-                ImageLockMode.WriteOnly,
-                PixelFormat.Format32bppRgb);
-
-            int resultStride = resultData.Stride;
-            int originalStride = originalData.Stride;
-
-            unsafe
-            {
-                Int32* originalPointer = (Int32*)originalData.Scan0.ToPointer();
-                Int32* resultPointer = (Int32*)resultData.Scan0.ToPointer();
-                Int32* endimg = (Int32*)((byte*)originalPointer + originalStride * originalHeight);
-                while (originalPointer < endimg) 
-                {
-                    Int32* endline = (Int32 *)((byte*)originalPointer + originalStride);
-                    Int32* line2 = (Int32*)((byte*)resultPointer + resultStride);
-                    while(originalPointer < endline) 
-                    {
-                        //*resultPointer++ = *originalPointer;
-                        //*resultPointer++ = *originalPointer;
-                        //*line2++ = *originalPointer;
-                        //*line2++ = *originalPointer++;
-                        *resultPointer++ = *resultPointer++ = *line2++ = *line2++ = *originalPointer++;
-
-                    }
-                    resultPointer = line2;
-                }
-                originalBitmap.UnlockBits(originalData);
-                resultBitmap.UnlockBits(resultData);
             }
         }
 

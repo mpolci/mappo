@@ -54,6 +54,9 @@ namespace MapperTools.Pollicino
         public GPSControl()
         {
             InitializeComponent();
+
+            this.pb_GPSActvity.Image = Properties.Resources.ImgGPS;
+
             //ProcessGPSEventAsync = new AsyncEventHandler(GPSEventAsync);
             //gpshandler = new GPSHandler(parent); //Initialize GPS handler
             gpshandler = new GPSHandler(this); //Initialize GPS handler
@@ -61,16 +64,6 @@ namespace MapperTools.Pollicino
             gpshandler.NewGPSFix += new GPSHandler.NewGPSFixHandler(this.GPSEventHandler); 
             started = false;
         }
-
-        public System.Drawing.Image Image {
-            get {
-                return pb_GPSActvity.Image;
-            }
-            set {
-                pb_GPSActvity.Image = value;
-            }
-        }
-
         private object gpsdatalock = new object();
         private GPSPosition _gpsdata;
         private GPSHandler gpshandler;
@@ -114,6 +107,9 @@ namespace MapperTools.Pollicino
             }
         }
         #endregion
+
+        [DllImport("coredll")]
+        extern static void SystemIdleTimerReset();
 
         /// <summary>
         /// Crea un nuovo waypoint nella posizione attuale e lo registra nel log
@@ -159,7 +155,7 @@ namespace MapperTools.Pollicino
                 if (!logfile.Directory.Exists)
                     logfile.Directory.Create();
                 lastlogname = logfile.FullName;
-                swGPSLog = new StreamWriter(lastlogname, true);     // appends if file exists
+                swGPSLog = new StreamWriter(lastlogname);
                 swGPSLog.AutoFlush = true;
             }
             gpshandler.Start(port, speed);
@@ -212,7 +208,7 @@ namespace MapperTools.Pollicino
                     break;
             }
 
-            PlatformSpecificCode.SystemIdleTimerReset();
+            SystemIdleTimerReset();
 
             if (swGPSLog != null)
                 lock (swGPSLog) swGPSLog.WriteLine(e.Sentence);

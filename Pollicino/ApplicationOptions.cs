@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 using System;
+//using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -61,29 +62,9 @@ namespace MapperTools.Pollicino
             public uint RecordAudioDevice;
             public WaveIn4CF.WaveFormats RecordAudioFormat;
             public bool AutoCentreMap;
-            public bool ShowPosition;
-            public bool ShowScale;
-            public bool ShowOdometer;
             public MapsLibrary.GeoPoint InitialMapPosition;
             public bool FullScreen;
-            public bool HiResDisplayMode;
-            public bool CustomHiResDisplayMode;
-#if PocketPC || Smartphone || WindowsCE
-			public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
-#else
-			public int CameraButton;
-#endif
-            // TODO: i parametri di OSM non è bene che stiano nella classe InterfaceOptions
-			public string OSMUsername;
-            public string OSMPassword;
-        }
-
-        public struct TrackingOptions
-        {
-            public string GMapsEmail;
-            public string GMapsPassword;
-            public int UpdateInterval;
-            public string TrackDescription;
+            public Microsoft.WindowsCE.Forms.HardwareKeys CameraButton;
         }
 
         /// <summary>
@@ -102,7 +83,6 @@ namespace MapperTools.Pollicino
         public GPSOptions GPS;
         public MapsOptions Maps;
         public InterfaceOptions Application;
-        public TrackingOptions OnlineTracking;
 
         public void SaveToFile(string filename)
         {
@@ -158,10 +138,6 @@ namespace MapperTools.Pollicino
             Maps.OSM.TileCachePath = "";
             Maps.GMaps.CachePath = "";
             Application.WaypointSoundFile = "";
-            OnlineTracking.GMapsEmail = "";
-            OnlineTracking.GMapsPassword = "";
-            OnlineTracking.UpdateInterval = 120;
-            OnlineTracking.TrackDescription = "";
         }
 
         #region ICloneable Members
@@ -174,7 +150,6 @@ namespace MapperTools.Pollicino
             cloned.GPS = this.GPS;
             cloned.Maps = this.Maps;
             cloned.Application = this.Application;
-            cloned.OnlineTracking = this.OnlineTracking;
             return cloned;
         }
 

@@ -30,13 +30,6 @@ namespace MapperTools.Pollicino
 
     static class Program
     {
-        internal static string GetPath()
-        {
-            Uri furl = new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            System.Diagnostics.Debug.Assert(furl.IsFile, "CodeBase returns not file uri");
-            return Path.GetDirectoryName(furl.LocalPath);
-        }
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -45,7 +38,7 @@ namespace MapperTools.Pollicino
         {
    
 #if TRACE
-            string path = Program.GetPath();
+            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             System.Diagnostics.TextWriterTraceListener outtw = new System.Diagnostics.TextWriterTraceListener(path + "\\pollicino_log.txt");
             System.Diagnostics.Trace.Listeners.Add(outtw);
             //System.Diagnostics.Debug.Listeners.Clear();

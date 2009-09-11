@@ -58,11 +58,9 @@ namespace MapperTools.Pollicino
             this.menuItem_waypoint = new System.Windows.Forms.MenuItem();
             this.menuItem_photo = new System.Windows.Forms.MenuItem();
             this.menuItem_gpsactivity = new System.Windows.Forms.MenuItem();
-            this.menuItem_onlinetracking = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_downloadmaps = new System.Windows.Forms.MenuItem();
             this.menuItem_loadtrack = new System.Windows.Forms.MenuItem();
-            this.menuItem_TracksManager = new System.Windows.Forms.MenuItem();
             this.menuItem_exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -74,23 +72,20 @@ namespace MapperTools.Pollicino
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem_showpos = new System.Windows.Forms.MenuItem();
             this.menuItem_showscale = new System.Windows.Forms.MenuItem();
-            this.menuItem_Odometer = new System.Windows.Forms.MenuItem();
-            this.menuItem_HiRes = new System.Windows.Forms.MenuItem();
-            this.menuItem_HiRes_customdraw = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
+            this.mapcontrol = new MapsLibrary.MapControl();
+            this.hardwareButton_app3 = new Microsoft.WindowsCE.Forms.HardwareButton();
+            this.gpsControl = new MapperTools.Pollicino.GPSControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_gpx = new System.Windows.Forms.Label();
             this.pb_DownloaderActivity = new System.Windows.Forms.PictureBox();
-            this.gpsControl = new MapperTools.Pollicino.GPSControl();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.mapcontrol = new MapsLibrary.MapControl();
             this.blinkcnDownloader = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
             this.blinkcnGPX = new MapperTools.Pollicino.BlinkingControlNotifier(this.components);
             this.gpx_saver = new MapperTools.Pollicino.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
-            this.label_odometer = new System.Windows.Forms.Label();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -107,7 +102,6 @@ namespace MapperTools.Pollicino
             this.menuItem1.MenuItems.Add(this.menuItem_waypoint);
             this.menuItem1.MenuItems.Add(this.menuItem_photo);
             this.menuItem1.MenuItems.Add(this.menuItem_gpsactivity);
-            this.menuItem1.MenuItems.Add(this.menuItem_onlinetracking);
             this.menuItem1.MenuItems.Add(this.menuItem4);
             this.menuItem1.MenuItems.Add(this.menuItem_exit);
             this.menuItem1.Text = "Commands";
@@ -138,19 +132,13 @@ namespace MapperTools.Pollicino
             // 
             // menuItem_gpsactivity
             // 
-            this.menuItem_gpsactivity.Text = "Start GPS";
+            this.menuItem_gpsactivity.Text = "start GPS";
             this.menuItem_gpsactivity.Click += new System.EventHandler(this.menuItem_gpsactivity_Click);
-            // 
-            // menuItem_onlinetracking
-            // 
-            this.menuItem_onlinetracking.Text = "Start online tracking";
-            this.menuItem_onlinetracking.Click += new System.EventHandler(this.menuItem_onlinetracking_Click);
             // 
             // menuItem4
             // 
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
-            this.menuItem4.MenuItems.Add(this.menuItem_TracksManager);
             this.menuItem4.Text = "Other";
             // 
             // menuItem_downloadmaps
@@ -162,11 +150,6 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_loadtrack.Text = "Load track...";
             this.menuItem_loadtrack.Click += new System.EventHandler(this.menuItem_loadtrack_Click);
-            // 
-            // menuItem_TracksManager
-            // 
-            this.menuItem_TracksManager.Text = "Tracks manager...";
-            this.menuItem_TracksManager.Click += new System.EventHandler(this.menuItem_TracksManager_Click);
             // 
             // menuItem_exit
             // 
@@ -180,8 +163,6 @@ namespace MapperTools.Pollicino
             this.menuItem2.MenuItems.Add(this.menuItem_autodownload);
             this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.MenuItems.Add(this.menuItem8);
-            this.menuItem2.MenuItems.Add(this.menuItem_HiRes);
-            this.menuItem2.MenuItems.Add(this.menuItem_HiRes_customdraw);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -220,7 +201,6 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem8.MenuItems.Add(this.menuItem_showpos);
             this.menuItem8.MenuItems.Add(this.menuItem_showscale);
-            this.menuItem8.MenuItems.Add(this.menuItem_Odometer);
             this.menuItem8.Text = "Show";
             // 
             // menuItem_showpos
@@ -232,21 +212,6 @@ namespace MapperTools.Pollicino
             // 
             this.menuItem_showscale.Text = "Scale";
             this.menuItem_showscale.Click += new System.EventHandler(this.menuItem_showscale_Click);
-            // 
-            // menuItem_Odometer
-            // 
-            this.menuItem_Odometer.Text = "Odometer";
-            this.menuItem_Odometer.Click += new System.EventHandler(this.menuItem_Odometer_Click);
-            // 
-            // menuItem_HiRes
-            // 
-            this.menuItem_HiRes.Text = "HiRes";
-            this.menuItem_HiRes.Click += new System.EventHandler(this.menuItem_HiRes_Click);
-            // 
-            // menuItem_HiRes_customdraw
-            // 
-            this.menuItem_HiRes_customdraw.Text = "HiRes mode 2";
-            this.menuItem_HiRes_customdraw.Click += new System.EventHandler(this.menuItem_HiRes_customdraw_Click);
             // 
             // label1
             // 
@@ -267,6 +232,32 @@ namespace MapperTools.Pollicino
             this.label_zoom.Name = "label_zoom";
             this.label_zoom.Size = new System.Drawing.Size(17, 16);
             this.label_zoom.Text = "14";
+            // 
+            // mapcontrol
+            // 
+            this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapcontrol.Location = new System.Drawing.Point(0, 0);
+            this.mapcontrol.Name = "mapcontrol";
+            this.mapcontrol.ShowPosition = false;
+            this.mapcontrol.ShowScaleRef = false;
+            this.mapcontrol.Size = new System.Drawing.Size(240, 268);
+            this.mapcontrol.TabIndex = 0;
+            this.mapcontrol.Zoom = ((uint)(0u));
+            this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
+            // 
+            // hardwareButton_app3
+            // 
+            this.hardwareButton_app3.AssociatedControl = this;
+            this.hardwareButton_app3.HardwareKey = Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3;
+            // 
+            // gpsControl
+            // 
+            this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.gpsControl.Location = new System.Drawing.Point(4, 3);
+            this.gpsControl.Name = "gpsControl";
+            this.gpsControl.Size = new System.Drawing.Size(12, 12);
+            this.gpsControl.TabIndex = 7;
             // 
             // panel1
             // 
@@ -294,37 +285,6 @@ namespace MapperTools.Pollicino
             this.pb_DownloaderActivity.Name = "pb_DownloaderActivity";
             this.pb_DownloaderActivity.Size = new System.Drawing.Size(16, 16);
             // 
-            // gpsControl
-            // 
-            this.gpsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.gpsControl.Image = ((System.Drawing.Image)(resources.GetObject("gpsControl.Image")));
-            this.gpsControl.Location = new System.Drawing.Point(4, 3);
-            this.gpsControl.Name = "gpsControl";
-            this.gpsControl.Size = new System.Drawing.Size(12, 12);
-            this.gpsControl.TabIndex = 7;
-            // 
-            // menuItem6
-            // 
-            this.menuItem6.Text = "Take photo...";
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Text = "Full screen";
-            // 
-            // mapcontrol
-            // 
-            this.mapcontrol.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.mapcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapcontrol.HiResMode = true;
-            this.mapcontrol.Location = new System.Drawing.Point(0, 0);
-            this.mapcontrol.Name = "mapcontrol";
-            this.mapcontrol.ShowPosition = false;
-            this.mapcontrol.ShowScaleRef = false;
-            this.mapcontrol.Size = new System.Drawing.Size(240, 268);
-            this.mapcontrol.TabIndex = 0;
-            this.mapcontrol.Zoom = ((uint)(0u));
-            this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
-            // 
             // blinkcnDownloader
             // 
             this.blinkcnDownloader.BlinkingControl = this.pb_DownloaderActivity;
@@ -336,20 +296,19 @@ namespace MapperTools.Pollicino
             this.blinkcnGPX.BlinkingInterval = 400;
             this.blinkcnGPX.VisibleOnStop = false;
             // 
-            // label_odometer
+            // menuItem6
             // 
-            this.label_odometer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_odometer.Location = new System.Drawing.Point(190, 0);
-            this.label_odometer.Name = "label_odometer";
-            this.label_odometer.Size = new System.Drawing.Size(50, 18);
-            this.label_odometer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.menuItem6.Text = "Take photo...";
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Text = "Full screen";
             // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
-            this.Controls.Add(this.label_odometer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_zoom);
@@ -385,6 +344,7 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_downloadmaps;
         private System.Windows.Forms.MenuItem menuItem_loadtrack;
         private System.Windows.Forms.MenuItem menuItem_followGPS;
+        private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
         private System.Windows.Forms.MenuItem menuItem_exit;
         private System.Windows.Forms.MenuItem menuItem4;
         private GPSControl gpsControl;
@@ -402,12 +362,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem menuItem_showscale;
-        private System.Windows.Forms.MenuItem menuItem_TracksManager;
-        private System.Windows.Forms.MenuItem menuItem_onlinetracking;
-        private System.Windows.Forms.MenuItem menuItem_HiRes;
-        private System.Windows.Forms.MenuItem menuItem_HiRes_customdraw;
-        private System.Windows.Forms.Label label_odometer;
-        private System.Windows.Forms.MenuItem menuItem_Odometer;
 
 
 

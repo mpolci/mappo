@@ -26,9 +26,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-#if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsCE.Forms;
-#endif
 
 namespace MapperTools.Pollicino
 {
@@ -41,17 +39,9 @@ namespace MapperTools.Pollicino
         {
             InitializeComponent();
 
-#if PocketPC || Smartphone || WindowsCE
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.None);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey1);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey2);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey4);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey5);
-            this.combo_CameraButton.Items.Add(Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey6);
+            num_recordaudioseconds.Maximum = MAXAUDIOREC;
 
             uint recdevices = WaveIn4CF.Native.waveInGetNumDevs();
-
             num_RecDeviceId.Maximum = (decimal) recdevices - 1;
 
             formats = new WaveIn4CF.WaveFormats[recdevices];
@@ -60,13 +50,7 @@ namespace MapperTools.Pollicino
                 formats[i] = WaveIn4CF.WaveInRecorder.GetSupportedFormats(i);
             }
             num_RecDeviceId.Value = 0;
-
             fill_RecFormats();
-#endif
-            //TODO: registrazione in windows?
-
-            num_recordaudioseconds.Maximum = MAXAUDIOREC;
-
 
         }
 
@@ -93,18 +77,9 @@ namespace MapperTools.Pollicino
                 _data.Application.WaypointRecordAudio = !rb_audiorec_disabled.Checked;
                 _data.Application.WaypointRecordAudioSeconds = (int) num_recordaudioseconds.Value;
                 _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
-                _data.Application.FullScreen = cb_fullscreen.Checked;
-				_data.Application.OSMUsername = tb_OSMUsername.Text;
-                _data.Application.OSMPassword = tb_OSMPassword.Text;
-#if PocketPC || Smartphone || WindowsCE
-                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
-#endif
-                //TODO: registrazione audio in windows?
-                _data.OnlineTracking.TrackDescription = tb_onlinetrack_name.Text;
-                _data.OnlineTracking.GMapsEmail = tb_gmaps_email.Text;
-                _data.OnlineTracking.GMapsPassword = tb_gmaps_password.Text;
-                _data.OnlineTracking.UpdateInterval = (int) num_TrackingInterval.Value;
+                _data.Application.FullScreen = cb_fullscreen.Checked;
+                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
                 return _data;
             }
             set
@@ -144,25 +119,14 @@ namespace MapperTools.Pollicino
                 } catch (Exception) {}
                 cb_fullscreen.Checked = value.Application.FullScreen;
                 combo_CameraButton.SelectedItem = value.Application.CameraButton;
-                tb_OSMUsername.Text = value.Application.OSMUsername;
-                tb_OSMPassword.Text = value.Application.OSMPassword;
-                tb_onlinetrack_name.Text = value.OnlineTracking.TrackDescription;
-                tb_gmaps_email.Text = value.OnlineTracking.GMapsEmail;
-                tb_gmaps_password.Text = value.OnlineTracking.GMapsPassword;
-                num_TrackingInterval.Value = value.OnlineTracking.UpdateInterval;
             }
         }
 
         private void button_SelectSimulationFile_Click(object sender, EventArgs e)
         {
-            string opendir;
-            try {
-                opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
-            } catch (ArgumentException) {
-                opendir = "";
-            }
+            string opendir = Path.GetDirectoryName(tb_SimulationFile.Text);
             if (!Directory.Exists(opendir))
-                opendir = Program.GetPath();
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb_SimulationFile.Text = openfiledlg.openfile;
@@ -174,7 +138,7 @@ namespace MapperTools.Pollicino
             if (!Directory.Exists(opendir)) 
                 opendir = Path.GetDirectoryName(opendir);
             if (!Directory.Exists(opendir))
-                opendir = Program.GetPath();
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, true))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb.Text = openfiledlg.directoty;
@@ -245,7 +209,7 @@ namespace MapperTools.Pollicino
         {
             string opendir = Path.GetDirectoryName(tb_waypointsound.Text);
             if (!Directory.Exists(opendir))
-                opendir = Program.GetPath();
+                opendir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
                 if (openfiledlg.ShowDialog() == DialogResult.OK)
                     tb_waypointsound.Text = openfiledlg.openfile;
@@ -299,7 +263,6 @@ namespace MapperTools.Pollicino
             }
 
         }
-
 
     }
 }
