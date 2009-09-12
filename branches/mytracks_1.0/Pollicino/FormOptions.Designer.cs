@@ -605,7 +605,7 @@ namespace MapperTools.Pollicino
             this.label15.Location = new System.Drawing.Point(7, 24);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(226, 20);
-            this.label15.Text = "Version 0.9 for Pocket PC";
+            this.label15.Text = "Version 1.0 for Pocket PC";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label14
