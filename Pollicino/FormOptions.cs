@@ -97,7 +97,7 @@ namespace MapperTools.Pollicino
 				_data.Application.OSMUsername = tb_OSMUsername.Text;
                 _data.Application.OSMPassword = tb_OSMPassword.Text;
 #if PocketPC || Smartphone || WindowsCE
-                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
+                _data.Application.CameraButton = (combo_CameraButton.SelectedItem != null) ? (HardwareKeys)combo_CameraButton.SelectedItem : HardwareKeys.None;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
 #endif
                 //TODO: registrazione audio in windows?
