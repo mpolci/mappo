@@ -79,7 +79,7 @@ namespace MapperTools.Pollicino
                 _data.Application.RecordAudioDevice = (uint)num_RecDeviceId.Value;
                 _data.Application.RecordAudioFormat = (WaveIn4CF.WaveFormats)combo_RecFormat.SelectedItem;
                 _data.Application.FullScreen = cb_fullscreen.Checked;
-                _data.Application.CameraButton = (HardwareKeys) combo_CameraButton.SelectedItem;
+                _data.Application.CameraButton = (combo_CameraButton.SelectedItem != null) ? (HardwareKeys) combo_CameraButton.SelectedItem : HardwareKeys.None;
                 return _data;
             }
             set
