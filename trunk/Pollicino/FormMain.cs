@@ -58,7 +58,8 @@ namespace MapperTools.Pollicino
         string configfile;
 
         protected CachedTilesMap map;
-        protected SparseImagesMap gmap;
+        //protected SparseImagesMap gmap;
+        protected CachedTilesMap gmap;
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
         protected LayerPoints waypoints;
@@ -217,7 +218,8 @@ namespace MapperTools.Pollicino
             //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
             idx_layer_osm = lmap.addLayerOnTop(this.map);
             // Google MAPS
-            gmap = new SparseImagesMap(new GoogleMapsSystem(GoogleKey), options.Maps.GMaps.CachePath, 150);
+            gmap = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, new GoogleMapsTileMapSystem(), required_buffers(true));
+            //gmap = new SparseImagesMap(new GoogleMapsSystem(GoogleKey), options.Maps.GMaps.CachePath, 150);
             idx_layer_gmaps = lmap.addLayerOnTop(gmap);
             lmap.setVisibility(idx_layer_gmaps, false);
             // Tracciato GPS
@@ -929,6 +931,7 @@ namespace MapperTools.Pollicino
             mNotifyIcon.Dispose();
 #endif
             map.Dispose();
+            gmap.Dispose();
             gpx_saver.Dispose();
 
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
