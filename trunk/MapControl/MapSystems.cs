@@ -234,6 +234,8 @@ namespace MapsLibrary
                 if (tileinfosaved == null || !tileinfosaved.isRecent())  // procede solo se il tile non è stato scaricato di recente
                 {
                     HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(this.TileUrl(tn));
+                    //httpRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                    httpRequest.UserAgent = "Pollicino";  
                     using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
                     {
                         TileInfo tileinfonew = getTileInfo(tn, httpResponse);

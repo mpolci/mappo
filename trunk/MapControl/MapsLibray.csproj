@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTypes.cs" />
+    <Compile Include="GoogleMapsTileMapSystem.cs" />
     <Compile Include="MapSystems.cs" />
     <Compile Include="LayerPoints.cs">
     </Compile>
