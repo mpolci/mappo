@@ -13,5 +13,19 @@ namespace MapperTools.Pollicino
         static public void SystemIdleTimerReset() 
         {}
 #endif
+        [DllImport("CoreDll.DLL", EntryPoint = "SetPowerRequirement", SetLastError = true)]
+        extern public static IntPtr SetPowerRequirement(String pvDevice, int DeviceState, int DeviceFlags, IntPtr pvSystemState, int StateFlags);
+
+        public static event EventHandler Hibernate
+        {
+            add
+            {
+                Microsoft.WindowsCE.Forms.MobileDevice.Hibernate += value;
+            }
+            remove
+            {
+                Microsoft.WindowsCE.Forms.MobileDevice.Hibernate += value;
+            }
+        }
     }
 }
