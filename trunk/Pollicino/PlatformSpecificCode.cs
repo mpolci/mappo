@@ -9,10 +9,7 @@ namespace MapperTools.Pollicino
 #if PocketPC || Smartphone || WindowsCE
         [DllImport("coredll")]
         extern public static void SystemIdleTimerReset();
-#else
-        static public void SystemIdleTimerReset() 
-        {}
-#endif
+
         [DllImport("CoreDll.DLL", EntryPoint = "SetPowerRequirement", SetLastError = true)]
         extern public static IntPtr SetPowerRequirement(String pvDevice, int DeviceState, int DeviceFlags, IntPtr pvSystemState, int StateFlags);
 
@@ -27,5 +24,17 @@ namespace MapperTools.Pollicino
                 Microsoft.WindowsCE.Forms.MobileDevice.Hibernate += value;
             }
         }
+
+#else
+        public static void SystemIdleTimerReset() 
+        {}
+
+        public static IntPtr SetPowerRequirement(String pvDevice, int DeviceState, int DeviceFlags, IntPtr pvSystemState, int StateFlags)
+        {}
+
+        public static event EventHandler Hibernate;
+
+#endif
+
     }
 }
