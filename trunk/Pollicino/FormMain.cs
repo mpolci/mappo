@@ -241,6 +241,8 @@ namespace MapperTools.Pollicino
             autocenter = options.Application.AutoCentreMap;
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
 
+            PlatformSpecificCode.Hibernate += new EventHandler(this.HibernateHandler);
+
             verifica_opzioni_finale();
 
             if (append_to_log != null)
@@ -262,6 +264,13 @@ namespace MapperTools.Pollicino
             if (Directory.Exists(options.GPS.LogsDir))
                 gpx_saver.ParseLogsDir(options.GPS.LogsDir);
 
+        }
+
+        private void HibernateHandler(Object sender, EventArgs e)
+        {
+            ((IHibernation)map).Hibernate();
+            ((IHibernation)gmap).Hibernate();
+            mapcontrol.Hibernate();
         }
 
         private uint required_buffers(bool minimized_memory)
