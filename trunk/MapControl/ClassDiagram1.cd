@@ -152,6 +152,7 @@
       <HashCode>4YCQEBAgIDAgAAAMEADABAEDABAFAABoIABAQAAKJgA=</HashCode>
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.GoogleMapsSystem">
     <Position X="3.25" Y="14.5" Width="2" />
@@ -295,6 +296,13 @@
     <Position X="3.25" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAQAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MapsLibrary.IHibernation">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
   </Interface>
