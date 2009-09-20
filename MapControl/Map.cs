@@ -80,6 +80,14 @@ namespace MapsLibrary
         ProjectedGeoArea[] SimplifyDownloadArea(ProjectedGeoArea area, uint zoom);
     }
 
+    public interface IHibernation
+    {
+        /// <summary>
+        /// Metodo invocato per richiedere il rilascio delle risorse non indispensabili. Tipicamente liberare le varie cache e buffers.
+        /// </summary>
+        void Hibernate();
+    }
+
     public abstract class TilesMap : IMap, IDownloadableMap
     {
         private string mTileCacheBasePath;
@@ -482,7 +490,7 @@ namespace MapsLibrary
 
     }
 
-    public class CachedTilesMap : TilesMap, IDisposable
+    public class CachedTilesMap : TilesMap, IDisposable, IHibernation
     {
         protected LRUQueue<TileNum, Bitmap> lruqueue;
         protected uint maxitems;
@@ -525,9 +533,16 @@ namespace MapsLibrary
         {
             set
             {
-                if (lruqueue != null) lruqueue.Clear();
+                //if (lruqueue != null) lruqueue.Clear();
+                ClearQueue();
                 base.mapsystem = value;
             }
+        }
+
+        protected void ClearQueue()
+        {
+            while (lruqueue.Count > 0)
+                lruqueue.Dequeue().Dispose();
         }
 
         /// <summary>
@@ -569,7 +584,8 @@ namespace MapsLibrary
 
         public override void updateTilesInArea(ProjectedGeoArea area, uint zoom)
         {
-            lruqueue.Clear();
+            //lruqueue.Clear();
+            ClearQueue();
             base.updateTilesInArea(area, zoom);
         }
 
@@ -646,7 +662,8 @@ namespace MapsLibrary
 
         public virtual void Dispose()
         {
-            lruqueue.Clear();
+            //lruqueue.Clear();
+            ClearQueue();
         }
 
         #endregion
@@ -661,6 +678,15 @@ namespace MapsLibrary
             }
             base.onTileChanged(tn);
         }
+
+        #region IHibernation Members
+
+        public void Hibernate()
+        {
+            ClearQueue();
+        }
+
+        #endregion
     }
 
     /// <remarks>Rispetto alla classe padre, vengono disegnati solo i tile già presenti nella cache. Quando un tile non è presente viene disegnato un tile vuoto mentre il tile vero e proprio viene fatto caricare nella cache da un thread che lavora in background.</remarks>

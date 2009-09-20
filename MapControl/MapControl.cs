@@ -29,7 +29,7 @@ using System.Drawing.Imaging;
 
 namespace MapsLibrary
 {
-    public partial class MapControl : UserControl
+    public partial class MapControl : UserControl, IHibernation
     {
         private IMap map;
         private ProjectedGeoPoint pgpCenter;
@@ -108,12 +108,21 @@ namespace MapsLibrary
 
         private delegate void mapchangeddelegate(IMap map, ProjectedGeoArea area);
 
+        /// <summary>
+        /// Gestische l'evento IMap.MapChanged effettuando una chiamata asincrona al metodo mapchanged
+        /// </summary>
         void invokemapchanged(IMap map, ProjectedGeoArea area)
         {
             mapchangeddelegate mydelegate = this.mapchanged;
             BeginInvoke(mydelegate, new object[] { map, area });
         }
 
+        /// <summary>
+        /// Questo metodo viene chiamato in modo asincrono da invokemapchanged, gestisce l'evento IMap.MapChanged 
+        /// rigenerando il buffer e invalidando l'area visibile se quest'ultima si sovrappone all'area cambiata.
+        /// </summary>
+        /// <param name="map">Oggetto che ha generato l'evento IMap.MapChanged.</param>
+        /// <param name="area">Area della mappa che è cambiata.</param>
         void mapchanged(IMap map, ProjectedGeoArea area)
         {
             // aggiorna il buffer
@@ -568,5 +577,18 @@ namespace MapsLibrary
             }
         }
 
+
+        #region IHibernation Members
+
+        public void Hibernate()
+        {
+            if (buffer != null)
+            {
+                buffer.Dispose();
+                buffer = null;
+            }
+        }
+
+        #endregion
     }
 }
