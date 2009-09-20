@@ -989,6 +989,7 @@ namespace MapperTools.Pollicino
     public class OnlineTrackingHandler
     {
         DateTime lastOnlineTrackTime = new DateTime(0);
+        GPSControl.GPSPosition lastgpsdata;
         GMapsDataAPI.GMAPSMap tracking_map;
         public bool active { get; set; }
         public bool initialized { get { return tracking_map != null; } }
@@ -1011,17 +1012,26 @@ namespace MapperTools.Pollicino
             if (active && tracking_map != null &&
                 (gpsdata.receivedtime - lastOnlineTrackTime).TotalSeconds >= updateinterval)
             {
-                try
-                {
-                    tracking_map.AddPoint(gpsdata.position.dLat, gpsdata.position.dLon, 0, gpsdata.receivedtime.ToLongTimeString());
-                    lastOnlineTrackTime = gpsdata.receivedtime;
-                }
-                catch (System.Net.WebException e)
-                {
-                    lastOnlineTrackTime.AddSeconds(120);
-                    System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
-                }
+                lastOnlineTrackTime.AddSeconds(120);
+                lastgpsdata = gpsdata;
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.upload_data));
             }
         }
+
+        private void upload_data(object state)
+        {
+            //FIXME: in teoria potrebbe succedere che lo stesso punto venga caricato 2 volte 
+            try
+            {
+                tracking_map.AddPoint(lastgpsdata.position.dLat, lastgpsdata.position.dLon, 0, lastgpsdata.receivedtime.ToLongTimeString());
+                lastOnlineTrackTime = lastgpsdata.receivedtime;
+            }
+            catch (System.Net.WebException e)
+            {
+                System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
+            }
+        }
+
+        
     }
 }
