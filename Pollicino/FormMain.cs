@@ -32,6 +32,7 @@ using GMapsDataAPI;
 #if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
+using System.Threading;
 #endif 
 
 namespace MapperTools.Pollicino
@@ -584,8 +585,14 @@ namespace MapperTools.Pollicino
         {
             try
             {
-                if (!tracking.initialized) 
-                    tracking.InitSession(options.OnlineTracking.TrackDescription, options.OnlineTracking.GMapsEmail, options.OnlineTracking.GMapsPassword);
+                if (!tracking.initialized)
+                    if (PlatformSpecificCode.IsNetworkAvailable)
+                        tracking.InitSession(options.OnlineTracking.TrackDescription, options.OnlineTracking.GMapsEmail, options.OnlineTracking.GMapsPassword);
+                    else
+                    {
+                        SystemSounds.Asterisk.Play();
+                        throw new Exception();
+                    }
                 tracking.active = !tracking.active;
                 if (tracking.active)
                     menuItem_onlinetracking.Text = "Stop online tracking";
@@ -596,6 +603,8 @@ namespace MapperTools.Pollicino
             {
                 System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
             }
+            catch (Exception)
+            { }
         }
 
         private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
@@ -989,7 +998,6 @@ namespace MapperTools.Pollicino
     public class OnlineTrackingHandler
     {
         DateTime lastOnlineTrackTime = new DateTime(0);
-        GPSControl.GPSPosition lastgpsdata;
         GMapsDataAPI.GMAPSMap tracking_map;
         public bool active { get; set; }
         public bool initialized { get { return tracking_map != null; } }
@@ -998,8 +1006,9 @@ namespace MapperTools.Pollicino
         {
             if (string.IsNullOrEmpty(name)) name = "Tracking";
             name += " " + DateTime.Now.ToString();
-            tracking_map = new GMAPSMap(name, name,
-                       GMAPSService.Login(email,pw));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(
+                (object s) => this.tracking_map = new GMAPSMap(name, name, GMAPSService.Login(email, pw))
+            ));
         }
 
         public void StopSession()
@@ -1010,28 +1019,27 @@ namespace MapperTools.Pollicino
         public void HandleGPSEvent(GPSControl.GPSPosition gpsdata, int updateinterval)
         {
             if (active && tracking_map != null &&
-                (gpsdata.receivedtime - lastOnlineTrackTime).TotalSeconds >= updateinterval)
+                (gpsdata.receivedtime - lastOnlineTrackTime).TotalSeconds >= updateinterval &&
+                PlatformSpecificCode.IsNetworkAvailable)
             {
+                // la seguente istruzione garantisce che prima di un certo tempo non venga ritentato un upload senza che il corrente abbia terminato
                 lastOnlineTrackTime.AddSeconds(120);
-                lastgpsdata = gpsdata;
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(this.upload_data));
-            }
-        }
+                ThreadPool.QueueUserWorkItem(new WaitCallback(
+                    (object s) =>
+                    {
 
-        private void upload_data(object state)
-        {
-            //FIXME: in teoria potrebbe succedere che lo stesso punto venga caricato 2 volte 
-            try
-            {
-                tracking_map.AddPoint(lastgpsdata.position.dLat, lastgpsdata.position.dLon, 0, lastgpsdata.receivedtime.ToLongTimeString());
-                lastOnlineTrackTime = lastgpsdata.receivedtime;
+                        try
+                        {
+                            tracking_map.AddPoint(gpsdata.position.dLat, gpsdata.position.dLon, 0, gpsdata.receivedtime.ToLongTimeString());
+                            lastOnlineTrackTime = gpsdata.receivedtime;
+                        }
+                        catch (System.Net.WebException e)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
+                        }
+                    }
+                ));
             }
-            catch (System.Net.WebException e)
-            {
-                System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
-            }
-        }
-
-        
+        }        
     }
 }
