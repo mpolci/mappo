@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using Microsoft.WindowsMobile.Status;
 
 namespace MapperTools.Pollicino
 {
@@ -25,6 +26,16 @@ namespace MapperTools.Pollicino
             }
         }
 
+        public static bool IsNetworkAvailable
+        {
+            get
+            {
+                // TODO: la rete potrebbe essere disponibile anche senza copertura GPRS, ad esempio via WIFI o ActiveSync
+                return !SystemState.PhoneRoaming && SystemState.PhoneGprsCoverage;
+            }
+        }
+
+        //TODO: creare un evento per il cambiamento di stato della disponibilità della rete, potrebbe servire durante il download delle mappe
 #else
         public static void SystemIdleTimerReset() 
         {}
@@ -33,7 +44,14 @@ namespace MapperTools.Pollicino
         {}
 
         public static event EventHandler Hibernate;
-
+        
+        public static bool IsNetworkAvailable()
+        {
+            get
+            {
+                return true;
+            }
+        }
 #endif
 
     }

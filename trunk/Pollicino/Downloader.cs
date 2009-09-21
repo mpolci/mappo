@@ -87,6 +87,10 @@ namespace MapperTools.Pollicino
             while (runthread)
             {
                 mre.WaitOne();
+                
+                while (!PlatformSpecificCode.IsNetworkAvailable)
+                    System.Threading.Thread.Sleep(5000);
+
                 notifier.WorkBegin();
                 while (q.Count > 0 && runthread)
                 {
