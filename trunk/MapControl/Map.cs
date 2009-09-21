@@ -541,8 +541,9 @@ namespace MapsLibrary
 
         protected void ClearQueue()
         {
-            while (lruqueue.Count > 0)
-                lruqueue.Dequeue().Dispose();
+            if (lruqueue != null)
+                while (lruqueue.Count > 0)
+                    lruqueue.Dequeue().Dispose();
         }
 
         /// <summary>
