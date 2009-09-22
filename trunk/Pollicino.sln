@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		Pollicino3.vsmdi = Pollicino3.vsmdi
+		Pollicino5.vsmdi = Pollicino5.vsmdi
 		SmartDeviceTestRun.testrunConfig = SmartDeviceTestRun.testrunConfig
 	EndProjectSection
 EndProject
@@ -30,6 +31,9 @@ Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
 		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Pollicino5.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PocketPC|Any CPU = Debug PocketPC|Any CPU
