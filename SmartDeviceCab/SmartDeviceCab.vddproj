@@ -21,7 +21,7 @@
         "Entry"
         {
         "MsmKey" = "8:_08DE8382BB685075C8E72B4DC3F4D041"
-        "OwnerKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
+        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -68,32 +68,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1E2E2E7308C7AA21908862FEF1557E5A"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1E2E2E7308C7AA21908862FEF1557E5A"
-        "OwnerKey" = "8:_7A7333D1CB9E922BBF93A15DD2927060"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1E2E2E7308C7AA21908862FEF1557E5A"
-        "OwnerKey" = "8:_4EA2D3C5C480B917B26FCA35F71F6810"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_42B3C92313EF431E8419D840553726B5"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -105,7 +87,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
-        "OwnerKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
+        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
+        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -134,31 +122,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4EA2D3C5C480B917B26FCA35F71F6810"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4EA2D3C5C480B917B26FCA35F71F6810"
-        "OwnerKey" = "8:_7A7333D1CB9E922BBF93A15DD2927060"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7A7333D1CB9E922BBF93A15DD2927060"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A0BB3858D82AA155F947DC3033B637F6"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -177,7 +147,13 @@
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
+        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
+        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -213,7 +189,13 @@
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
+        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
+        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -254,18 +236,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EDE348787AA50E4235E7401C4064C6FD"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EDE348787AA50E4235E7401C4064C6FD"
-        "OwnerKey" = "8:_1E2E2E7308C7AA21908862FEF1557E5A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_EF66BA14319F1F1FB6675424C55817EB"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
@@ -285,7 +255,7 @@
         "Entry"
         {
         "MsmKey" = "8:_F5AC8367A6B94F22A438849DF9A66C79"
-        "OwnerKey" = "8:_310E3B3112C8C9224982A2B22B9530DE"
+        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -428,62 +398,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_1E2E2E7308C7AA21908862FEF1557E5A"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OpenNETCF, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7"
-                "ScatterAssemblies"
-                {
-                    "_1E2E2E7308C7AA21908862FEF1557E5A"
-                    {
-                    "Name" = "8:OpenNETCF.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:OpenNETCF.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_310E3B3112C8C9224982A2B22B9530DE"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3102.14827, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_310E3B3112C8C9224982A2B22B9530DE"
-                    {
-                    "Name" = "8:MapControl.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:MapControl.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{BA458234-9B71-4F46-8107-E91156377184}:_42B3C92313EF431E8419D840553726B5"
             {
             "SourcePath" = "8:..\\Pollicino\\readme.txt"
@@ -500,6 +414,34 @@
             "Register" = "3:0"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_45CA694949228D15B4B0324710A7B0B4"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3237.32574, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_45CA694949228D15B4B0324710A7B0B4"
+                    {
+                    "Name" = "8:SharpGps.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SharpGps.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_4D806B49777A904C40A2A111B009293A"
@@ -530,90 +472,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_4EA2D3C5C480B917B26FCA35F71F6810"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OpenNETCF.Drawing, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7"
-                "ScatterAssemblies"
-                {
-                    "_4EA2D3C5C480B917B26FCA35F71F6810"
-                    {
-                    "Name" = "8:OpenNETCF.Drawing.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:OpenNETCF.Drawing.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_7A7333D1CB9E922BBF93A15DD2927060"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OpenNETCF.Windows.Forms, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7"
-                "ScatterAssemblies"
-                {
-                    "_7A7333D1CB9E922BBF93A15DD2927060"
-                    {
-                    "Name" = "8:OpenNETCF.Windows.Forms.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:OpenNETCF.Windows.Forms.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_A0BB3858D82AA155F947DC3033B637F6"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3048.18227, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_A0BB3858D82AA155F947DC3033B637F6"
-                    {
-                    "Name" = "8:SharpGps.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SharpGps.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_A85423248D7BEC7A2948739F1685EAA9"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -639,6 +497,34 @@
             "SharedLegacy" = "11:FALSE"
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_BF90170DFFDFD18903CA1DFCFC188353"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3254.15100, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_BF90170DFFDFD18903CA1DFCFC188353"
+                    {
+                    "Name" = "8:MapControl.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MapControl.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -751,34 +637,6 @@
             "SharedLegacy" = "11:FALSE"
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_EDE348787AA50E4235E7401C4064C6FD"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OpenNETCF.Configuration, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7"
-                "ScatterAssemblies"
-                {
-                    "_EDE348787AA50E4235E7401C4064C6FD"
-                    {
-                    "Name" = "8:OpenNETCF.Configuration.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:OpenNETCF.Configuration.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
