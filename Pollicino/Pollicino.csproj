@@ -21,6 +21,10 @@
     <StartupObject>
     </StartupObject>
     <ApplicationIcon>Resources\Map.ico</ApplicationIcon>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,6 +81,7 @@
       <DependentUpon>BlinkingControlNotifier.cs</DependentUpon>
     </Compile>
     <Compile Include="Downloader.cs" />
+    <Compile Include="ExtendedInput.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +179,10 @@
     <ProjectReference Include="..\MapControl\MapsLibray.csproj">
       <Project>{55C7C88D-38A0-412B-BFD8-6EC3B903182C}</Project>
       <Name>MapsLibray</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sensors\sensors.csproj">
+      <Project>{E0CB6BA1-A3C4-4E3D-9479-D552D30AF194}</Project>
+      <Name>sensors</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpGps\SharpGps.csproj">
       <Project>{8516BA0A-3E52-4770-9D99-0C866B7E513B}</Project>
