@@ -6,10 +6,16 @@ namespace MapsLibrary
 {
     class Tools
     {
+
+        private static System.Reflection.PropertyInfo fontHeightProp = (Environment.OSVersion.Platform != PlatformID.WinCE) ? typeof(System.Drawing.Font).GetProperty("Height") : null;
+
         public static int GetFontHeight(System.Drawing.Font font)
         {
 #if PocketPC || Smartphone || WindowsCE
-            return Tools.GetTextMetrics(font).tmHeight;
+            if (Environment.OSVersion.Platform == PlatformID.WinCE)
+                return Tools.GetTextMetrics(font).tmHeight;
+            else
+                return (int) fontHeightProp.GetValue(font, null);
 #else
             return font.Height;
 #endif
