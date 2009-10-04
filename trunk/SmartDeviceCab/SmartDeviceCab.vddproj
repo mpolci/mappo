@@ -6,10 +6,10 @@
 "ProjectName" = "8:SmartDeviceCab"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
-"SccProjectName" = "8:"
-"SccLocalPath" = "8:"
-"SccAuxPath" = "8:"
-"SccProvider" = "8:"
+"SccProjectName" = "8:Svn"
+"SccLocalPath" = "8:Svn"
+"SccAuxPath" = "8:Svn"
+"SccProvider" = "8:SubversionScc"
     "Hierarchy"
     {
         "Entry"
@@ -21,7 +21,7 @@
         "Entry"
         {
         "MsmKey" = "8:_08DE8382BB685075C8E72B4DC3F4D041"
-        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
+        "OwnerKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -62,6 +62,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_16F655AE6A4AA155297784403BF91E2E"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
@@ -74,12 +80,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
         "OwnerKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,13 +87,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
-        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
-        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
+        "OwnerKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -122,14 +122,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
+        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -147,13 +159,19 @@
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
+        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
+        "OwnerKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -189,13 +207,19 @@
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_45CA694949228D15B4B0324710A7B0B4"
+        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
+        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
+        "OwnerKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -242,6 +266,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_EF66BA14319F1F1FB6675424C55817EB"
+        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -255,7 +285,7 @@
         "Entry"
         {
         "MsmKey" = "8:_F5AC8367A6B94F22A438849DF9A66C79"
-        "OwnerKey" = "8:_BF90170DFFDFD18903CA1DFCFC188353"
+        "OwnerKey" = "8:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -370,6 +400,34 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_15544C2685941AA5D1B128D6C9078DAA"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3552.40152, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_15544C2685941AA5D1B128D6C9078DAA"
+                    {
+                    "Name" = "8:sensors.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:sensors.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_16F655AE6A4AA155297784403BF91E2E"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -416,34 +474,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_45CA694949228D15B4B0324710A7B0B4"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3237.32574, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_45CA694949228D15B4B0324710A7B0B4"
-                    {
-                    "Name" = "8:SharpGps.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SharpGps.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_4D806B49777A904C40A2A111B009293A"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -472,6 +502,62 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_5C1B1142B8025ADE9884B2705A7DD95A"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3541.17404, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_5C1B1142B8025ADE9884B2705A7DD95A"
+                    {
+                    "Name" = "8:SharpGps.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SharpGps.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3552.28259, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
+                    {
+                    "Name" = "8:MapControl.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MapControl.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_A85423248D7BEC7A2948739F1685EAA9"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -497,34 +583,6 @@
             "SharedLegacy" = "11:FALSE"
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_BF90170DFFDFD18903CA1DFCFC188353"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3254.15100, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_BF90170DFFDFD18903CA1DFCFC188353"
-                    {
-                    "Name" = "8:MapControl.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:MapControl.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -743,7 +801,7 @@
         {
             "{605BE39E-5046-48BD-AEC0-63C3A46626D5}:_F21ADB5B581B49D981AE7021DB00B8A3"
             {
-            "SourcePath" = "8:..\\Pollicino\\obj\\Debug\\Pollicino.exe"
+            "SourcePath" = "8:..\\Pollicino\\obj\\Release\\Pollicino.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
