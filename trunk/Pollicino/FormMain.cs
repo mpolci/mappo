@@ -32,8 +32,8 @@ using GMapsDataAPI;
 #if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsMobile.Forms;
 using Microsoft.WindowsCE.Forms;
-using System.Threading;
 #endif 
+using System.Threading;
 
 namespace MapperTools.Pollicino
 {
@@ -42,6 +42,7 @@ namespace MapperTools.Pollicino
 #if PocketPC || Smartphone || WindowsCE
         NotifyIcon mNotifyIcon;
         private Microsoft.WindowsCE.Forms.HardwareButton hardwareButton_app3;
+        protected ExtendedInput ext_in;
 #endif
 
         private DateTime activatedTime = DateTime.MinValue;
@@ -163,6 +164,11 @@ namespace MapperTools.Pollicino
             // mNotifyIcon
             mNotifyIcon = new NotifyIcon(Properties.Resources.Map);
             mNotifyIcon.Click += new EventHandler(this.notify_icon_click);
+            // Extended Input (sensors)
+            ext_in = new ExtendedInput(this);
+            ext_in.GDisplayOff = true;
+            ext_in.NavCW += new ExtendedInput.NavHandler(() => mapcontrol.Zoom++);
+            ext_in.NavCCW += new ExtendedInput.NavHandler(() => mapcontrol.Zoom--);
 #endif
             // disabilito l'autodownload
             options.Maps.AutoDownload = false;
@@ -253,6 +259,7 @@ namespace MapperTools.Pollicino
             }
             else if (options.GPS.Autostart)
                 action_StartGPS(null);
+
         }
 
         private void init_gpx_db(object p)
@@ -915,12 +922,13 @@ namespace MapperTools.Pollicino
                         action_CreateWaypoint();
                     else
                         action_StartGPS(null);
-#if DEBUG
+                #if DEBUG
                 else 
                     System.Diagnostics.Debug.WriteLine("Ignoring key - time from last keypress: " + intervalFromLast);
-#endif
+                #endif
             }
 #if PocketPC || Smartphone || WindowsCE
+            //FIXME: il tasto associato alla macchina fotografica dipende dal dispositivo
             if ((HardwareKeys)e.KeyCode == Microsoft.WindowsCE.Forms.HardwareKeys.ApplicationKey3)
             {
                 // se il tasto è stato premuto a meno di 1 secondo dall'attivazione probabilmente è stato
@@ -947,6 +955,7 @@ namespace MapperTools.Pollicino
             downloader.stopThread();
 #if PocketPC || Smartphone || WindowsCE
             mNotifyIcon.Dispose();
+            ext_in.Dispose();
 #endif
             map.Dispose();
             gmap.Dispose();
