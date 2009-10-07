@@ -41,9 +41,9 @@ namespace SharpGis.SharpGps
 		private bool HasTimedOut;
 		private const int _receivedBytesThreshold = 200;
 		private System.IO.Ports.SerialPort com;
-        // Use a StremReader to read com.BaseStream instead of read using com.ReadLine resolves problem 
-        // using gps intermediate driver in HTC Touch Diamond        
-        private StreamReader comReader;    
+        //// Use a StremReader to read com.BaseStream instead of read using com.ReadLine resolves problem 
+        //// using gps intermediate driver in HTC Touch Diamond. Used on AltRead().        
+        //private StreamReader comReader;    
 		private bool disposed = false;
         private bool stopped = false;
 		
@@ -123,8 +123,8 @@ namespace SharpGis.SharpGps
 			{
 				com.Open();
                 com.ReadTimeout = _TimeOut * 1000;
-                if (comReader != null) comReader.Dispose();
-                comReader = com.IsOpen ? new StreamReader(com.BaseStream) : null;
+                //if (comReader != null) comReader.Dispose();
+                //comReader = com.IsOpen ? new StreamReader(com.BaseStream) : null;
 			}
 			catch (System.IO.IOException)
 			{
@@ -157,8 +157,8 @@ namespace SharpGis.SharpGps
             {
                 try
                 {
-                    //FIX: Read();
-                    AltRead();
+                    Read();
+                    //AltRead();
                 }
                 catch (System.IO.IOException)
                 {
@@ -181,7 +181,7 @@ namespace SharpGis.SharpGps
             }
 		}
   
-        /*
+        
 		/// <summary>
 		/// Check the serial port for data. If data is available, data is read and parsed.
 		/// This is a loop the keeps running until the port is closed.
@@ -194,11 +194,13 @@ namespace SharpGis.SharpGps
 
 			while (com.IsOpen)
 			{
-				int nBytes = com.BytesToRead;
+				int nBytes = Math.Min(8096, com.BytesToRead);
 				byte[] BufBytes;
 				BufBytes = new byte[nBytes];
 
-				com.Read(BufBytes, 0, nBytes);
+                //Read on BaseStream resolves problem with HTC Diamon GPS intermediate driver
+                //com.Read(BufBytes, 0, nBytes);
+                nBytes = com.BaseStream.Read(BufBytes, 0, nBytes);
 
 				strData += Encoding.GetEncoding("ASCII").GetString(BufBytes, 0, nBytes);
 
@@ -218,8 +220,8 @@ namespace SharpGis.SharpGps
 				}
 			}
 		}
-        */
-
+        
+/*
         private void AltRead()
         {
             //TODO: forse bisogna fare il detect della fine riga. \n o \r? 
@@ -252,7 +254,8 @@ namespace SharpGis.SharpGps
                 }
             }
         }
-		
+*/
+
 		/// <summary>
 		/// Writes data to serial port. This is useful for sending DGPS data to the device.
 		/// </summary>
