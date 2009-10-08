@@ -200,18 +200,22 @@ namespace SharpGis.SharpGps
 
                 //Read on BaseStream resolves problem with HTC Diamon GPS intermediate driver
                 //com.Read(BufBytes, 0, nBytes);
-                nBytes = com.BaseStream.Read(BufBytes, 0, nBytes);
+                try
+                {
+                    nBytes = com.BaseStream.Read(BufBytes, 0, nBytes);
 
-				strData += Encoding.GetEncoding("ASCII").GetString(BufBytes, 0, nBytes);
+                    strData += Encoding.GetEncoding("ASCII").GetString(BufBytes, 0, nBytes);
 
-				string temp = "";
-				while (strData != temp)
-				{
-					temp = strData;
-					strData = GetNmeaString(strData);
-				}
+                    string temp = "";
+                    while (strData != temp)
+                    {
+                        temp = strData;
+                        strData = GetNmeaString(strData);
+                    }
 
-				Thread.Sleep(MilliSecondsWait);
+                    Thread.Sleep(MilliSecondsWait);
+                }
+                catch (TimeoutException) { }
 
 				if (DateTime.Now.Ticks - TimeSinceLastEvent > 10000000 * _TimeOut && !HasTimedOut)
 				{
