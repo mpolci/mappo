@@ -809,7 +809,7 @@ namespace MapsLibrary
 
     }
 
-    public class LayeredMap : IMap
+    public class LayeredMap : IMap, IEnumerable
     {
         private struct LayerItem
         {
@@ -826,8 +826,9 @@ namespace MapsLibrary
 
         }
 
+        //TODO: cambiare il tipo da ArrayList generico a List<LayerItem>
         private ArrayList aLayers = new ArrayList();
-
+        
         #region IMap Members
 
         public event MapChangedEventHandler MapChanged;
@@ -895,6 +896,15 @@ namespace MapsLibrary
             }
         }
 
+
+        #region IEnumerable Members
+
+        public IEnumerator GetEnumerator()
+        {
+            return aLayers.GetEnumerator();
+        }
+
+        #endregion
     }
 
     public class SparseImagesMap : IMap, IDownloadableMap
