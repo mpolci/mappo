@@ -88,7 +88,7 @@ namespace MapperTools.Pollicino
             {
                 mre.WaitOne();
                 
-                while (!PlatformSpecificCode.IsNetworkAvailable)
+                while (!PlatformSpecificCode.IsNetworkAvailable && runthread)
                     System.Threading.Thread.Sleep(5000);
 
                 notifier.WorkBegin();
@@ -131,7 +131,7 @@ namespace MapperTools.Pollicino
 
         public void addDownloadArea(IDownloadableMap map, ProjectedGeoArea area, uint zoom)
         {
-            if (runthread)
+            if (runthread && map != null)
             {
                 // aggiunge l'area solo se questa non è equivalente all'ultima inserita o si fa riferimento ad un'altra mappa
                 bool process =   zoom != mLastInserted.zoom ||
