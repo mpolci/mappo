@@ -41,7 +41,7 @@ namespace MapsLibrary
     /// </remarks>
     public abstract class MercatorProjectionMapSystem
     {
-        public abstract uint MaxZoom { get; }
+        public abstract uint MaxZoom { get; set; }
 
         /// <summary>
         /// Indica l'ulteriore fattore di zoom per determinare la dimensione dei pixel.
@@ -52,7 +52,7 @@ namespace MapsLibrary
         /// Dal punto di vista delle TilesMap i pezzi in cui è suddivisa la mappa hanno una dimensionde in pixel pari a 2^PixelZoomFactor.
         /// Vedere anche il concetto di zoom nella descrizione della classe.
         /// </remarks>
-        public abstract uint PixelZoomFactor { get; }
+        public abstract uint PixelZoomFactor { get; set; }
 
         public readonly ProjectedGeoArea FullMapArea = new ProjectedGeoArea(new ProjectedGeoPoint(0, 0), new ProjectedGeoPoint((Int32)1 << (Int32)30, (Int32)1 << (Int32)30));
 
@@ -140,6 +140,7 @@ namespace MapsLibrary
         public abstract string identifier
         {
             get;
+            set;
         }
 
         public PxCoordinates GeoToPx(GeoPoint gp, uint zoom)
@@ -346,6 +347,8 @@ namespace MapsLibrary
 
     public class OSMTileMapSystem : TileMapSystem
     {
+        public const string ServerUrl_Mapnik = "http://tile.openstreetmap.org/",
+                            ServerUrl_TAH = "http://tah.openstreetmap.org/Tiles/tile/";
         /// <summary>
         /// URL di base dove scaricare i tile
         /// </summary>
@@ -374,9 +377,9 @@ namespace MapsLibrary
         {
             switch (serverurl)
             {
-                case "http://tile.openstreetmap.org/":
+                case ServerUrl_Mapnik:
                     return new MapnikMapSystem(serverurl); 
-                case "http://tah.openstreetmap.org/Tiles/tile/":
+                case ServerUrl_TAH:
                     return new TAHMapSystem(serverurl);
                 //case "http://dev.openstreetmap.org/~random/no-names/":
                 //    return new NoNameMapSystem();
@@ -391,6 +394,7 @@ namespace MapsLibrary
             {
                 return 19;
             }
+            set { throw new InvalidOperationException(); }
         }
         public override uint PixelZoomFactor
         {
@@ -398,6 +402,7 @@ namespace MapsLibrary
             {
                 return 8;
             }
+            set { throw new InvalidOperationException(); }
         }
 
         public override string identifier
@@ -407,6 +412,7 @@ namespace MapsLibrary
                 Uri srvuri = new Uri(sTileServer);
                 return srvuri.Host + '_' + sTileServer.GetHashCode().ToString("X8");
             }
+            set { throw new InvalidOperationException(); }
         }
     }
 
@@ -647,8 +653,8 @@ namespace MapsLibrary
 
         public string APIKey { get; set; }
 
-        public override uint MaxZoom         { get { return 19; } }
-        public override uint PixelZoomFactor { get { return 8;  } }
+        public override uint MaxZoom         { get { return 19;  } set { throw new InvalidOperationException(); } }
+        public override uint PixelZoomFactor { get { return 8;   } set { throw new InvalidOperationException(); } }
         public override int imagemapsize     { get { return 500; } }
 
         public override void RetrieveMap(GeoPoint center, uint zoom, string outfilename)

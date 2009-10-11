@@ -14,6 +14,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0195593088A7372D5DF0561B829CBE7A"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_08DE8382BB685075C8E72B4DC3F4D041"
         "OwnerKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
         "MsmSig" = "8:_UNDEFINED"
@@ -38,12 +44,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0E1A554AD8DC46E59E7F9CDB08EF1065"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_10B0156A38DE34A1B73E7F94896597FE"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
@@ -62,20 +62,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_16F655AE6A4AA155297784403BF91E2E"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_42B3C92313EF431E8419D840553726B5"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -141,7 +129,7 @@
         "Entry"
         {
         "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
-        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "OwnerKey" = "8:_0195593088A7372D5DF0561B829CBE7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -159,13 +147,13 @@
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
+        "OwnerKey" = "8:_0195593088A7372D5DF0561B829CBE7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -207,13 +195,13 @@
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_5C1B1142B8025ADE9884B2705A7DD95A"
+        "OwnerKey" = "8:_0195593088A7372D5DF0561B829CBE7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -267,7 +255,7 @@
         "Entry"
         {
         "MsmKey" = "8:_EF66BA14319F1F1FB6675424C55817EB"
-        "OwnerKey" = "8:_15544C2685941AA5D1B128D6C9078DAA"
+        "OwnerKey" = "8:_0195593088A7372D5DF0561B829CBE7A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,6 +314,34 @@
     {
         "File"
         {
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_0195593088A7372D5DF0561B829CBE7A"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3561.19868, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_0195593088A7372D5DF0561B829CBE7A"
+                    {
+                    "Name" = "8:sensors.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:sensors.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_08DE8382BB685075C8E72B4DC3F4D041"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -352,24 +368,6 @@
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{BA458234-9B71-4F46-8107-E91156377184}:_0E1A554AD8DC46E59E7F9CDB08EF1065"
-            {
-            "SourcePath" = "8:..\\Pollicino\\license.txt"
-            "TargetName" = "8:license.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_10B0156A38DE34A1B73E7F94896597FE"
@@ -400,34 +398,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_15544C2685941AA5D1B128D6C9078DAA"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3552.40152, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_15544C2685941AA5D1B128D6C9078DAA"
-                    {
-                    "Name" = "8:sensors.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:sensors.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_16F655AE6A4AA155297784403BF91E2E"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -454,24 +424,6 @@
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{BA458234-9B71-4F46-8107-E91156377184}:_42B3C92313EF431E8419D840553726B5"
-            {
-            "SourcePath" = "8:..\\Pollicino\\readme.txt"
-            "TargetName" = "8:readme.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_4D806B49777A904C40A2A111B009293A"
@@ -505,7 +457,7 @@
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_5C1B1142B8025ADE9884B2705A7DD95A"
             {
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3541.17404, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3567.41229, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_5C1B1142B8025ADE9884B2705A7DD95A"
@@ -533,7 +485,7 @@
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
             {
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3552.28259, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3567.40546, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_78582EDA8AC0CA1DD16ABCA47A8F0CB8"
@@ -819,6 +771,32 @@
             "ProjectOutputGroupRegister" = "3:0"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{44DEFCDE-5E53-410B-9D5B-DEAF135F937E}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{605BE39E-5046-48BD-AEC0-63C3A46626D5}:_F4B919E5FF1044C29206A2FF9A09BBE7"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:0"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{44DEFCDE-5E53-410B-9D5B-DEAF135F937E}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"

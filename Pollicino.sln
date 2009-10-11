@@ -9,9 +9,7 @@ Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "SmartDeviceCab", "SmartDevi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{23FD16D9-2FBB-4610-8934-B82D77D24B68}"
 	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		Pollicino3.vsmdi = Pollicino3.vsmdi
-		Pollicino5.vsmdi = Pollicino5.vsmdi
+		Pollicino7.vsmdi = Pollicino7.vsmdi
 		SmartDeviceTestRun.testrunConfig = SmartDeviceTestRun.testrunConfig
 	EndProjectSection
 EndProject
@@ -33,6 +31,9 @@ Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
 		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Pollicino7.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PocketPC|Any CPU = Debug PocketPC|Any CPU

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ConfigurableMapSystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MaxZoom>18</MaxZoom>
+  <PixelZoomFactor>8</PixelZoomFactor>
+  <identifier>tiles@home</identifier>
+  <TileServers>
+    <string>tah.openstreetmap.org</string>
+  </TileServers>
+  <Protocol>http</Protocol>
+  <UrlLocationPattern>/Tiles/tile/{0}/{1}/{2}.png</UrlLocationPattern>
+</ConfigurableMapSystem>

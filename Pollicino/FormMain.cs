@@ -59,13 +59,6 @@ namespace MapperTools.Pollicino
                 
         string configfile;
 
-        protected CachedTilesMap map;
-        //protected SparseImagesMap gmap;
-        protected CachedTilesMap gmap;
-        protected LayeredMap lmap;
-        protected LayerPoints trackpoints;
-        protected LayerPoints waypoints;
-        protected int idx_layer_gmaps, idx_layer_osm, idx_layer_trkpnt, idx_layer_waypnt;
         protected string logname;
         protected Downloader downloader;
         protected OnlineTrackingHandler tracking;
@@ -131,25 +124,9 @@ namespace MapperTools.Pollicino
             }
         }
 
-
-        private string GoogleKey
-        {
-            get
-            {
-                //TODO: sistemare l'ottenimento della chiave googke
-
-#if PocketPC || Smartphone || WindowsCE
-                return Properties.Resources.GoogleMapsKey;
-#else
-				return "";	
-#endif
-            }
-        }
-
         public Form_MapperToolMain()
         {
             InitializeComponent();
-
             // carica le opzioni dal file di configurazione
             carica_opzioni();
 
@@ -218,29 +195,10 @@ namespace MapperTools.Pollicino
             ShowOdometer = options.Application.ShowOdometer;
 
             // mappe
-            this.lmap = new LayeredMap();
-            // OSM
-            //this.map = new CachedTilesMap(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(false));
-            this.map = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, OSMTileMapSystem.CreateOSMMapSystem(options.Maps.OSM.OSMTileServer), required_buffers(true));
-            //this.map = new ReadAheadCachedTilesMap(options.Maps.OSM.TileCachePath, new OSMTileMapSystem(options.Maps.OSM.OSMTileServer), 20, new Size(320, 240));
-            idx_layer_osm = lmap.addLayerOnTop(this.map);
-            // Google MAPS
-            gmap = new CachedTilesMapDL(options.Maps.OSM.TileCachePath, new GoogleMapsTileMapSystem(), required_buffers(true));
-            //gmap = new SparseImagesMap(new GoogleMapsSystem(GoogleKey), options.Maps.GMaps.CachePath, 150);
-            idx_layer_gmaps = lmap.addLayerOnTop(gmap);
-            lmap.setVisibility(idx_layer_gmaps, false);
-            // Tracciato GPS
-            trackpoints = new LayerPoints(map.mapsystem);
-            idx_layer_trkpnt = lmap.addLayerOnTop(trackpoints);
-            // Waypoints
-            waypoints = new LayerPoints(map.mapsystem);
-            waypoints.SetDrawPointFunction(LayerPoints.DrawEmptySquare, new Pen(Color.Red));
-            idx_layer_waypnt = lmap.addLayerOnTop(waypoints);
-
-            verifica_opzioni_intermedio();
+            InitMaps();
 
             mapcontrol.Map = lmap;
-            this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.prepara_mappe);
+            this.mapcontrol.PrePaint += new MapControl.MapControlEventHandler(this.prepaint_mappe);
 
             mapcontrol.Zoom = 12;
             mapcontrol.Center = map.mapsystem.CalcProjection(options.Application.InitialMapPosition);
@@ -249,8 +207,6 @@ namespace MapperTools.Pollicino
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
 
             PlatformSpecificCode.Hibernate += new EventHandler(this.HibernateHandler);
-
-            verifica_opzioni_finale();
 
             if (append_to_log != null)
             {
@@ -276,9 +232,7 @@ namespace MapperTools.Pollicino
 
         private void HibernateHandler(Object sender, EventArgs e)
         {
-            ((IHibernation)map).Hibernate();
-            ((IHibernation)gmap).Hibernate();
-            mapcontrol.Hibernate();
+            map.Hibernate();
         }
 
         private uint required_buffers(bool minimized_memory)
@@ -313,48 +267,6 @@ namespace MapperTools.Pollicino
             {
                 MessageBox.Show("Config file error! Resetting options to default.");
                 options = DefaultOptions();
-            }
-        }
-
-        private void verifica_opzioni_intermedio()
-        {
-            if (options.version < 1)
-            {
-                try
-                {
-                    // è necessario spostare gli eventuali file dei tile
-                    DirectoryInfo newdir = new DirectoryInfo(map.TileCachePath);
-                    if (!newdir.Exists) newdir.Create();
-                    DirectoryInfo source = new DirectoryInfo(options.Maps.OSM.TileCachePath);
-                    foreach (DirectoryInfo zoomdir in source.GetDirectories())
-                    {
-                        try
-                        {
-                            zoomdir.MoveTo(newdir.FullName + zoomdir.Name);
-                        }
-                        catch (IOException) { }  // l'eccezione verrà sicuramente generata perché newdir è sottodirectory di source
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Trace.WriteLine("---- " + DateTime.Now + " ---- Eccezione inaspettata");
-                            System.Diagnostics.Trace.WriteLine("Stato: " + source.FullName + " - " + newdir.FullName + " - " + zoomdir.Name);
-                            System.Diagnostics.Trace.WriteLine(ex.ToString());
-                            throw;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Errore inaspettato! Si consiglia di inviare il file di log \"pollicino_log.txt\" all'autore.");
-                }
-            }
-        }
-
-        private void verifica_opzioni_finale()
-        {
-            if (options.version < ApplicationOptions.CurrentVersion)
-            {
-                options.version = ApplicationOptions.CurrentVersion;
-                options.SaveToFile(this.configfile);
             }
         }
 
@@ -451,22 +363,7 @@ namespace MapperTools.Pollicino
 
         private void action_CiclesVisibleMap()
         {
-            if (lmap.isVisible(idx_layer_gmaps))
-            {
-                lmap.setVisibility(idx_layer_osm, true);
-                lmap.setVisibility(idx_layer_gmaps, false);
-                mapcontrol.Invalidate();
-                this.menuItem_map_gmaps.Enabled = true;
-                this.menuItem_map_osm.Enabled = false;
-            }
-            else
-            {
-                lmap.setVisibility(idx_layer_osm, false);
-                lmap.setVisibility(idx_layer_gmaps, true);
-                mapcontrol.Invalidate();
-                this.menuItem_map_gmaps.Enabled = false;
-                this.menuItem_map_osm.Enabled = true;
-            }
+            ShowNextMap();
         }
 
         private void action_loadtrack(string file)
@@ -488,8 +385,7 @@ namespace MapperTools.Pollicino
             // count: for debug
             int count = 0;
             System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
-            lmap.setVisibility(idx_layer_trkpnt, false);
-            lmap.setVisibility(idx_layer_waypnt, false);
+            SetTrackVisibility(false);
             try
             {
                 // Create an instance of StreamReader to read from a file.
@@ -507,13 +403,13 @@ namespace MapperTools.Pollicino
                             case "$GPRMC":
                                 SharpGis.SharpGps.NMEA.GPRMC gpmrc = new SharpGis.SharpGps.NMEA.GPRMC(line);
                                 gp = new GeoPoint(gpmrc.Position.Latitude, gpmrc.Position.Longitude);
-                                this.trackpoints.addPoint(this.map.mapsystem.CalcProjection(gp));
+                                this.trackpoints.addPoint(map.mapsystem.CalcProjection(gp));
                                 count++;
                                 break;
                             case "$GPWPL":
                                 GPWPL gpwpl = new GPWPL(line);
                                 gp = new GeoPoint(gpwpl.latitude, gpwpl.longitude);
-                                this.waypoints.addPoint(this.map.mapsystem.CalcProjection(gp));
+                                this.waypoints.addPoint(map.mapsystem.CalcProjection(gp));
                                 break;
                         }
                     }
@@ -525,8 +421,7 @@ namespace MapperTools.Pollicino
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(ex.Message);
             }
-            lmap.setVisibility(idx_layer_trkpnt, true);
-            lmap.setVisibility(idx_layer_waypnt, true);
+            SetTrackVisibility(true);
             System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
@@ -538,8 +433,7 @@ namespace MapperTools.Pollicino
                 form.TracksCollection = gpx_saver.GPXFilesDB;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    lmap.setVisibility(idx_layer_trkpnt, false);
-                    lmap.setVisibility(idx_layer_waypnt, false);
+                    SetTrackVisibility(false);
                     if (MessageBox.Show("Clear current track data from the map? If you press yes the current track and way points will be removed from the map before loading the selected track.", "Load track", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         this.trackpoints.clear();
@@ -558,7 +452,7 @@ namespace MapperTools.Pollicino
                             NMEA2GPX.WaypointType[] trackpoints = gpxdata.trk.GetPoints();
                             foreach (NMEA2GPX.WaypointType wp in trackpoints)
                             {
-                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                                pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.trackpoints.addPoint(pgp);
                             }
                         }
@@ -568,7 +462,7 @@ namespace MapperTools.Pollicino
                         if (gpxdata.wpt != null)
                             foreach (NMEA2GPX.WaypointType wp in gpxdata.wpt)
                             {
-                                pgp = this.map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                                pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
                                 this.waypoints.addPoint(pgp);
                             }
                         System.Windows.Forms.Cursor.Current = Cursors.Default;
@@ -581,8 +475,8 @@ namespace MapperTools.Pollicino
                     }
                     finally
                     {
-                        lmap.setVisibility(idx_layer_trkpnt, true);
-                        lmap.setVisibility(idx_layer_waypnt, true);
+                        SetTrackVisibility(true);
+
                     }
                 }
             }
@@ -684,12 +578,10 @@ namespace MapperTools.Pollicino
         {
             ProjectedGeoArea area = mapcontrol.VisibleArea;
             int end = (mapcontrol.Zoom > 1) ? -1 : 0;
-            for (int i = options.Maps.OSM.DownloadDepth; i >= end; i--)
+            for (int i = options.Maps.DownloadDepth; i >= end; i--)
             {
                 uint z = (uint)(mapcontrol.Zoom + i);
                 downloader.addDownloadArea(map, area, z);
-                if (i <= 2)
-                    downloader.addDownloadArea(gmap, area, z);
             }
         }
         /*
@@ -727,8 +619,11 @@ namespace MapperTools.Pollicino
                 opt.data = (ApplicationOptions)this.options.Clone();
                 opt.ShowDialog();
                 ApplicationOptions newopt = opt.data;
-                if (options.Maps.OSM.OSMTileServer != newopt.Maps.OSM.OSMTileServer)
-                    this.map.mapsystem = OSMTileMapSystem.CreateOSMMapSystem(newopt.Maps.OSM.OSMTileServer);
+                // Controlla se la è cambiata la lista delle mappe attive
+                bool changemap = options.Maps.ActiveTileMaps.Count != newopt.Maps.ActiveTileMaps.Count ||
+                          !options.Maps.ActiveTileMaps.TrueForAll(new Predicate<string>(
+                             (name) => newopt.Maps.ActiveTileMaps.Contains(name))
+                          );
                 if (options.Application.WaypointSoundFile != newopt.Application.WaypointSoundFile)
                     wpt_sound.SoundLocation = newopt.Application.WaypointSoundFile;
                 wpt_recorder.DeviceID = newopt.Application.RecordAudioDevice;
@@ -739,6 +634,8 @@ namespace MapperTools.Pollicino
                 this.hardwareButton_app3.HardwareKey = newopt.Application.CameraButton;
 #endif
                 options = newopt;
+                if (changemap)
+                    RefreshActiveMapsList();
                 options.SaveToFile(this.configfile);
             }
         }
@@ -754,12 +651,12 @@ namespace MapperTools.Pollicino
                 this.Close();
         }
 
-        private void prepara_mappe(MapControl sender)
+       private void prepaint_mappe(MapControl sender)
         {
             if (options.Maps.AutoDownload)
             {
-                IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
-                downloader.addDownloadArea(vm, mapcontrol.VisibleArea, mapcontrol.Zoom);
+                //IDownloadableMap vm = lmap.isVisible(idx_layer_osm) ? (IDownloadableMap)map : (IDownloadableMap)gmap;
+                downloader.addDownloadArea(map, mapcontrol.VisibleArea, mapcontrol.Zoom);
             }
         }
 
@@ -772,11 +669,9 @@ namespace MapperTools.Pollicino
             opt.GPS.Simulation = false;
             opt.GPS.SimulationFile = "";
             opt.GPS.LogsDir = programpath + "\\gpslogs";
-            opt.Maps.OSM.OSMTileServer = "http://tile.openstreetmap.org/";
-            opt.Maps.OSM.TileCachePath = programpath + "\\tiles";
-            opt.Maps.OSM.DownloadDepth = 3;
+            opt.Maps.TileCachePath = programpath + "\\tiles";
+            opt.Maps.DownloadDepth = 3;
             opt.Maps.AutoDownload = false;
-            opt.Maps.GMaps.CachePath = programpath + "\\gmaps";
             opt.Application.DelayGPXTrackStart = false;
             opt.Application.WaypointSoundPlay = true;
             opt.Application.WaypointSoundFile = "\\Windows\\Infbeg.wav";
@@ -958,7 +853,6 @@ namespace MapperTools.Pollicino
             ext_in.Dispose();
 #endif
             map.Dispose();
-            gmap.Dispose();
             gpx_saver.Dispose();
 
             options.Application.InitialMapPosition = map.mapsystem.CalcInverseProjection(mapcontrol.Center);
@@ -1001,7 +895,6 @@ namespace MapperTools.Pollicino
         {
             ShowOdometer = !ShowOdometer;
         }
-
     }
 
     public class OnlineTrackingHandler
@@ -1051,4 +944,5 @@ namespace MapperTools.Pollicino
             }
         }        
     }
+
 }

@@ -88,6 +88,9 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMain.map.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormOpenFile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +198,9 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Resources\ImgGPS.bmp" />
+    <Content Include="TileServersConf\GoogleMaps_map.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.txt">
@@ -204,8 +210,26 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="readme.txt" />
-    <Content Include="Resources\IconInternet.ico" />
-    <Content Include="Resources\Map.ico" />
+    <None Include="Resources\IconInternet.ico" />
+    <None Include="Resources\Map.ico" />
+    <Content Include="TileServersConf\BingMap_aerial.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TileServersConf\BingMap_hybrid.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TileServersConf\BingMap_roads.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TileServersConf\OpenCycleMap.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TileServersConf\OSM_mapnik.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TileServersConf\tiles%40home.tms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

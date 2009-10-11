@@ -47,6 +47,8 @@ namespace MapperTools.Pollicino
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_GPS = new System.Windows.Forms.TabPage();
             this.cb_gps_autostart = new System.Windows.Forms.CheckBox();
@@ -62,17 +64,13 @@ namespace MapperTools.Pollicino
             this.label1 = new System.Windows.Forms.Label();
             this.tb_GPSPort = new System.Windows.Forms.TextBox();
             this.tabPage_Maps = new System.Windows.Forms.TabPage();
-            this.combo_TileServer = new System.Windows.Forms.ComboBox();
+            this.listView_TileServers = new System.Windows.Forms.ListView();
             this.button_emptytilescache = new System.Windows.Forms.Button();
-            this.button_GMapsCacheDir = new System.Windows.Forms.Button();
             this.button_TileCacheDir = new System.Windows.Forms.Button();
             this.num_DownloadDepth = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tb_GMapsCacheDir = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tb_TileCacheDir = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabPage_AudioRec = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.rb_audiorec_continuous = new System.Windows.Forms.RadioButton();
@@ -114,6 +112,7 @@ namespace MapperTools.Pollicino
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage_Maps.SuspendLayout();
@@ -253,54 +252,44 @@ namespace MapperTools.Pollicino
             // tabPage_Maps
             // 
             this.tabPage_Maps.AutoScroll = true;
-            this.tabPage_Maps.Controls.Add(this.combo_TileServer);
+            this.tabPage_Maps.Controls.Add(this.label4);
+            this.tabPage_Maps.Controls.Add(this.listView_TileServers);
             this.tabPage_Maps.Controls.Add(this.button_emptytilescache);
-            this.tabPage_Maps.Controls.Add(this.button_GMapsCacheDir);
             this.tabPage_Maps.Controls.Add(this.button_TileCacheDir);
             this.tabPage_Maps.Controls.Add(this.num_DownloadDepth);
             this.tabPage_Maps.Controls.Add(this.label7);
-            this.tabPage_Maps.Controls.Add(this.label6);
-            this.tabPage_Maps.Controls.Add(this.tb_GMapsCacheDir);
             this.tabPage_Maps.Controls.Add(this.label5);
             this.tabPage_Maps.Controls.Add(this.tb_TileCacheDir);
-            this.tabPage_Maps.Controls.Add(this.label4);
             this.tabPage_Maps.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Maps.Name = "tabPage_Maps";
             this.tabPage_Maps.Size = new System.Drawing.Size(240, 245);
             this.tabPage_Maps.Text = "Maps";
             // 
-            // combo_TileServer
+            // listView_TileServers
             // 
-            this.combo_TileServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.combo_TileServer.Items.Add("http://tile.openstreetmap.org/");
-            this.combo_TileServer.Items.Add("http://tah.openstreetmap.org/Tiles/tile/");
-            this.combo_TileServer.Items.Add("http://andy.sandbox.cloudmade.com/tiles/cycle/");
-            this.combo_TileServer.Location = new System.Drawing.Point(7, 26);
-            this.combo_TileServer.Name = "combo_TileServer";
-            this.combo_TileServer.Size = new System.Drawing.Size(226, 22);
-            this.combo_TileServer.TabIndex = 28;
+            this.listView_TileServers.CheckBoxes = true;
+            listViewItem3.Text = "OSM_mapnik";
+            listViewItem4.Text = "GoogleMaps_map";
+            this.listView_TileServers.Items.Add(listViewItem3);
+            this.listView_TileServers.Items.Add(listViewItem4);
+            this.listView_TileServers.Location = new System.Drawing.Point(7, 27);
+            this.listView_TileServers.Name = "listView_TileServers";
+            this.listView_TileServers.Size = new System.Drawing.Size(226, 117);
+            this.listView_TileServers.TabIndex = 37;
+            this.listView_TileServers.View = System.Windows.Forms.View.List;
             // 
             // button_emptytilescache
             // 
-            this.button_emptytilescache.Location = new System.Drawing.Point(46, 152);
+            this.button_emptytilescache.Location = new System.Drawing.Point(46, 220);
             this.button_emptytilescache.Name = "button_emptytilescache";
             this.button_emptytilescache.Size = new System.Drawing.Size(149, 20);
             this.button_emptytilescache.TabIndex = 23;
             this.button_emptytilescache.Text = "Empty tiles cache";
             this.button_emptytilescache.Click += new System.EventHandler(this.button_emptytilescache_Click);
             // 
-            // button_GMapsCacheDir
-            // 
-            this.button_GMapsCacheDir.Location = new System.Drawing.Point(212, 221);
-            this.button_GMapsCacheDir.Name = "button_GMapsCacheDir";
-            this.button_GMapsCacheDir.Size = new System.Drawing.Size(21, 21);
-            this.button_GMapsCacheDir.TabIndex = 18;
-            this.button_GMapsCacheDir.Text = "...";
-            this.button_GMapsCacheDir.Click += new System.EventHandler(this.button_GMapsCacheDir_Click);
-            // 
             // button_TileCacheDir
             // 
-            this.button_TileCacheDir.Location = new System.Drawing.Point(212, 74);
+            this.button_TileCacheDir.Location = new System.Drawing.Point(212, 168);
             this.button_TileCacheDir.Name = "button_TileCacheDir";
             this.button_TileCacheDir.Size = new System.Drawing.Size(21, 21);
             this.button_TileCacheDir.TabIndex = 17;
@@ -309,7 +298,7 @@ namespace MapperTools.Pollicino
             // 
             // num_DownloadDepth
             // 
-            this.num_DownloadDepth.Location = new System.Drawing.Point(184, 101);
+            this.num_DownloadDepth.Location = new System.Drawing.Point(184, 195);
             this.num_DownloadDepth.Maximum = new decimal(new int[] {
             4,
             0,
@@ -331,45 +320,24 @@ namespace MapperTools.Pollicino
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(7, 103);
+            this.label7.Location = new System.Drawing.Point(7, 197);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(162, 20);
             this.label7.Text = "Download command depth";
             // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(7, 200);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(149, 20);
-            this.label6.Text = "GMaps cache path";
-            // 
-            // tb_GMapsCacheDir
-            // 
-            this.tb_GMapsCacheDir.Location = new System.Drawing.Point(7, 221);
-            this.tb_GMapsCacheDir.Name = "tb_GMapsCacheDir";
-            this.tb_GMapsCacheDir.Size = new System.Drawing.Size(199, 21);
-            this.tb_GMapsCacheDir.TabIndex = 7;
-            // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(7, 53);
+            this.label5.Location = new System.Drawing.Point(7, 147);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(149, 20);
             this.label5.Text = "Tiles cache path";
             // 
             // tb_TileCacheDir
             // 
-            this.tb_TileCacheDir.Location = new System.Drawing.Point(7, 74);
+            this.tb_TileCacheDir.Location = new System.Drawing.Point(7, 168);
             this.tb_TileCacheDir.Name = "tb_TileCacheDir";
             this.tb_TileCacheDir.Size = new System.Drawing.Size(199, 21);
             this.tb_TileCacheDir.TabIndex = 4;
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(7, 6);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(149, 20);
-            this.label4.Text = "OSM tiles server";
             // 
             // tabPage_AudioRec
             // 
@@ -506,7 +474,7 @@ namespace MapperTools.Pollicino
             this.tabPage_Misc.Controls.Add(this.cb_waypointsound);
             this.tabPage_Misc.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Misc.Name = "tabPage_Misc";
-            this.tabPage_Misc.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_Misc.Size = new System.Drawing.Size(232, 242);
             this.tabPage_Misc.Text = "Misc.";
             // 
             // label19
@@ -614,7 +582,7 @@ namespace MapperTools.Pollicino
             this.tabPage_GMaps.Controls.Add(this.label21);
             this.tabPage_GMaps.Location = new System.Drawing.Point(0, 0);
             this.tabPage_GMaps.Name = "tabPage_GMaps";
-            this.tabPage_GMaps.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_GMaps.Size = new System.Drawing.Size(232, 242);
             this.tabPage_GMaps.Text = "GMaps";
             // 
             // tb_onlinetrack_name
@@ -757,6 +725,13 @@ namespace MapperTools.Pollicino
             this.label14.Text = "Pollicino for OpenStreetMap";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(7, 4);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(149, 20);
+            this.label4.Text = "Visible maps";
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -792,9 +767,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.TextBox tb_GPSPortSpeed;
         private System.Windows.Forms.CheckBox cb_Simulation;
         private System.Windows.Forms.Button button_SelectSimulationFile;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox tb_GMapsCacheDir;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tb_TileCacheDir;
         private System.Windows.Forms.NumericUpDown num_DownloadDepth;
@@ -803,14 +775,12 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.Button button_gpslogpath;
-        private System.Windows.Forms.Button button_GMapsCacheDir;
         private System.Windows.Forms.Button button_TileCacheDir;
         private System.Windows.Forms.Button button_emptytilescache;
         private System.Windows.Forms.TabPage tabPage_Misc;
         private System.Windows.Forms.TextBox tb_waypointsound;
         private System.Windows.Forms.CheckBox cb_waypointsound;
         private System.Windows.Forms.Button button_waypointsound;
-        private System.Windows.Forms.ComboBox combo_TileServer;
         private System.Windows.Forms.CheckBox cb_fullscreen;
         private System.Windows.Forms.ComboBox combo_CameraButton;
         private System.Windows.Forms.Label label12;
@@ -848,5 +818,7 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.NumericUpDown num_TrackingInterval;
         private System.Windows.Forms.TextBox tb_onlinetrack_name;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.ListView listView_TileServers;
+        private System.Windows.Forms.Label label4;
     }
 }

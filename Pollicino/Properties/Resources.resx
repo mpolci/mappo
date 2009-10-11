@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GoogleMapsKey" xml:space="preserve">
-    <value>ABQIAAAAh1PZgzRL2L5R0KjFvh5Q8RSpRh2vAE_NR2zRhX5ZJ3rp2ZZDExTpIUr3qM9vMNqCFi7gF1XEEyaRAA</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="IconGPS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icongps.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
