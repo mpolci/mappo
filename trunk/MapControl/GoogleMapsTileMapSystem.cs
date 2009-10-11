@@ -12,6 +12,7 @@ namespace MapsLibrary
         public override string identifier
         {
             get { return "GoogleMaps"; }
+            set { throw new InvalidOperationException(); }
         }
 
         public override string TileUrl(TileNum tn)
@@ -24,11 +25,13 @@ namespace MapsLibrary
         public override uint MaxZoom
         {
             get { return 21; }
+            set { throw new InvalidOperationException(); }
         }
 
         public override uint PixelZoomFactor
         {
             get { return 8; }
+            set { throw new InvalidOperationException(); }
         }
     }
 }

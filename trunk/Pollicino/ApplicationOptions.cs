@@ -22,11 +22,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections;
+using MapsLibrary;
 
 namespace MapperTools.Pollicino
 {
+    [Serializable]
     public class ApplicationOptions : ICloneable
     {
+        [Serializable]
         public struct GPSOptions
         {
             public string PortName;
@@ -36,20 +40,37 @@ namespace MapperTools.Pollicino
             public string SimulationFile;
             public string LogsDir;
         }
-        public struct MapsOptions
+        [Serializable]
+        public class MapsOptions: ICloneable
         {
-            public struct OSMOptions {
-                public string OSMTileServer;
-                public string TileCachePath;
-                public int DownloadDepth;
-            }
-            public struct GMAPSOptions {
-                public string CachePath;
-            }
-
-            public OSMOptions OSM;
-            public GMAPSOptions GMaps;
             public bool AutoDownload;
+            public int DownloadDepth;
+            public string TileCachePath;
+
+            /// <summary>
+            /// Elenco degli identificativi delle mappe da usare per la visualizzazione.
+            /// </summary>
+            [XmlArrayItem(ElementName="id")]
+            public List<string> ActiveTileMaps;
+
+            /// <summary>
+            /// Tabella hash di ConfigurableMapSystems
+            /// </summary>
+            [XmlIgnore]
+            public Hashtable TileMaps;
+
+            #region ICloneable Members
+            public object Clone()
+            {
+                MapsOptions o = new MapsOptions();
+                o.AutoDownload = AutoDownload;
+                o.DownloadDepth = DownloadDepth;
+                o.TileCachePath = (string) TileCachePath.Clone();
+                o.ActiveTileMaps = new List<string>(ActiveTileMaps);
+                o.TileMaps = (Hashtable) TileMaps.Clone();
+                return o;
+            }
+            #endregion
         }
         public struct InterfaceOptions
         {
@@ -93,14 +114,14 @@ namespace MapperTools.Pollicino
         /// Quando viene modificata questa classe è probabile che questo valore debba essere incrementato di uno.
         /// Attenzione al tipo di modifiche sulla classe. Eliminare o rinominare dei campi potrebbe creare dei problemi quando viene caricato un file di configurazione di una vecchia versione. Sarebbe meglio aggiungere nuovi campi e considerati deprecati i nomi vecchi e non più utilizzati.
         /// </remarks>
-        public const uint CurrentVersion = 2;
+        public const uint CurrentVersion = 3;
         /// <summary>
         /// Versione dellle opzioni.
         /// </summary>
         /// <remarks>Permette di salvare nel file di configurazione il numero di versione delle opzioni. Grazie a questo è possibile effettuare eventuali aggiornamenti ai dati salvati quando si fa un aggiornamento del programma.</remarks>
         public uint version;
         public GPSOptions GPS;
-        public MapsOptions Maps;
+        public MapsOptions Maps = new MapsOptions();
         public InterfaceOptions Application;
         public TrackingOptions OnlineTracking;
 
@@ -145,23 +166,49 @@ namespace MapperTools.Pollicino
                 opts = (ApplicationOptions)serializer.Deserialize(fs);
                 fs.Close();
             }
+
+            // carica le definizioni dei tileserver
+            opts.Maps.TileMaps = new Hashtable();
+            string path = Path.GetDirectoryName(filename);
+            string tsconfdir = Path.Combine(path, "TileServersConf");
+            XmlSerializer ser = new XmlSerializer(typeof(ConfigurableMapSystem));
+            if (Directory.Exists(tsconfdir))
+            {
+                foreach (string cfn in Directory.GetFiles(tsconfdir, "*.tms"))
+                    using (FileStream fs = new FileStream(cfn, FileMode.Open))
+                    {
+                        try
+                        {
+                            ConfigurableMapSystem tms = (ConfigurableMapSystem)ser.Deserialize(fs);
+                            opts.Maps.TileMaps.Add(tms.identifier, tms);
+                        }
+                        catch (Exception) { }
+                    }
+            }
+
+            return InitNullFields(opts);
+        }
+
+        protected static ApplicationOptions InitNullFields(ApplicationOptions opts)
+        {
+            Init(ref opts.GPS.PortName , "");
+            Init(ref opts.GPS.SimulationFile, "");
+            Init(ref opts.GPS.LogsDir, "");
+            Init(ref opts.Maps.TileCachePath, "");
+            if (opts.Maps.TileMaps == null) opts.Maps.TileMaps = new Hashtable();
+            if (opts.Maps.ActiveTileMaps == null) opts.Maps.ActiveTileMaps = new List<string>(); 
+            Init(ref opts.Application.WaypointSoundFile, "");
+            Init(ref opts.OnlineTracking.GMapsEmail, "");
+            Init(ref opts.OnlineTracking.GMapsPassword, "");
+            Init(ref opts.OnlineTracking.TrackDescription, "");
+            if (opts.OnlineTracking.UpdateInterval == 0) opts.OnlineTracking.UpdateInterval = 300;
             return opts;
         }
 
-        public ApplicationOptions()
+        private static void Init(ref string var, string val)
         {
-            version = 0;
-            GPS.PortName = "";
-            GPS.SimulationFile = "";
-            GPS.LogsDir = "";
-            Maps.OSM.OSMTileServer = "";
-            Maps.OSM.TileCachePath = "";
-            Maps.GMaps.CachePath = "";
-            Application.WaypointSoundFile = "";
-            OnlineTracking.GMapsEmail = "";
-            OnlineTracking.GMapsPassword = "";
-            OnlineTracking.UpdateInterval = 120;
-            OnlineTracking.TrackDescription = "";
+            if (var == null)
+                var = "";
         }
 
         #region ICloneable Members
@@ -172,7 +219,7 @@ namespace MapperTools.Pollicino
             System.Diagnostics.Debug.Assert(GPS.GetType().IsValueType && Maps.GetType().IsValueType && Application.GetType().IsValueType);
             cloned.version = version;
             cloned.GPS = this.GPS;
-            cloned.Maps = this.Maps;
+            cloned.Maps = (MapsOptions) this.Maps.Clone();
             cloned.Application = this.Application;
             cloned.OnlineTracking = this.OnlineTracking;
             return cloned;

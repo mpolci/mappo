@@ -26,6 +26,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using MapsLibrary;
+using System.Collections;
 #if PocketPC || Smartphone || WindowsCE
 using Microsoft.WindowsCE.Forms;
 #endif
@@ -83,10 +85,9 @@ namespace MapperTools.Pollicino
                 _data.GPS.SimulationFile = tb_SimulationFile.Text;
                 _data.GPS.LogsDir = tb_GPSLogPath.Text;
                 _data.GPS.Autostart = cb_gps_autostart.Checked;
-                _data.Maps.OSM.OSMTileServer = combo_TileServer.Text;
-                _data.Maps.OSM.TileCachePath = tb_TileCacheDir.Text;
-                _data.Maps.OSM.DownloadDepth = (int) num_DownloadDepth.Value;
-                _data.Maps.GMaps.CachePath = tb_GMapsCacheDir.Text;
+                _data.Maps.ActiveTileMaps = GetCheckedTileServers();
+                _data.Maps.TileCachePath = tb_TileCacheDir.Text;
+                _data.Maps.DownloadDepth = (int) num_DownloadDepth.Value;
                 _data.Application.DelayGPXTrackStart = cb_delayTrackStart.Checked;
                 _data.Application.WaypointSoundPlay = cb_waypointsound.Checked;
                 _data.Application.WaypointSoundFile = tb_waypointsound.Text;
@@ -116,12 +117,11 @@ namespace MapperTools.Pollicino
                 tb_SimulationFile.Text = value.GPS.SimulationFile;
                 tb_GPSLogPath.Text = value.GPS.LogsDir;
                 cb_gps_autostart.Checked = value.GPS.Autostart;
-                combo_TileServer.Text = value.Maps.OSM.OSMTileServer;
-                tb_TileCacheDir.Text = value.Maps.OSM.TileCachePath;
+                InitListBoxTileServers(value.Maps.TileMaps, value.Maps.ActiveTileMaps);
+                tb_TileCacheDir.Text = value.Maps.TileCachePath;
                 try {
-                    num_DownloadDepth.Value = value.Maps.OSM.DownloadDepth;
+                    num_DownloadDepth.Value = value.Maps.DownloadDepth;
                 } catch (Exception) { }
-                tb_GMapsCacheDir.Text = value.Maps.GMaps.CachePath;
                 cb_delayTrackStart.Checked = value.Application.DelayGPXTrackStart;
                 cb_waypointsound.Checked = value.Application.WaypointSoundPlay;
                 tb_waypointsound.Text = value.Application.WaypointSoundFile;
@@ -151,6 +151,32 @@ namespace MapperTools.Pollicino
                 tb_gmaps_password.Text = value.OnlineTracking.GMapsPassword;
                 num_TrackingInterval.Value = value.OnlineTracking.UpdateInterval;
             }
+        }
+
+        private void InitListBoxTileServers(System.Collections.Hashtable TileMaps, List<string> selected)
+        {
+            //List<string> sel = new List<string>(selected);
+
+            listView_TileServers.Items.Clear();
+            foreach (System.Collections.DictionaryEntry item in TileMaps)
+            {
+                ConfigurableMapSystem msys = (ConfigurableMapSystem) item.Value;
+                ListViewItem li = new ListViewItem(msys.identifier);
+                if (selected.Contains(msys.identifier))
+                    li.Checked = true;
+                listView_TileServers.Items.Add(li);
+            }
+        }
+
+        private List<string> GetCheckedTileServers()
+        {
+            List<string> result = new List<string>();
+            foreach (ListViewItem lvi in listView_TileServers.Items)
+                if (lvi.Checked)
+                    result.Add(lvi.Text);
+            if (result.Count == 0 && listView_TileServers.Items.Count > 0)
+                result.Add(listView_TileServers.Items[0].Text);
+            return result;
         }
 
         private void button_SelectSimulationFile_Click(object sender, EventArgs e)
@@ -188,11 +214,6 @@ namespace MapperTools.Pollicino
         private void button_TileCacheDir_Click(object sender, EventArgs e)
         {
             selectDir(tb_TileCacheDir);
-        }
-
-        private void button_GMapsCacheDir_Click(object sender, EventArgs e)
-        {
-            selectDir(tb_GMapsCacheDir);
         }
 
         private void num_recordaudioseconds_ValueChanged(object sender, EventArgs e)

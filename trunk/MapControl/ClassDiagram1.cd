@@ -53,7 +53,7 @@
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>gIAAAAAAAAAAIAAACBAAAAABAAAAAEAAAAAAAEAAgAA=</HashCode>
+      <HashCode>gIAAAAAAAAAAIBAACBAAAAABAAAAAEAAAAAAAEAAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -85,7 +85,7 @@
   <Class Name="MapsLibrary.CachedTilesMap">
     <Position X="3.25" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>gAAECAAABKAAAAAAAABBAAAAAAAAAAAAAAAAAAIAgAA=</HashCode>
+      <HashCode>oAAECAAABKAAAAAAAABBAAAAAAAAAAAAACAAAAIAgAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -98,7 +98,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3.25" Y="12.75" Width="2" />
+    <Position X="3.25" Y="12.5" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
@@ -154,15 +154,15 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MapsLibrary.GoogleMapsSystem">
-    <Position X="3.25" Y="14.5" Width="2" />
+  <Class Name="MapsLibrary.GoogleMapsSystem" Collapsed="true">
+    <Position X="5.5" Y="13.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAABAAAhAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.ReadAheadCachedTilesMap" Collapsed="true">
-    <Position X="3.25" Y="11.25" Width="2" />
+    <Position X="3.25" Y="11.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
       <FileName>ReadAheadCachedTilesMap.cs</FileName>
@@ -170,7 +170,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.NoNameMapSystem">
-    <Position X="5" Y="20" Width="2" />
+    <Position X="4.75" Y="20" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
@@ -219,7 +219,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.CachedTilesMapDL">
-    <Position X="3.5" Y="8.25" Width="1.75" />
+    <Position X="3.5" Y="8.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gAEQAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>Map.cs</FileName>
@@ -238,6 +238,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAQQAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>GoogleMapsTileMapSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapsLibrary.ConfigurableMapSystem">
+    <Position X="7.25" Y="17" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAABgAAAAAAkAAJAQACAAABAAAQAAQAAAAA=</HashCode>
+      <FileName>ConfigurableMapSystem.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="MapsLibrary.TileNum">
