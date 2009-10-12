@@ -268,6 +268,8 @@ namespace MapperTools.Pollicino
                 MessageBox.Show("Config file error! Resetting options to default.");
                 options = DefaultOptions();
             }
+            //FIXME: fa schifo, rivedere!
+            ApplicationOptions.LoadTileMaps(this.configfile, options);
         }
 
         /// <summary>
@@ -664,6 +666,7 @@ namespace MapperTools.Pollicino
         {
             string programpath = Program.GetPath();
             ApplicationOptions opt = new ApplicationOptions();
+            opt.Init();
             opt.GPS.PortName = "COM1";
             opt.GPS.PortSpeed = 9600;
             opt.GPS.Simulation = false;
