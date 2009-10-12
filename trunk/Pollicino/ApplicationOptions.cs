@@ -173,6 +173,14 @@ namespace MapperTools.Pollicino
             }
 
             // carica le definizioni dei tileserver
+            LoadTileMaps(filename, opts);
+            InitNullFields(opts);
+            return opts;
+        }
+
+        //TODO: non è elegante ma serve per l'inizializzazione delle opzioni di default, rivedere!
+        public static void LoadTileMaps(string filename, ApplicationOptions opts)
+        {
             opts.Maps.TileMaps = new Hashtable();
             string path = Path.GetDirectoryName(filename);
             string tsconfdir = Path.Combine(path, "TileServersConf");
@@ -190,8 +198,6 @@ namespace MapperTools.Pollicino
                         catch (Exception) { }
                     }
             }
-            InitNullFields(opts);
-            return opts;
         }
 
         protected static void InitNullFields(ApplicationOptions opts)
