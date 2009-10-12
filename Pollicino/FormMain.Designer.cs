@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
- *  Pollicino - A tool for gps mapping.
+ *  Mappo! - A tool for gps mapping.
  *  Copyright (C) 2008  Marco Polci
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -357,7 +357,7 @@ namespace MapperTools.Pollicino
             this.KeyPreview = true;
             this.Menu = this.mainMenu;
             this.Name = "Form_MapperToolMain";
-            this.Text = "Pollicino";
+            this.Text = "Mappo!";
             this.Activated += new System.EventHandler(this.Form_MapperToolMain_Activated);
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Form_MapperToolMain_Closing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_MapperToolMain_KeyDown);
