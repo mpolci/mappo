@@ -664,6 +664,7 @@ namespace MapperTools.Pollicino
         {
             string programpath = Program.GetPath();
             ApplicationOptions opt = new ApplicationOptions();
+            opt.Init();
             opt.GPS.PortName = "COM1";
             opt.GPS.PortSpeed = 9600;
             opt.GPS.Simulation = false;
