@@ -268,6 +268,8 @@ namespace MapperTools.Pollicino
                 MessageBox.Show("Config file error! Resetting options to default.");
                 options = DefaultOptions();
             }
+            //FIXME: fa schifo, rivedere!
+            ApplicationOptions.LoadTileMaps(this.configfile, options);
         }
 
         /// <summary>
