@@ -125,6 +125,11 @@ namespace MapperTools.Pollicino
         public InterfaceOptions Application;
         public TrackingOptions OnlineTracking;
 
+        public void Init()
+        {
+            InitNullFields(this);
+        }
+
         public void SaveToFile(string filename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationOptions));
@@ -185,11 +190,11 @@ namespace MapperTools.Pollicino
                         catch (Exception) { }
                     }
             }
-
-            return InitNullFields(opts);
+            InitNullFields(opts);
+            return opts;
         }
 
-        protected static ApplicationOptions InitNullFields(ApplicationOptions opts)
+        protected static void InitNullFields(ApplicationOptions opts)
         {
             Init(ref opts.GPS.PortName , "");
             Init(ref opts.GPS.SimulationFile, "");
@@ -202,7 +207,6 @@ namespace MapperTools.Pollicino
             Init(ref opts.OnlineTracking.GMapsPassword, "");
             Init(ref opts.OnlineTracking.TrackDescription, "");
             if (opts.OnlineTracking.UpdateInterval == 0) opts.OnlineTracking.UpdateInterval = 300;
-            return opts;
         }
 
         private static void Init(ref string var, string val)
