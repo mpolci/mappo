@@ -47,8 +47,9 @@ namespace MapperTools.Pollicino
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptions));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_GPS = new System.Windows.Forms.TabPage();
             this.cb_gps_autostart = new System.Windows.Forms.CheckBox();
@@ -264,10 +265,10 @@ namespace MapperTools.Pollicino
             // listView_TileServers
             // 
             this.listView_TileServers.CheckBoxes = true;
-            listViewItem1.Text = "OSM_mapnik";
-            listViewItem2.Text = "GoogleMaps_map";
-            this.listView_TileServers.Items.Add(listViewItem1);
-            this.listView_TileServers.Items.Add(listViewItem2);
+            listViewItem3.Text = "OSM_mapnik";
+            listViewItem4.Text = "GoogleMaps_map";
+            this.listView_TileServers.Items.Add(listViewItem3);
+            this.listView_TileServers.Items.Add(listViewItem4);
             this.listView_TileServers.Location = new System.Drawing.Point(7, 27);
             this.listView_TileServers.Name = "listView_TileServers";
             this.listView_TileServers.Size = new System.Drawing.Size(226, 117);
@@ -575,7 +576,7 @@ namespace MapperTools.Pollicino
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(232, 242);
+            this.tabPage1.Size = new System.Drawing.Size(240, 245);
             this.tabPage1.Text = "About";
             // 
             // textBox1
@@ -588,11 +589,10 @@ namespace MapperTools.Pollicino
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(226, 142);
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(234, 145);
             this.textBox1.TabIndex = 7;
-            this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
-                "l.html).\r\n\r\nPart of this software is based on SharpGPS (http://www.codeplex.com/" +
-                "SharpGPS).";
+            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // linkLabel1
             // 
@@ -600,7 +600,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.Location = new System.Drawing.Point(7, 72);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(226, 20);
+            this.linkLabel1.Size = new System.Drawing.Size(234, 20);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.Text = "http://www.marcopolci.net/wiki/informatica:progetti:pollicino_en";
             // 
@@ -610,7 +610,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.Location = new System.Drawing.Point(7, 48);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(226, 20);
+            this.label16.Size = new System.Drawing.Size(234, 20);
             this.label16.Text = "Copyright (c) 2008 by Marco Polci";
             this.label16.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -620,7 +620,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.Location = new System.Drawing.Point(7, 24);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(226, 20);
+            this.label15.Size = new System.Drawing.Size(234, 20);
             this.label15.Text = "Version 1.0 for Pocket PC";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -630,7 +630,7 @@ namespace MapperTools.Pollicino
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.Location = new System.Drawing.Point(7, 4);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(226, 20);
+            this.label14.Size = new System.Drawing.Size(234, 20);
             this.label14.Text = "Mappo!";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
