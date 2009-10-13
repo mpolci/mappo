@@ -491,7 +491,7 @@
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_2CD8FEE995F30FEF943C6C8DE722A905"
             {
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3573.29401, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3573.30013, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_2CD8FEE995F30FEF943C6C8DE722A905"
@@ -547,7 +547,7 @@
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_55C40030DF3A038C93FDC0BF5EA25F54"
             {
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3573.29397, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3573.30007, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_55C40030DF3A038C93FDC0BF5EA25F54"
@@ -575,7 +575,7 @@
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_8A038D44EF20FDD85589867DB970E9CB"
             {
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3573.29398, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3573.30009, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_8A038D44EF20FDD85589867DB970E9CB"
@@ -836,7 +836,7 @@
         "OSVersionMin" = "8:4.0"
         "OSVersionMax" = "8:6.99"
         "NoUninstall" = "11:FALSE"
-        "Compress" = "11:FALSE"
+        "Compress" = "11:TRUE"
         "CESetupDLL" = "8:"
         }
         "ProjectOutput"
