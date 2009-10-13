@@ -198,9 +198,6 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Resources\ImgGPS.bmp" />
-    <Content Include="TileServersConf\GoogleMaps_map.tms">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.txt">
@@ -212,15 +209,6 @@
     <Content Include="readme.txt" />
     <None Include="Resources\IconInternet.ico" />
     <None Include="Resources\Map.ico" />
-    <Content Include="TileServersConf\BingMap_aerial.tms">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TileServersConf\BingMap_hybrid.tms">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TileServersConf\BingMap_roads.tms">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="TileServersConf\OpenCycleMap.tms">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
