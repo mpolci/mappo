@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
- *  Pollicino - A tool for gps mapping.
+ *  Mappo! - A tool for gps mapping.
  *  Copyright (C) 2008  Marco Polci
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,8 @@ namespace MapperTools.Pollicino
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_GPS = new System.Windows.Forms.TabPage();
             this.cb_gps_autostart = new System.Windows.Forms.CheckBox();
@@ -64,6 +64,7 @@ namespace MapperTools.Pollicino
             this.label1 = new System.Windows.Forms.Label();
             this.tb_GPSPort = new System.Windows.Forms.TextBox();
             this.tabPage_Maps = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
             this.listView_TileServers = new System.Windows.Forms.ListView();
             this.button_emptytilescache = new System.Windows.Forms.Button();
             this.button_TileCacheDir = new System.Windows.Forms.Button();
@@ -112,7 +113,6 @@ namespace MapperTools.Pollicino
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_GPS.SuspendLayout();
             this.tabPage_Maps.SuspendLayout();
@@ -262,16 +262,23 @@ namespace MapperTools.Pollicino
             this.tabPage_Maps.Controls.Add(this.tb_TileCacheDir);
             this.tabPage_Maps.Location = new System.Drawing.Point(0, 0);
             this.tabPage_Maps.Name = "tabPage_Maps";
-            this.tabPage_Maps.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_Maps.Size = new System.Drawing.Size(232, 242);
             this.tabPage_Maps.Text = "Maps";
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(7, 4);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(149, 20);
+            this.label4.Text = "Visible maps";
             // 
             // listView_TileServers
             // 
             this.listView_TileServers.CheckBoxes = true;
-            listViewItem3.Text = "OSM_mapnik";
-            listViewItem4.Text = "GoogleMaps_map";
-            this.listView_TileServers.Items.Add(listViewItem3);
-            this.listView_TileServers.Items.Add(listViewItem4);
+            listViewItem1.Text = "OSM_mapnik";
+            listViewItem2.Text = "GoogleMaps_map";
+            this.listView_TileServers.Items.Add(listViewItem1);
+            this.listView_TileServers.Items.Add(listViewItem2);
             this.listView_TileServers.Location = new System.Drawing.Point(7, 27);
             this.listView_TileServers.Name = "listView_TileServers";
             this.listView_TileServers.Size = new System.Drawing.Size(226, 117);
@@ -352,7 +359,7 @@ namespace MapperTools.Pollicino
             this.tabPage_AudioRec.Controls.Add(this.label13);
             this.tabPage_AudioRec.Location = new System.Drawing.Point(0, 0);
             this.tabPage_AudioRec.Name = "tabPage_AudioRec";
-            this.tabPage_AudioRec.Size = new System.Drawing.Size(240, 245);
+            this.tabPage_AudioRec.Size = new System.Drawing.Size(232, 242);
             this.tabPage_AudioRec.Text = "Audio";
             // 
             // panel1
@@ -712,7 +719,7 @@ namespace MapperTools.Pollicino
             this.label15.Location = new System.Drawing.Point(7, 24);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(234, 20);
-            this.label15.Text = "Version 0.9 for Pocket PC";
+            this.label15.Text = "Version 1.0 for Pocket PC";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label14
@@ -722,15 +729,8 @@ namespace MapperTools.Pollicino
             this.label14.Location = new System.Drawing.Point(7, 4);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(234, 20);
-            this.label14.Text = "Pollicino for OpenStreetMap";
+            this.label14.Text = "Mappo!";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(7, 4);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(149, 20);
-            this.label4.Text = "Visible maps";
             // 
             // FormOptions
             // 
