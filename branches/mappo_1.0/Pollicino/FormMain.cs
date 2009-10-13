@@ -185,8 +185,7 @@ namespace MapperTools.Pollicino
             ShowPosition = options.Application.ShowPosition;
             ShowScaleRef = options.Application.ShowScale;
             //HiRes flags
-            menuItem_HiRes.Checked = mapcontrol.HiResMode;
-            menuItem_HiRes_customdraw.Checked = mapcontrol.HiResModeCustomDraw;
+            mapcontrol.HiResMode = false;
             
             // Gestore del tracking online
             tracking = new OnlineTrackingHandler();
@@ -484,32 +483,6 @@ namespace MapperTools.Pollicino
             }
         }
 
-        private void action_ToggleOnlineTracking()
-        {
-            try
-            {
-                if (!tracking.initialized)
-                    if (PlatformSpecificCode.IsNetworkAvailable)
-                        tracking.InitSession(options.OnlineTracking.TrackDescription, options.OnlineTracking.GMapsEmail, options.OnlineTracking.GMapsPassword);
-                    else
-                    {
-                        SystemSounds.Asterisk.Play();
-                        throw new Exception();
-                    }
-                tracking.active = !tracking.active;
-                if (tracking.active)
-                    menuItem_onlinetracking.Text = "Stop online tracking";
-                else
-                    menuItem_onlinetracking.Text = "Start online tracking";
-            }
-            catch (System.Net.WebException e)
-            {
-                System.Diagnostics.Debug.WriteLine("Problema di connessione: " + e);
-            }
-            catch (Exception)
-            { }
-        }
-
         private void mapcontrol_ZoomChanged(MapsLibrary.MapControl sender)
         {
             this.label_zoom.Text = sender.Zoom.ToString();
@@ -525,12 +498,7 @@ namespace MapperTools.Pollicino
             this.mapcontrol.Zoom--;
         }
 
-        private void menuItem_map_osm_Click(object sender, EventArgs e)
-        {
-            action_CiclesVisibleMap();
-        }
-
-        private void menuItem_map_gmaps_Click(object sender, EventArgs e)
+        private void menuItem_shownextmap_Click(object sender, EventArgs e)
         {
             action_CiclesVisibleMap();
         }
@@ -875,23 +843,6 @@ namespace MapperTools.Pollicino
         private void mapcontrol_Resize(object sender, EventArgs e)
         {
             this.map.CacheLen = required_buffers(true);
-        }
-
-        private void menuItem_onlinetracking_Click(object sender, EventArgs e)
-        {
-            action_ToggleOnlineTracking();
-        }
-
-        private void menuItem_HiRes_Click(object sender, EventArgs e)
-        {
-            menuItem_HiRes.Checked = !menuItem_HiRes.Checked;
-            mapcontrol.HiResMode = menuItem_HiRes.Checked;
-        }
-
-        private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
-        {
-            menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
-            mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
         }
 
         private void menuItem_Odometer_Click(object sender, EventArgs e)
