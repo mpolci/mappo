@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CA63D65C-BDEF-472A-B3C9-A7DA33080ACA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MapsLibrary_win</RootNamespace>
+    <AssemblyName>MapsLibrary-win</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MapControl\BasicTypes.cs">
+      <Link>BasicTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\ConfigurableMapSystem.cs">
+      <Link>ConfigurableMapSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\GoogleMapsTileMapSystem.cs">
+      <Link>GoogleMapsTileMapSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\LayerPoints.cs">
+      <Link>LayerPoints.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\LRUQueue.cs">
+      <Link>LRUQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\Map.cs">
+      <Link>Map.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\MapControl.cs">
+      <Link>MapControl.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\MapControl\MapControl.Designer.cs">
+      <Link>MapControl.Designer.cs</Link>
+      <DependentUpon>MapControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\MapControl\MapSystems.cs">
+      <Link>MapSystems.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\ReadAheadCachedTilesMap.cs">
+      <Link>ReadAheadCachedTilesMap.cs</Link>
+    </Compile>
+    <Compile Include="..\MapControl\Tools.cs">
+      <Link>Tools.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\MapControl\ClassDiagram1.cd">
+      <Link>ClassDiagram1.cd</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="prop\" />
+  </ItemGroup>
+</Project>
