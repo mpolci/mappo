@@ -21,7 +21,7 @@
         "Entry"
         {
         "MsmKey" = "8:_08DE8382BB685075C8E72B4DC3F4D041"
-        "OwnerKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
+        "OwnerKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,6 +34,12 @@
         {
         "MsmKey" = "8:_08DE8382BB685075C8E72B4DC3F4D041"
         "OwnerKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -56,19 +62,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_138890454C5358FD336382186A7EF847"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_16F655AE6A4AA155297784403BF91E2E"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_278554327AC6D5068D95762003AA87D2"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -81,13 +75,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
-        "OwnerKey" = "8:_278554327AC6D5068D95762003AA87D2"
+        "OwnerKey" = "8:_BF29EAE82201CF74C0F3ECA5A65AC536"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_4D806B49777A904C40A2A111B009293A"
-        "OwnerKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
+        "OwnerKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -116,12 +110,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
-        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
@@ -129,7 +117,13 @@
         "Entry"
         {
         "MsmKey" = "8:_A85423248D7BEC7A2948739F1685EAA9"
-        "OwnerKey" = "8:_138890454C5358FD336382186A7EF847"
+        "OwnerKey" = "8:_F73CF682E0D2CF1ABD708BF07A4AB02F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF29EAE82201CF74C0F3ECA5A65AC536"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -147,19 +141,19 @@
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_278554327AC6D5068D95762003AA87D2"
+        "OwnerKey" = "8:_BF29EAE82201CF74C0F3ECA5A65AC536"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_138890454C5358FD336382186A7EF847"
+        "OwnerKey" = "8:_F73CF682E0D2CF1ABD708BF07A4AB02F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D0C8AF3638AAF188FB3E9820B82C0B18"
-        "OwnerKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
+        "OwnerKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -195,19 +189,19 @@
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_278554327AC6D5068D95762003AA87D2"
+        "OwnerKey" = "8:_BF29EAE82201CF74C0F3ECA5A65AC536"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_138890454C5358FD336382186A7EF847"
+        "OwnerKey" = "8:_F73CF682E0D2CF1ABD708BF07A4AB02F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_ED4E5C73EEF21081F00A094D66D8C659"
-        "OwnerKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
+        "OwnerKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -255,7 +249,7 @@
         "Entry"
         {
         "MsmKey" = "8:_EF66BA14319F1F1FB6675424C55817EB"
-        "OwnerKey" = "8:_138890454C5358FD336382186A7EF847"
+        "OwnerKey" = "8:_F73CF682E0D2CF1ABD708BF07A4AB02F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -273,12 +267,18 @@
         "Entry"
         {
         "MsmKey" = "8:_F5AC8367A6B94F22A438849DF9A66C79"
-        "OwnerKey" = "8:_9867A893BEB85CB3229AFB2CA85D6181"
+        "OwnerKey" = "8:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F5AC8367A6B94F22A438849DF9A66C79"
+        "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F73CF682E0D2CF1ABD708BF07A4AB02F"
         "OwnerKey" = "8:_F21ADB5B581B49D981AE7021DB00B8A3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -342,6 +342,34 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3574.32831, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_0FF4A5E246EA9AA1FB6A6A9EC1C337BC"
+                    {
+                    "Name" = "8:MapControl.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MapControl.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_10B0156A38DE34A1B73E7F94896597FE"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -367,34 +395,6 @@
             "SharedLegacy" = "11:FALSE"
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_138890454C5358FD336382186A7EF847"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3572.38833, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_138890454C5358FD336382186A7EF847"
-                    {
-                    "Name" = "8:sensors.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:sensors.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -426,34 +426,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_278554327AC6D5068D95762003AA87D2"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3572.38836, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_278554327AC6D5068D95762003AA87D2"
-                    {
-                    "Name" = "8:SharpGps.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:SharpGps.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_4D806B49777A904C40A2A111B009293A"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -482,34 +454,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_9867A893BEB85CB3229AFB2CA85D6181"
-            {
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MapControl, Version=1.0.3572.38834, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_9867A893BEB85CB3229AFB2CA85D6181"
-                    {
-                    "Name" = "8:MapControl.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:MapControl.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
-            "Condition" = "8:"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "Register" = "3:0"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_A85423248D7BEC7A2948739F1685EAA9"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -535,6 +479,34 @@
             "SharedLegacy" = "11:FALSE"
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_BF29EAE82201CF74C0F3ECA5A65AC536"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:SharpGps, Version=0.5.3574.32832, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_BF29EAE82201CF74C0F3ECA5A65AC536"
+                    {
+                    "Name" = "8:SharpGps.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:SharpGps.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -706,6 +678,34 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_F73CF682E0D2CF1ABD708BF07A4AB02F"
+            {
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:sensors, Version=1.0.3574.32829, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_F73CF682E0D2CF1ABD708BF07A4AB02F"
+                    {
+                    "Name" = "8:sensors.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:sensors.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE97E258ABBC45F59BE510C27A397C24"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "Folder"
         {
@@ -746,7 +746,7 @@
         "OSVersionMin" = "8:4.0"
         "OSVersionMax" = "8:6.99"
         "NoUninstall" = "11:FALSE"
-        "Compress" = "11:FALSE"
+        "Compress" = "11:TRUE"
         "CESetupDLL" = "8:"
         }
         "ProjectOutput"
