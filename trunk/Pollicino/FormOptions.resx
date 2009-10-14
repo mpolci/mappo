@@ -117,6 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gpl.html).
+
+Part of this software is based on SharpGPS (http://www.codeplex.com/SharpGPS).
+
+Part of this software is based on Windows Mobile Unified Sensor API (http://sensorapi.codeplex.com/).</value>
+  </data>
   <metadata name="mainMenu1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
