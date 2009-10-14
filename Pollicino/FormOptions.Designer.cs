@@ -47,8 +47,9 @@ namespace MapperTools.Pollicino
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem();
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptions));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_GPS = new System.Windows.Forms.TabPage();
             this.cb_gps_autostart = new System.Windows.Forms.CheckBox();
@@ -275,10 +276,10 @@ namespace MapperTools.Pollicino
             // listView_TileServers
             // 
             this.listView_TileServers.CheckBoxes = true;
-            listViewItem1.Text = "OSM_mapnik";
-            listViewItem2.Text = "GoogleMaps_map";
-            this.listView_TileServers.Items.Add(listViewItem1);
-            this.listView_TileServers.Items.Add(listViewItem2);
+            listViewItem3.Text = "OSM_mapnik";
+            listViewItem4.Text = "GoogleMaps_map";
+            this.listView_TileServers.Items.Add(listViewItem3);
+            this.listView_TileServers.Items.Add(listViewItem4);
             this.listView_TileServers.Location = new System.Drawing.Point(7, 27);
             this.listView_TileServers.Name = "listView_TileServers";
             this.listView_TileServers.Size = new System.Drawing.Size(226, 117);
@@ -686,11 +687,10 @@ namespace MapperTools.Pollicino
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(234, 145);
             this.textBox1.TabIndex = 7;
-            this.textBox1.Text = "This program is released under GNU GPL v3 License (http://www.gnu.org/licenses/gp" +
-                "l.html).\r\n\r\nPart of this software is based on SharpGPS (http://www.codeplex.com/" +
-                "SharpGPS).";
+            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // linkLabel1
             // 
