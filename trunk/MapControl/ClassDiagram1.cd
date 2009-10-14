@@ -78,7 +78,7 @@
   <Class Name="MapsLibrary.OSMTileMapSystem">
     <Position X="0.5" Y="17" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAkAAAAQAAAAABAAAAAQAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAACAAkAAAAQAAAgCBAAAAAQAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -149,7 +149,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>4YCQEBAgIDAgAAAMEADABAEDABAFAABoIABAQAAKJgA=</HashCode>
+      <HashCode>4YCQEBAgIDAgAAAMVADABAEDADAFAABoIABAQAAKJgA=</HashCode>
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

@@ -705,7 +705,7 @@ namespace MapsLibrary
             jobEvent = new System.Threading.AutoResetEvent(false);
             thrLoader = new System.Threading.Thread(new System.Threading.ThreadStart(this.LoadTileToCacheProc));
             thrLoader.Name = "Image loader";
-            //thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
+            thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
             thrLoader.Start();
         }
 
