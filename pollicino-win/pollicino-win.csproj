@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{286DD4FB-DC61-47F0-A442-6AB5F99A14BC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MapperTools.Pollicino</RootNamespace>
+    <AssemblyName>pollicino-win</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="..\Pollicino\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\AudioRecorder.cs">
+      <Link>AudioRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\BlinkingControlNotifier.cs">
+      <Link>BlinkingControlNotifier.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\BlinkingControlNotifier.Designer.cs">
+      <Link>BlinkingControlNotifier.Designer.cs</Link>
+      <DependentUpon>BlinkingControlNotifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\Downloader.cs">
+      <Link>Downloader.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\FormGPXDetails.cs">
+      <Link>FormGPXDetails.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormGPXDetails.Designer.cs">
+      <Link>FormGPXDetails.Designer.cs</Link>
+      <DependentUpon>FormGPXDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\FormMain.cs">
+      <Link>FormMain.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormMain.Designer.cs">
+      <Link>FormMain.Designer.cs</Link>
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\FormMain.map.cs">
+      <Link>FormMain.map.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormOpenFile.cs">
+      <Link>FormOpenFile.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormOpenFile.Designer.cs">
+      <Link>FormOpenFile.Designer.cs</Link>
+      <DependentUpon>FormOpenFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\FormOptions.cs">
+      <Link>FormOptions.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormOptions.Designer.cs">
+      <Link>FormOptions.Designer.cs</Link>
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\FormTracksManager.cs">
+      <Link>FormTracksManager.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\FormTracksManager.Designer.cs">
+      <Link>FormTracksManager.Designer.cs</Link>
+      <DependentUpon>FormTracksManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\GMapsDataApi.cs">
+      <Link>GMapsDataApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\GPSControl.cs">
+      <Link>GPSControl.cs</Link>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\GPSControl.Designer.cs">
+      <Link>GPSControl.Designer.cs</Link>
+      <DependentUpon>GPSControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\GPXCollection.cs">
+      <Link>GPXCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\GPXSaver.cs">
+      <Link>GPXSaver.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\Pollicino\GPXSaver.Designer.cs">
+      <Link>GPXSaver.Designer.cs</Link>
+      <DependentUpon>GPXSaver.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Pollicino\interfaces.cs">
+      <Link>interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\NmeaToGpx.cs">
+      <Link>NmeaToGpx.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\Odometer.cs">
+      <Link>Odometer.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\PlatformSpecificCode.cs">
+      <Link>PlatformSpecificCode.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\Properties\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\Properties\Resources.Designer.cs">
+      <Link>Resources.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\WaveIn4CF.cs">
+      <Link>WaveIn4CF.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\Waypoint.cs">
+      <Link>Waypoint.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Pollicino\BlinkingControlNotifier.resx">
+      <Link>BlinkingControlNotifier.resx</Link>
+      <DependentUpon>BlinkingControlNotifier.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\FormGPXDetails.resx">
+      <Link>FormGPXDetails.resx</Link>
+      <DependentUpon>FormGPXDetails.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\FormMain.resx">
+      <Link>FormMain.resx</Link>
+      <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\FormOpenFile.resx">
+      <Link>FormOpenFile.resx</Link>
+      <DependentUpon>FormOpenFile.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\FormOptions.resx">
+      <Link>FormOptions.resx</Link>
+      <DependentUpon>FormOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\FormTracksManager.resx">
+      <Link>FormTracksManager.resx</Link>
+      <DependentUpon>FormTracksManager.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\GPSControl.resx">
+      <Link>GPSControl.resx</Link>
+      <DependentUpon>GPSControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Pollicino\Properties\Resources.resx">
+      <Link>Resources.resx</Link>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MapsLibrary-win\MapsLibrary-win.csproj">
+      <Project>{CA63D65C-BDEF-472A-B3C9-A7DA33080ACA}</Project>
+      <Name>MapsLibrary-win</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpGps\SharpGps.csproj">
+      <Project>{8516BA0A-3E52-4770-9D99-0C866B7E513B}</Project>
+      <Name>SharpGps</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Pollicino\ClassDiagram1.cd">
+      <Link>ClassDiagram1.cd</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Pollicino\log.nmea.txt">
+      <Link>log.nmea.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+</Project>
