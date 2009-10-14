@@ -18,7 +18,6 @@
  ******************************************************************************/
 
 using System;
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -26,6 +25,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using System.Threading;
 
 namespace MapsLibrary
 {
@@ -41,7 +41,38 @@ namespace MapsLibrary
 
         // per le operazioni di dragging
         private int drag_lastx, drag_lasty;
-        private bool dragging;
+        private bool drag_changed;
+        private bool _dragging;
+        private bool dragging
+        {
+            get { return _dragging; }
+            set
+            {
+                if (value != _dragging)
+                {
+                    _dragging = value;
+                    if (value)
+                    {
+                        drag_changed = false;
+                        drag_draw_timer.Enabled = true;
+                    }
+                    else
+                    {
+                        drag_draw_timer.Enabled = false;
+                        Invalidate();
+                    }
+                }
+            }
+        }
+
+        private void drag_draw_timer_Tick(object sender, EventArgs e)
+        {
+           if (drag_changed)
+           {
+               Invalidate();
+               drag_changed = false;
+           } 
+        }
 
         private bool _showcross;
         private bool _showscaleref;
@@ -197,7 +228,11 @@ namespace MapsLibrary
                 if (pgpCenter != value)
                 {
                     pgpCenter = value;
-                    Invalidate();
+                    // durante le operazione di trascinamento Invalidate() viene invocato ad intervalli regolari da un timer
+                    if (dragging)
+                        drag_changed = true;
+                    else
+                        Invalidate();
                     if (PositionChanged != null) 
                         PositionChanged(this); // evento
                 }
@@ -590,5 +625,7 @@ namespace MapsLibrary
         }
 
         #endregion
+
+
     }
 }
