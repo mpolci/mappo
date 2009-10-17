@@ -698,6 +698,23 @@ namespace MapsLibrary
         //private Queue<TileNum> mTilesToLoad = new Queue<TileNum>();
         private LRUQueue<TileNum> mTilesToLoad = new LRUQueue<TileNum>();
 
+        /// <summary>
+        /// Invocato all'inizio di un ciclo di caricamento di tile.
+        /// </summary>
+        /// <remarks>Questo evento è eseguito nel thread di load dei tile.</remarks>
+        public event EventHandler BeginTileLoad;
+
+        /// <summary>
+        /// Invocato quando non ci sono più tile  da caricare in coda.
+        /// </summary>
+        /// <remarks>Questo evento è eseguito nel thread di load dei tile.</remarks>
+        public event EventHandler EndTileLoad;
+
+        /// <summary>
+        /// Invocato quando veggono accodati dei nuovi tile da caricare.
+        /// </summary>
+        public event EventHandler TileRequested;
+
 
         public CachedTilesMapDL( string tileCachePath, TileMapSystem ms, uint cachelen) :
             base(tileCachePath, ms, cachelen)
@@ -705,7 +722,8 @@ namespace MapsLibrary
             jobEvent = new System.Threading.AutoResetEvent(false);
             thrLoader = new System.Threading.Thread(new System.Threading.ThreadStart(this.LoadTileToCacheProc));
             thrLoader.Name = "Image loader";
-            thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
+            //thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
+            thrLoader.Priority = System.Threading.ThreadPriority.BelowNormal;
             thrLoader.Start();
         }
 
@@ -747,6 +765,7 @@ namespace MapsLibrary
                         if (mTilesToLoad.Count == maxitems)
                             mTilesToLoad.Dequeue();
                         mTilesToLoad.Enqueue(tn);
+                        if (TileRequested != null) TileRequested(this, null);
                         jobEvent.Set();
                     }
                     else
@@ -773,7 +792,12 @@ namespace MapsLibrary
                         tn = mTilesToLoad.Dequeue();
                 }
                 if (!avail)
+                {
+                    if (EndTileLoad != null) EndTileLoad(this, null);
                     jobEvent.WaitOne();
+                    if (BeginTileLoad != null) BeginTileLoad(this, null);
+
+                }
                 else if (!lruqueue.Contains(tn))
                 {
                     if (lruqueue.Count >= maxitems)
@@ -801,7 +825,9 @@ namespace MapsLibrary
                     }
                     catch (TileNotFoundException)
                     { }
-                } else {
+                }
+                else
+                {
                     System.Diagnostics.Debug.WriteLine("LoadTileToCacheProc() - tile già in cache: " + tn.ToString());
                 }
             }

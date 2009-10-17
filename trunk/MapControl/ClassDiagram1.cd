@@ -98,7 +98,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3.25" Y="12.5" Width="2" />
+    <Position X="3.25" Y="13.25" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
@@ -135,7 +135,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.MapControl">
-    <Position X="13.25" Y="0.5" Width="1.5" />
+    <Position X="13.25" Y="0.5" Width="1.75" />
     <NestedTypes>
       <Delegate Name="MapsLibrary.MapControl.MapControlEventHandler" Collapsed="true">
         <TypeIdentifier>
@@ -149,7 +149,7 @@
       </Delegate>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>4YCQEBAgIDAgAAAMVADABAEDADAFAABoIABAQAAKJgA=</HashCode>
+      <HashCode>4YCQEBAgIDAgAAAMVADABAEDADAFABBoIABAQAAKJgA=</HashCode>
       <FileName>MapControl.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -162,7 +162,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.ReadAheadCachedTilesMap" Collapsed="true">
-    <Position X="3.25" Y="11.5" Width="2" />
+    <Position X="3.25" Y="12.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
       <FileName>ReadAheadCachedTilesMap.cs</FileName>
@@ -221,7 +221,7 @@
   <Class Name="MapsLibrary.CachedTilesMapDL">
     <Position X="3.5" Y="8.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gAEQAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAIAAAA=</HashCode>
+      <HashCode>gAEQAAAAACAAAAAAAAAIAAAAAFAAAAAAAAABAAIAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -307,7 +307,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="MapsLibrary.IHibernation">
-    <Position X="15" Y="0.5" Width="1.5" />
+    <Position X="15.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Map.cs</FileName>

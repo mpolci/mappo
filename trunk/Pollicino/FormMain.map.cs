@@ -25,7 +25,7 @@ namespace MapperTools.Pollicino
 {
     public partial class Form_MapperToolMain 
     {
-        protected CachedTilesMap map;
+        protected CachedTilesMapDL map;
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
         protected LayerPoints waypoints;
