@@ -482,12 +482,18 @@ namespace MapsLibrary
             base.OnMouseMove(e);
             if (dragging)
             {
-                PxCoordinates pxc = map.mapsystem.PointToPx(Center, Zoom);
-                pxc.xpx -= e.X - drag_lastx;
-                pxc.ypx -= e.Y - drag_lasty;
-
+                int dx = e.X - drag_lastx;
+                int dy = e.Y - drag_lasty;
+                if (!HiResMode) {
+                    dx *= 2;
+                    dy *= 2;
+                }
                 this.drag_lastx = e.X;
                 this.drag_lasty = e.Y;
+
+                PxCoordinates pxc = map.mapsystem.PointToPx(Center, Zoom);
+                pxc.xpx -= dx;
+                pxc.ypx -= dy;
 
                 this.Center = map.mapsystem.PxToPoint(pxc, this.Zoom);
             }
