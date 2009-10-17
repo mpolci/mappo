@@ -897,11 +897,11 @@ namespace MapperTools.Pollicino
             mapcontrol.HiResMode = menuItem_HiRes.Checked;
         }
 
-        private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
-        {
-            menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
-            mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
-        }
+        //private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
+        //{
+        //    menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
+        //    mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
+        //}
 
         private void menuItem_Odometer_Click(object sender, EventArgs e)
         {

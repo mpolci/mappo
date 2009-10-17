@@ -76,7 +76,6 @@ namespace MapperTools.Pollicino
             this.menuItem_showscale = new System.Windows.Forms.MenuItem();
             this.menuItem_Odometer = new System.Windows.Forms.MenuItem();
             this.menuItem_HiRes = new System.Windows.Forms.MenuItem();
-            this.menuItem_HiRes_customdraw = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label_zoom = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -181,7 +180,6 @@ namespace MapperTools.Pollicino
             this.menuItem2.MenuItems.Add(this.menuItem_config);
             this.menuItem2.MenuItems.Add(this.menuItem8);
             this.menuItem2.MenuItems.Add(this.menuItem_HiRes);
-            this.menuItem2.MenuItems.Add(this.menuItem_HiRes_customdraw);
             this.menuItem2.Text = "Options";
             // 
             // menuItem3
@@ -240,13 +238,8 @@ namespace MapperTools.Pollicino
             // 
             // menuItem_HiRes
             // 
-            this.menuItem_HiRes.Text = "HiRes";
+            this.menuItem_HiRes.Text = "HiRes Display";
             this.menuItem_HiRes.Click += new System.EventHandler(this.menuItem_HiRes_Click);
-            // 
-            // menuItem_HiRes_customdraw
-            // 
-            this.menuItem_HiRes_customdraw.Text = "HiRes mode 2";
-            this.menuItem_HiRes_customdraw.Click += new System.EventHandler(this.menuItem_HiRes_customdraw_Click);
             // 
             // label1
             // 
@@ -405,7 +398,6 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_TracksManager;
         private System.Windows.Forms.MenuItem menuItem_onlinetracking;
         private System.Windows.Forms.MenuItem menuItem_HiRes;
-        private System.Windows.Forms.MenuItem menuItem_HiRes_customdraw;
         private System.Windows.Forms.Label label_odometer;
         private System.Windows.Forms.MenuItem menuItem_Odometer;
 
