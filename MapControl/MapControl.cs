@@ -378,10 +378,18 @@ namespace MapsLibrary
                     }
                     else
                     {
-                        // FIXME: Non c'è bisogno di ricalcolare questi rettangoli ogni volta
-                        Rectangle dst_r = new Rectangle(0, 0, Size.Width, Size.Height);
-                        Rectangle src_r = new Rectangle(0, 0, MapViewportSize.Width, MapViewportSize.Height);
-                        e.Graphics.DrawImage(buffer, dst_r, src_r, GraphicsUnit.Pixel);
+                        //Rectangle dst_r = new Rectangle(0, 0, Size.Width, Size.Height);
+                        //Rectangle src_r = new Rectangle(0, 0, MapViewportSize.Width, MapViewportSize.Height);
+                        //e.Graphics.DrawImage(buffer, dst_r, src_r, GraphicsUnit.Pixel);
+                        using (Graphics ig = Graphics.FromImage(buffer))
+                        {
+                            IntPtr hdcimg = ig.GetHdc();
+                            IntPtr hdcout = e.Graphics.GetHdc();
+                            StretchBlt(hdcout, 0, 0, this.Size.Width, this.Size.Height,
+                                       hdcimg, 0, 0, MapViewportSize.Width, MapViewportSize.Height, TernaryRasterOperations.SRCCOPY);
+                            e.Graphics.ReleaseHdc(hdcout);
+                            ig.ReleaseHdc(hdcimg);
+                        }
                     }
                 }
                 else
@@ -612,6 +620,20 @@ namespace MapsLibrary
             }
         }
 
+#if (PocketPC || Smartphone || WindowsCE)
+        [System.Runtime.InteropServices.DllImport("coredll.dll")]
+#else 
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+#endif
+        static extern bool StretchBlt(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
+            int nWidthDest, int nHeightDest,
+            IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
+            TernaryRasterOperations dwRop);
+
+        enum TernaryRasterOperations
+        {
+            SRCCOPY = 0x00CC0020, /* dest = source*/
+        };
 
         #region IHibernation Members
 
