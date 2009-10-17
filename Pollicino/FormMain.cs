@@ -181,7 +181,6 @@ namespace MapperTools.Pollicino
             // autodownload flag
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
             // show position flag
-            //menuItem_showpos.Checked = mapcontrol.ShowPosition;
             ShowPosition = options.Application.ShowPosition;
             ShowScaleRef = options.Application.ShowScale;
             //HiRes flags
@@ -203,10 +202,17 @@ namespace MapperTools.Pollicino
             mapcontrol.Zoom = 12;
             mapcontrol.Center = map.mapsystem.CalcProjection(options.Application.InitialMapPosition);
 
+            // Imposta mapcontrol in modo da abbassare i FPS durante il caricamento dei tile da disco.
+            EventHandler LowFPSDelegate = new EventHandler((object s, EventArgs a) => mapcontrol.DragRefreshInterval = 80);
+            EventHandler HiFPSDelegate = new EventHandler((object s, EventArgs a) => mapcontrol.DragRefreshInterval = 50);
+            // FIXME: ci potrebbe essere un problema di concorrenza perché questi eventi sotto non vengono eseguiti nello stesso thread
+            map.BeginTileLoad += LowFPSDelegate;
+            map.TileRequested += LowFPSDelegate;
+            map.EndTileLoad += HiFPSDelegate;  
+
+            // GPS
             autocenter = options.Application.AutoCentreMap;
             this.gpsControl.PositionUpdated += new GPSControl.PositionUpdateHandler(GPSEventHandler);
-
-            PlatformSpecificCode.Hibernate += new EventHandler(this.HibernateHandler);
 
             if (append_to_log != null)
             {
@@ -215,6 +221,9 @@ namespace MapperTools.Pollicino
             }
             else if (options.GPS.Autostart)
                 action_StartGPS(null);
+
+            // gestione memoria
+            PlatformSpecificCode.Hibernate += new EventHandler(this.HibernateHandler);
 
         }
 

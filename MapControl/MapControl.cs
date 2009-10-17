@@ -626,6 +626,18 @@ namespace MapsLibrary
 
         #endregion
 
+        public int DragRefreshInterval
+        {
+            get
+            {
+                return drag_draw_timer.Interval;
+            }
+            set
+            {
+                drag_draw_timer.Interval = value;
+            }
+        }
+
 
     }
 }

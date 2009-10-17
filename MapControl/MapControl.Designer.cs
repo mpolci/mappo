@@ -52,7 +52,7 @@ namespace MapsLibrary
             // 
             // drag_draw_timer
             // 
-            this.drag_draw_timer.Interval = 30;
+            this.drag_draw_timer.Interval = 70;
             this.drag_draw_timer.Tick += new System.EventHandler(this.drag_draw_timer_Tick);
             // 
             // MapControl
