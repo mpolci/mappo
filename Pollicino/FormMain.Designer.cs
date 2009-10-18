@@ -317,6 +317,7 @@ namespace MapperTools.Pollicino
             this.mapcontrol.TabIndex = 0;
             this.mapcontrol.Zoom = ((uint)(0u));
             this.mapcontrol.ZoomChanged += new MapsLibrary.MapControl.MapControlEventHandler(this.mapcontrol_ZoomChanged);
+            this.mapcontrol.Resize += new System.EventHandler(this.mapcontrol_Resize);
             // 
             // blinkcnDownloader
             // 
