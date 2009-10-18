@@ -98,7 +98,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.SparseImagesMapSystem">
-    <Position X="3.25" Y="13.25" Width="2" />
+    <Position X="3.25" Y="14" Width="2" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAA=</HashCode>
       <FileName>MapSystems.cs</FileName>
@@ -136,23 +136,9 @@
   </Class>
   <Class Name="MapsLibrary.MapControl">
     <Position X="13.25" Y="0.5" Width="1.75" />
-    <NestedTypes>
-      <Delegate Name="MapsLibrary.MapControl.MapControlEventHandler" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>MapControl.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-      <Delegate Name="MapsLibrary.MapControl.mapchangeddelegate" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>MapControl.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>4YCQEBAgIDAgAAAMVADABAEDADAFABBoIABAQAAKJgA=</HashCode>
-      <FileName>MapControl.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAABACAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="MapsLibrary.GoogleMapsSystem" Collapsed="true">
     <Position X="5.5" Y="13.75" Width="2" />
@@ -162,7 +148,17 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MapsLibrary.ReadAheadCachedTilesMap" Collapsed="true">
-    <Position X="3.25" Y="12.25" Width="2" />
+    <Position X="3.25" Y="12.75" Width="2" />
+    <InheritanceLine Type="MapsLibrary.CachedTilesMap" ManuallyRouted="true">
+      <Path>
+        <Point X="4.25" Y="7.923" />
+        <Point X="4.25" Y="8.258" />
+        <Point X="3.3" Y="8.258" />
+        <Point X="3.3" Y="12.45" />
+        <Point X="4.25" Y="12.45" />
+        <Point X="4.25" Y="12.75" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAgQCACAACAAAAAAAAAACAAEAAAIAEAAAAAAggAAgAA=</HashCode>
       <FileName>ReadAheadCachedTilesMap.cs</FileName>
@@ -220,8 +216,16 @@
   </Class>
   <Class Name="MapsLibrary.CachedTilesMapDL">
     <Position X="3.5" Y="8.75" Width="1.75" />
+    <InheritanceLine Type="MapsLibrary.CachedTilesMap" ManuallyRouted="true">
+      <Path>
+        <Point X="4.25" Y="7.923" />
+        <Point X="4.25" Y="8.25" />
+        <Point X="4.375" Y="8.25" />
+        <Point X="4.375" Y="8.75" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>gAEQAAAAACAAAAAAAAAIAAAAAFAAAAAAAAABAAIAAAA=</HashCode>
+      <HashCode>gAEQAAAAACAAAAAAAAIIAAAAAFAAAAAAAAABAAIAAAA=</HashCode>
       <FileName>Map.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
