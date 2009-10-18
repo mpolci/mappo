@@ -63,6 +63,7 @@ namespace MapperTools.Pollicino
         protected Downloader downloader;
         protected OnlineTrackingHandler tracking;
         protected Odometer odo;
+        protected MapTransitionsHandler transitionHandler;
 
         protected const string DateOnFilenameFormat = "yyyy-MM-dd_HHmmss";
 
@@ -144,8 +145,8 @@ namespace MapperTools.Pollicino
             // Extended Input (sensors)
             ext_in = new ExtendedInput(this);
             ext_in.GDisplayOff = true;
-            ext_in.NavCW += new ExtendedInput.NavHandler(() => mapcontrol.Zoom++);
-            ext_in.NavCCW += new ExtendedInput.NavHandler(() => mapcontrol.Zoom--);
+            ext_in.NavCW += new ExtendedInput.NavHandler(() => action_ZoomIn() );
+            ext_in.NavCCW += new ExtendedInput.NavHandler(() => action_ZoomOut() );
 #endif
             // disabilito l'autodownload
             options.Maps.AutoDownload = false;
@@ -185,7 +186,6 @@ namespace MapperTools.Pollicino
             ShowScaleRef = options.Application.ShowScale;
             //HiRes flags
             menuItem_HiRes.Checked = mapcontrol.HiResMode;
-            menuItem_HiRes_customdraw.Checked = mapcontrol.HiResModeCustomDraw;
             
             // Gestore del tracking online
             tracking = new OnlineTrackingHandler();
@@ -208,7 +208,10 @@ namespace MapperTools.Pollicino
             // FIXME: ci potrebbe essere un problema di concorrenza perché questi eventi sotto non vengono eseguiti nello stesso thread
             map.BeginTileLoad += LowFPSDelegate;
             map.TileRequested += LowFPSDelegate;
-            map.EndTileLoad += HiFPSDelegate;  
+            map.EndTileLoad += HiFPSDelegate;
+
+            // gestore degli effetti di transizione
+            transitionHandler = new MapTransitionsHandler(mapcontrol, map);
 
             // GPS
             autocenter = options.Application.AutoCentreMap;
@@ -526,12 +529,12 @@ namespace MapperTools.Pollicino
 
         private void menuItem_zoomin_Click(object sender, EventArgs e)
         {
-            this.mapcontrol.Zoom++;
+            action_ZoomIn();
         }
 
         private void menuItem_zoomout_Click(object sender, EventArgs e)
         {
-            this.mapcontrol.Zoom--;
+            action_ZoomOut();
         }
 
         private void menuItem_map_osm_Click(object sender, EventArgs e)
@@ -799,12 +802,12 @@ namespace MapperTools.Pollicino
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
             {
                 // Up
-                mapcontrol.Zoom++;
+                action_ZoomIn();
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Down))
             {
                 // Down
-                mapcontrol.Zoom--;
+                action_ZoomOut();
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Left))
             {
@@ -846,6 +849,18 @@ namespace MapperTools.Pollicino
                     action_takephoto();
             }
 #endif
+        }
+
+        private void action_ZoomOut()
+        {
+            //mapcontrol.Zoom--;
+            transitionHandler.AnimateMapZoomOut();
+        }
+
+        private void action_ZoomIn()
+        {
+            //mapcontrol.Zoom++;
+            transitionHandler.AnimateMapZoomIn();
         }
 
         private void notify_icon_click(object obj, EventArgs args)
@@ -908,6 +923,7 @@ namespace MapperTools.Pollicino
             ShowOdometer = !ShowOdometer;
         }
     }
+
 
     public class OnlineTrackingHandler
     {
