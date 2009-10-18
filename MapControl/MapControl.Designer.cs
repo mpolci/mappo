@@ -47,13 +47,7 @@ namespace MapsLibrary
         /// </summary>
         private void InitializeComponent()
         {
-            this.drag_draw_timer = new System.Windows.Forms.Timer();
             this.SuspendLayout();
-            // 
-            // drag_draw_timer
-            // 
-            this.drag_draw_timer.Interval = 70;
-            this.drag_draw_timer.Tick += new System.EventHandler(this.drag_draw_timer_Tick);
             // 
             // MapControl
             // 
@@ -65,7 +59,6 @@ namespace MapsLibrary
 
         #endregion
 
-        private System.Windows.Forms.Timer drag_draw_timer;
 
     }
 }
