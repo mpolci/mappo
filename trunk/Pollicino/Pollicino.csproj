@@ -131,6 +131,7 @@
       <DependentUpon>GPXSaver.cs</DependentUpon>
     </Compile>
     <Compile Include="interfaces.cs" />
+    <Compile Include="MapTransitionsHandler.cs" />
     <Compile Include="NotifyIcon.cs" />
     <Compile Include="Odometer.cs" />
     <Compile Include="PlatformSpecificCode.cs" />

@@ -81,12 +81,14 @@ namespace MapperTools.Pollicino
         {
             int idx = currentMapIdx + 1;
             if (idx >= options.Maps.ActiveTileMaps.Count) idx = 0;
-            map.mapsystem = SelectActiveMap(idx);
+            //map.mapsystem = SelectActiveMap(idx);
+            transitionHandler.AnimateMapRL(SelectActiveMap(idx));
         }
 
         public void ShowPrevMap()
         {
-            map.mapsystem = SelectActiveMap((currentMapIdx > 0 ? currentMapIdx : options.Maps.ActiveTileMaps.Count) - 1);
+            //map.mapsystem = SelectActiveMap((currentMapIdx > 0 ? currentMapIdx : options.Maps.ActiveTileMaps.Count) - 1);
+            transitionHandler.AnimateMapLR(SelectActiveMap((currentMapIdx > 0 ? currentMapIdx : options.Maps.ActiveTileMaps.Count) - 1));
         }
     }
 }
