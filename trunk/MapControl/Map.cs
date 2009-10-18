@@ -725,7 +725,18 @@ namespace MapsLibrary
             //thrLoader.Priority = System.Threading.ThreadPriority.AboveNormal;
             thrLoader.Priority = System.Threading.ThreadPriority.BelowNormal;
             thrLoader.Start();
+            AsyncLoad = true;
         }
+
+        /// <summary>
+        /// Abilita/disabilita il caricamento asincrono dei tile.
+        /// </summary>
+        /// <remarks>
+        /// Se true il caricamento dei tile da disco viene fatto in modo asincrono rispetto alla richiesta che invece ottiene come risultato il tile nullo.
+        /// Se false il comportamento è identico a quello della classe padre.
+        /// </remarks>
+        /// <value>Defalt: true</value>
+        public bool AsyncLoad { get; set; }
 
         #region IDisposable Members
 
@@ -740,8 +751,15 @@ namespace MapsLibrary
         /// <summary>
         /// Restituisce il bitmap del tile indicato
         /// </summary>
+        /// <remarks>
+        /// Se il caricamento asincrono è attivo e il tile non è in cache, viene restituito un tile nullo e il tile
+        /// richiesto viene messo in coda per il caricamento.
+        /// </remarks>
         public override Bitmap getImageTile(TileNum tn)
         {
+            if (!AsyncLoad)
+                return base.getImageTile(tn);
+
             Bitmap retbmp = null;
             Debug.Assert(lruqueue != null, "null lruqueue");
             bool incache;
