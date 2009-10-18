@@ -43,6 +43,10 @@ namespace MapsLibrary
         private int drag_lastx, drag_lasty;
         private bool drag_changed;
         private bool _dragging;
+        // uso questo timer invece che System.Windows.Forms.Timer perché più preciso e non da problemi in Windows.
+        private System.Threading.Timer drag_invalidate_timer;
+        private EventHandler drag_draw_timer_tick_eh;
+
         private bool dragging
         {
             get { return _dragging; }
@@ -54,16 +58,32 @@ namespace MapsLibrary
                     if (value)
                     {
                         drag_changed = false;
-                        drag_draw_timer.Enabled = true;
+                        drag_invalidate_timer.Change(DragRefreshInterval, DragRefreshInterval);
                     }
                     else
                     {
-                        drag_draw_timer.Enabled = false;
+                        drag_invalidate_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                         Invalidate();
                     }
                 }
             }
         }
+
+        private int _dragRefreshInterval;
+        public int DragRefreshInterval
+        {
+            get
+            {
+                return _dragRefreshInterval;
+            }
+            set
+            {
+                _dragRefreshInterval = value;
+                int start = _dragging ? 0 : System.Threading.Timeout.Infinite;
+                drag_invalidate_timer.Change(start, value);
+            }
+        }
+
 
         private void drag_draw_timer_Tick(object sender, EventArgs e)
         {
@@ -102,6 +122,13 @@ namespace MapsLibrary
                 }
                 crossline_hlen = drawingfont_height * 3 / 2;
             }
+
+            _dragRefreshInterval = 70;
+            drag_draw_timer_tick_eh = new EventHandler(this.drag_draw_timer_Tick);
+            drag_invalidate_timer = new System.Threading.Timer(new TimerCallback(
+                    (object s) => Invoke(drag_draw_timer_tick_eh)
+                ), null, System.Threading.Timeout.Infinite, _dragRefreshInterval);
+
         }
 
         #region campi e metodi utilizzati dal metodo paint
@@ -265,8 +292,16 @@ namespace MapsLibrary
             }
         }
 
+        public new event PaintEventHandler Paint;
+
         protected override void OnPaint(PaintEventArgs e)
         {
+            //base.OnPaint(e);
+            if (Paint != null)
+            {
+                Paint(this, e);
+                return;
+            }
 
             if (map != null)
             {
@@ -653,18 +688,6 @@ namespace MapsLibrary
         }
 
         #endregion
-
-        public int DragRefreshInterval
-        {
-            get
-            {
-                return drag_draw_timer.Interval;
-            }
-            set
-            {
-                drag_draw_timer.Interval = value;
-            }
-        }
 
 
     }
