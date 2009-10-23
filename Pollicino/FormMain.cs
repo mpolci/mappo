@@ -247,6 +247,7 @@ namespace MapperTools.Pollicino
             map.Hibernate();
         }
 
+        //TODO: questa funzione è da rivedere e bisogna eliminare i parametri perché richiamata in più punti
         private uint required_buffers(bool minimized_memory)
         {
             Size cs = this.ClientSize;
@@ -898,7 +899,8 @@ namespace MapperTools.Pollicino
 
         private void mapcontrol_Resize(object sender, EventArgs e)
         {
-            this.map.CacheLen = required_buffers(true);
+            if (map != null)
+                this.map.CacheLen = required_buffers(true);
         }
 
         private void menuItem_onlinetracking_Click(object sender, EventArgs e)
