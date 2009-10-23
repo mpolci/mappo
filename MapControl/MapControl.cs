@@ -413,10 +413,8 @@ namespace MapsLibrary
                     }
                     else
                     {
-                        //Rectangle dst_r = new Rectangle(0, 0, Size.Width, Size.Height);
-                        //Rectangle src_r = new Rectangle(0, 0, MapViewportSize.Width, MapViewportSize.Height);
-                        //e.Graphics.DrawImage(buffer, dst_r, src_r, GraphicsUnit.Pixel);
-                        using (Graphics ig = Graphics.FromImage(buffer))
+#if (PocketPC || Smartphone || WindowsCE)
+                       using (Graphics ig = Graphics.FromImage(buffer))
                         {
                             IntPtr hdcimg = ig.GetHdc();
                             IntPtr hdcout = e.Graphics.GetHdc();
@@ -425,6 +423,12 @@ namespace MapsLibrary
                             e.Graphics.ReleaseHdc(hdcout);
                             ig.ReleaseHdc(hdcimg);
                         }
+#else
+                        Rectangle dst_r = new Rectangle(0, 0, Size.Width, Size.Height);
+                        Rectangle src_r = new Rectangle(0, 0, MapViewportSize.Width, MapViewportSize.Height);
+                        e.Graphics.DrawImage(buffer, dst_r, src_r, GraphicsUnit.Pixel);
+#endif
+ 
                     }
                 }
                 else
