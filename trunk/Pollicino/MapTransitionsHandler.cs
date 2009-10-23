@@ -30,9 +30,12 @@ namespace MapperTools.Pollicino
         private void initPreBuffer()
         {
             System.Diagnostics.Trace.Assert(trans_buffer_pre == null, "buffer già inizializzato");
-            trans_buffer_pre = new Bitmap(mapcontrol.Width, mapcontrol.Height);
+            trans_buffer_pre = new Bitmap(mapcontrol.MapViewportSize.Width, mapcontrol.MapViewportSize.Height);
+            bool oldAsyncState = map.AsyncLoad;
+            map.AsyncLoad = false;
             using (Graphics gpre = Graphics.FromImage(trans_buffer_pre))
                 mapcontrol.Map.drawImageMapAt(mapcontrol.Center, mapcontrol.Zoom, mapcontrol.VisibleArea, gpre, new Point(0, 0));
+            map.AsyncLoad = oldAsyncState;
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace MapperTools.Pollicino
         private void initPostBuffer(MercatorProjectionMapSystem new_msys)
         {
             System.Diagnostics.Trace.Assert(trans_buffer_post == null, "buffer già inizializzato");
-            trans_buffer_post = new Bitmap(mapcontrol.Width, mapcontrol.Height);
+            trans_buffer_post = new Bitmap(mapcontrol.MapViewportSize.Width, mapcontrol.MapViewportSize.Height);
             bool oldAsyncState = map.AsyncLoad;
             map.AsyncLoad = false;
             map.mapsystem = new_msys;
@@ -58,13 +61,26 @@ namespace MapperTools.Pollicino
         private void initPostBuffer(int zoominc)
         {
             System.Diagnostics.Trace.Assert(trans_buffer_post == null, "buffer già inizializzato");
-            trans_buffer_post = new Bitmap(mapcontrol.Width, mapcontrol.Height);
+            trans_buffer_post = new Bitmap(mapcontrol.MapViewportSize.Width, mapcontrol.MapViewportSize.Height);
             bool oldAsyncState = map.AsyncLoad;
             map.AsyncLoad = false;
             mapcontrol.Zoom = (uint)((int)mapcontrol.Zoom + zoominc);
             using (Graphics gpost = Graphics.FromImage(trans_buffer_post))
                 mapcontrol.Map.drawImageMapAt(mapcontrol.Center, mapcontrol.Zoom, mapcontrol.VisibleArea, gpost, new Point(0, 0));
             map.AsyncLoad = oldAsyncState;
+        }
+
+        private void fixBuffersSize(ref Bitmap buffer)
+        {
+            if (buffer != null && buffer.Width != mapcontrol.Width)
+            {
+                Bitmap finalbuff = new Bitmap(mapcontrol.Width, mapcontrol.Height);
+                using (Graphics dst = Graphics.FromImage(finalbuff))
+                    StretchBlt(dst, new Rectangle(0, 0, mapcontrol.Width, mapcontrol.Height),
+                               buffer, new Rectangle(0, 0, buffer.Width, buffer.Height));
+                buffer.Dispose();
+                buffer = finalbuff;
+            }
         }
 
         private void initTransition(PaintEventHandler transition_handler)
@@ -100,22 +116,27 @@ namespace MapperTools.Pollicino
 
         public void AnimateMapRL(MercatorProjectionMapSystem new_msys)
         {
-            // inizializza la transizione
-            initTransition(new PaintEventHandler(this.mapcontrol_paint_RL));
-            // prepara il buffer di inizio transizione
-            initPreBuffer();
-            // prepara il buffer di fine transizione
-            initPostBuffer(new_msys);
+            PaintEventHandler paint_fn = new PaintEventHandler(this.mapcontrol_paint_RL);
+            AnimateMap(new_msys, paint_fn);
         }
 
         public void AnimateMapLR(MercatorProjectionMapSystem new_msys)
         {
+            PaintEventHandler paint_fn = new PaintEventHandler(this.mapcontrol_paint_LR);
+            AnimateMap(new_msys, paint_fn);
+        }
+
+        private void AnimateMap(MercatorProjectionMapSystem new_msys, PaintEventHandler paint_fn)
+        {
             // inizializza la transizione
-            initTransition(new PaintEventHandler(this.mapcontrol_paint_LR));
+            initTransition(paint_fn);
             // prepara il buffer di inizio transizione
             initPreBuffer();
             // prepara il buffer di fine transizione
             initPostBuffer(new_msys);
+            // se i buffer sono più piccoli dell'area del controllo vengono ridimensionati
+            fixBuffersSize(ref trans_buffer_pre);
+            fixBuffersSize(ref trans_buffer_post);
         }
 
         public void AnimateMapZoomIn()
@@ -125,7 +146,7 @@ namespace MapperTools.Pollicino
             // Prepara il buffer di inizio transizione
             initPreBuffer();
             // Il buffer di fine transizione non serve durante la transizione, quindi verrà generato alla fine.
-            //mapcontrol.Zoom++;
+            mapcontrol.Zoom++;
         }
 
         public void AnimateMapZoomOut()
@@ -177,16 +198,17 @@ namespace MapperTools.Pollicino
                 trans_terminate();
                 // Disegna la mappa finale
                 // Il post buffer non era ancora stato inizializzato
-                initPostBuffer(+1);  
+                initPostBuffer(0);
+                fixBuffersSize(ref trans_buffer_post);
                 e.Graphics.DrawImage(trans_buffer_post, 0, 0);
                 trans_freebuffers();
             }
             else
             {
-                int w = mapcontrol.Width * 100 / (100 + trans_progress);
-                int h = mapcontrol.Height * 100 / (100 + trans_progress);
-                int x = (mapcontrol.Width - w) / 2;
-                int y = (mapcontrol.Height - h) / 2;
+                int w = trans_buffer_pre.Width * 100 / (100 + trans_progress);
+                int h = trans_buffer_pre.Height * 100 / (100 + trans_progress);
+                int x = (trans_buffer_pre.Width - w) / 2;
+                int y = (trans_buffer_pre.Height - h) / 2;
                 Rectangle src_rec = new Rectangle(x, y, w, h);
                 StretchBlt(e.Graphics, new Rectangle(0, 0, mapcontrol.Width, mapcontrol.Height),
                            trans_buffer_pre, src_rec);
@@ -203,17 +225,18 @@ namespace MapperTools.Pollicino
             }
             else
             {
-                int w = mapcontrol.Width * 100 / (200 - trans_progress);
-                int h = mapcontrol.Height * 100 / (200 - trans_progress);
-                int x = (mapcontrol.Width - w) / 2;
-                int y = (mapcontrol.Height - h) / 2;
+                int w = trans_buffer_post.Width * 100 / (200 - trans_progress);
+                int h = trans_buffer_post.Height * 100 / (200 - trans_progress);
+                int x = (trans_buffer_post.Width - w) / 2;
+                int y = (trans_buffer_post.Height - h) / 2;
                 Rectangle src_rec = new Rectangle(x, y, w, h);
                 StretchBlt(e.Graphics, new Rectangle(0, 0, mapcontrol.Width, mapcontrol.Height),
                            trans_buffer_post, src_rec);
             }
         }
 
-        private void StretchBlt(Graphics dst, Rectangle dst_rec, Bitmap src, Rectangle src_rec)
+#if (PocketPC || Smartphone || WindowsCE)
+       private void StretchBlt(Graphics dst, Rectangle dst_rec, Bitmap src, Rectangle src_rec)
         {
             using (Graphics ig = Graphics.FromImage(src))
             {
@@ -226,7 +249,13 @@ namespace MapperTools.Pollicino
                 ig.ReleaseHdc(hdcimg);
             }
         }
-
+#else
+        private void StretchBlt(Graphics dst, Rectangle dst_rec, Bitmap src, Rectangle src_rec)
+        {
+            dst.DrawImage(src, dst_rec, src_rec, GraphicsUnit.Pixel);
+        }
+#endif
+ 
 #if (PocketPC || Smartphone || WindowsCE)
         [System.Runtime.InteropServices.DllImport("coredll.dll")]
 #else 
