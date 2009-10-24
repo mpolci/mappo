@@ -61,11 +61,11 @@ namespace Sensors
         IntPtr myOldWndProc;
         public HTCNavSensor(Form form)
         {
+            int ret = HTCNativeMethods.HTCNavOpen(form.Handle, HTCNativeMethods.HTCNavOpenAPI);
+            ret = HTCNativeMethods.HTCNavSetMode(form.Handle, HTCAPIMode.Gesture);
             myHandler = new WndProcHandler(WndProc);
             myForm = form;
             myOldWndProc = SetWindowLong(form.Handle, WindowLong.GWL_WNDPROC, Marshal.GetFunctionPointerForDelegate(myHandler));
-            int ret = HTCNativeMethods.HTCNavOpen(form.Handle, HTCNativeMethods.HTCNavOpenAPI);
-            ret = HTCNativeMethods.HTCNavSetMode(form.Handle, HTCAPIMode.Gesture);
         }
 
 
