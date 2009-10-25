@@ -70,6 +70,30 @@ namespace MapperTools.Pollicino
             map.AsyncLoad = oldAsyncState;
         }
 
+        /// <summary>
+        /// Inizializza il buffer di fine transizione per lo zoom out di un livello. Contrariamente al metodo generico,
+        /// questo non impone il caricamento dei tile in modo sincrono e la parte centrale viene generata
+        ///  ridimensionando il buffer di inizio transizione, se inizializzato.
+        /// </summary>
+        private void initPostBufferFastZO()
+        {
+            System.Diagnostics.Trace.Assert(trans_buffer_post == null, "buffer già inizializzato");
+            trans_buffer_post = new Bitmap(mapcontrol.MapViewportSize.Width, mapcontrol.MapViewportSize.Height);
+            mapcontrol.Zoom--;
+            using (Graphics gpost = Graphics.FromImage(trans_buffer_post))
+            {
+                mapcontrol.Map.drawImageMapAt(mapcontrol.Center, mapcontrol.Zoom, mapcontrol.VisibleArea, gpost, new Point(0, 0));
+                if (map.AsyncLoad && trans_buffer_pre != null)
+                {
+                    int x = trans_buffer_post.Width / 4,
+                        y = trans_buffer_post.Height / 4,
+                        w = trans_buffer_post.Width / 2,
+                        h = trans_buffer_post.Height / 2;
+                    StretchBlt(gpost, new Rectangle(x, y, w, h), trans_buffer_pre, new Rectangle(0, 0, trans_buffer_pre.Width, trans_buffer_pre.Height));
+                }
+            }
+        }
+
         private void fixBuffersSize(ref Bitmap buffer)
         {
             if (buffer != null && buffer.Width != mapcontrol.Width)
@@ -153,9 +177,15 @@ namespace MapperTools.Pollicino
         {
              // inizializza la transizione
             initTransition(new PaintEventHandler(this.mapcontrol_paint_ZO));
-            //initPreBuffer();
             // prepara il buffer di fine transizione
+#if (PocketPC || Smartphone || WindowsCE)
+            // Il caricamento dei tile dopo lo zoom out è un'operazione lenta, quindi il post buffer viene generato dal pre buffer.
+            initPreBuffer();
+            initPostBufferFastZO();
+#else 
             initPostBuffer(-1);
+#endif
+
         }
         
         void mapcontrol_paint_RL(object sender, PaintEventArgs e)
@@ -221,6 +251,14 @@ namespace MapperTools.Pollicino
             if (trans_progress >= 100)
             {
                 trans_terminate();
+#if (PocketPC || Smartphone || WindowsCE)
+                // Si stava utilizzando un post buffer fasullo generato dal pre buffer. Ora viene generato e disegnato quello vero.
+                trans_buffer_post.Dispose();
+                trans_buffer_post = null;
+                initPostBuffer(0);
+                fixBuffersSize(ref trans_buffer_post);
+                e.Graphics.DrawImage(trans_buffer_post, 0, 0);
+#endif
                 trans_freebuffers();
             }
             else
