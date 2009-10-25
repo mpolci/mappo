@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MapperTools.Pollicino</RootNamespace>
-    <AssemblyName>pollicino-win</AssemblyName>
+    <AssemblyName>mappo-win</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -132,6 +132,9 @@
     </Compile>
     <Compile Include="..\Pollicino\interfaces.cs">
       <Link>interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\Pollicino\MapTransitionsHandler.cs">
+      <Link>MapTransitionsHandler.cs</Link>
     </Compile>
     <Compile Include="..\Pollicino\NmeaToGpx.cs">
       <Link>NmeaToGpx.cs</Link>
