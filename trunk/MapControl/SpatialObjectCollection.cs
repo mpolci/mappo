@@ -7,7 +7,7 @@ namespace MapsLibrary
 {
     public abstract class SpatialObject
     {
-        public abstract ProjectedGeoArea ContainigArea { get; }
+        public abstract ProjectedGeoArea ContainingArea { get; }
         public abstract bool Contains(ProjectedGeoPoint point);
         //public abstract bool Intersect(ProjectedGeoArea area);
     }
@@ -62,11 +62,11 @@ namespace MapsLibrary
                                               next;
                 while (current != null)
                 {
-                    ProjectedGeoPoint c = current.Value.ContainigArea.center;
+                    ProjectedGeoPoint c = current.Value.ContainingArea.center;
                     int x = c.nLon < middle.nLon ? 0 : 1;
                     int y = c.nLat < middle.nLat ? 0 : 1;
                     next = current.Next;
-                    if (q[x, y].area.testIntersection(current.Value.ContainigArea) == AreaIntersectionType.fullContains)
+                    if (q[x, y].area.testIntersection(current.Value.ContainingArea) == AreaIntersectionType.fullContains)
                     {
                         q[x, y].AddObject(current.Value);
                         //TODO: controllare che quest'operazione non mandi in tilt il ciclo
@@ -78,7 +78,7 @@ namespace MapsLibrary
 
             public void AddObject(SpatialObject sobj)
             {
-                System.Diagnostics.Debug.Assert(this.area.testIntersection(sobj.ContainigArea) == AreaIntersectionType.fullContains, "QTreeNode.AddObject(): object too big");
+                System.Diagnostics.Debug.Assert(this.area.testIntersection(sobj.ContainingArea) == AreaIntersectionType.fullContains, "QTreeNode.AddObject(): object too big");
                 ProjectedGeoPoint middle = ProjectedGeoPoint.middle(pMin, pMax);
                 // Se middle == pMin abbiamo raggiunto la profondità massima, non possiamo avere
                 // altri livelli né aggiungerli. L'oggetto va inserito per forza nel livello corrente.
@@ -100,10 +100,10 @@ namespace MapsLibrary
                         transferObjectToChild(middle);
                     }
                     // Aggiunge il nuovo oggetto in uno dei sottonodi se in grado di contenerlo, altrimenti nel bucket.
-                    ProjectedGeoPoint c = sobj.ContainigArea.center;
+                    ProjectedGeoPoint c = sobj.ContainingArea.center;
                     int x = c.nLon < middle.nLon ? 0 : 1;
                     int y = c.nLat < middle.nLat ? 0 : 1;
-                    if (q[x, y].area.testIntersection(sobj.ContainigArea) == AreaIntersectionType.fullContains)
+                    if (q[x, y].area.testIntersection(sobj.ContainingArea) == AreaIntersectionType.fullContains)
                         q[x, y].AddObject(sobj);
                     else
                         bucket.AddLast(sobj);
@@ -203,7 +203,7 @@ namespace MapsLibrary
                     case AreaIntersectionType.partialIntersection:
                     case AreaIntersectionType.fullContained:
                         foreach (SpatialObject o in bucket)
-                            if (filterarea.testIntersection(o.ContainigArea) != AreaIntersectionType.noItersection)
+                            if (filterarea.testIntersection(o.ContainingArea) != AreaIntersectionType.noItersection)
                                 yield return o;
                         if (q != null && maxdepth != 0)
                             foreach (QTreeNode n in q)
@@ -230,7 +230,7 @@ namespace MapsLibrary
                 //    return;
 
                 foreach (SpatialObject o in bucket)
-                    if (o.ContainigArea.contains(point))
+                    if (o.ContainingArea.contains(point))
                         yield return o;
 
                 if (q != null && maxdepth != 0)
@@ -245,14 +245,14 @@ namespace MapsLibrary
 
             public bool remove(SpatialObject o)
             {
-                if (area.testIntersection(o.ContainigArea) != AreaIntersectionType.fullContains)
+                if (area.testIntersection(o.ContainingArea) != AreaIntersectionType.fullContains)
                     return false;
                 else
                 {
                     // prima cerca di rimuovere l'oggetto nei sottorami e solo nel caso non venga trovato cerca nel bucket
                     if (q != null)
                     {
-                        ProjectedGeoPoint point = o.ContainigArea.center;
+                        ProjectedGeoPoint point = o.ContainingArea.center;
                         ProjectedGeoPoint middle = this.area.center;
                         int x = point.nLon < middle.nLon ? 0 : 1;
                         int y = point.nLat < middle.nLat ? 0 : 1;
@@ -281,12 +281,12 @@ namespace MapsLibrary
 
         public void AddObject(SpatialObject o)
         {
-            ProjectedGeoPoint objcenter = o.ContainigArea.center;
+            ProjectedGeoPoint objcenter = o.ContainingArea.center;
             if (root == null)
                 InitRoot(objcenter);
             
             // Espande l'albero finché non contiene completamente l'oggetto da inserire.
-            while (root.area.testIntersection(o.ContainigArea) != AreaIntersectionType.fullContains)
+            while (root.area.testIntersection(o.ContainingArea) != AreaIntersectionType.fullContains)
                 root = root.expand(objcenter);
             root.AddObject(o);
         }
