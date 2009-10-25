@@ -84,6 +84,7 @@ namespace MapsLibrary
             }
         }
 
+        public ProjectedGeoPoint LastMouseDownPoint { get; private set; }
 
         private void drag_draw_timer_Tick(object sender, EventArgs e)
         {
@@ -129,6 +130,9 @@ namespace MapsLibrary
                     (object s) => Invoke(drag_draw_timer_tick_eh)
                 ), null, System.Threading.Timeout.Infinite, _dragRefreshInterval);
 
+            contextmenu_timer = new System.Windows.Forms.Timer();
+            contextmenu_timer.Interval = 1000;
+            contextmenu_timer.Tick += new EventHandler(contextmenu_timertick);
         }
 
         #region campi e metodi utilizzati dal metodo paint
@@ -495,21 +499,59 @@ namespace MapsLibrary
         protected override void OnPaintBackground(PaintEventArgs e)
         { }
 
+        private void contextmenu_timertick(object s, EventArgs e)
+        {
+            contextmenu_timer.Enabled = false;
+            dragging = false;
+            ContextMenu.Show(this, contextmenu_clickpoint);
+        }
+
+        System.Windows.Forms.Timer contextmenu_timer;
+        Point contextmenu_clickpoint;
+
+        // Non utilizzo l'implementazione del menu contestuale della classe padre perché non riuscirei a
+        // catturare l'evento di pressione del tasto del mouse e quindi il punto dove è stato fatto click.
+        public override ContextMenu ContextMenu { get; set; }
+
         /// <summary>
         /// Avvia lo spostamento dell'area visibile della mappa
         /// </summary>
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            // Calcola le coordinate del punto dove è stato fatto click
+            PxCoordinates pxcPoint = map.mapsystem.PointToPx(this.VisibleArea.pMin, this.Zoom);
+            if (HiResMode)
+            {
+                pxcPoint.xpx += e.X / 2;
+                pxcPoint.ypx += e.Y / 2;
+            }
+            else
+            {
+                pxcPoint.xpx += e.X;
+                pxcPoint.ypx += e.Y;
+            }
+            LastMouseDownPoint = map.mapsystem.PxToPoint(pxcPoint, this.Zoom);
+            // Gestione del menu contestuale
+            if (ContextMenu != null)
+            {
+                contextmenu_clickpoint = new Point(e.X, e.Y);
+                contextmenu_timer.Enabled = true;
+            }
+
             base.OnMouseDown(e);
+
+            // Inizializza l'operazione di spostamento
             this.drag_lastx = e.X;
             this.drag_lasty = e.Y;
             this.dragging = true;
         }
+
         /// <summary>
         /// Termina lo spostamento dell'area visibile della mappa
         /// </summary>
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            contextmenu_timer.Enabled = false;
             this.dragging = false;
             base.OnMouseUp(e);
         }
@@ -521,8 +563,14 @@ namespace MapsLibrary
             base.OnMouseMove(e);
             if (dragging)
             {
+                int adx = Math.Abs(contextmenu_clickpoint.X - e.X);
+                int ady = Math.Abs(contextmenu_clickpoint.Y - e.Y);
+                if (adx > 4 || ady > 4)
+                    contextmenu_timer.Enabled = false;
+
                 int dx = e.X - drag_lastx;
                 int dy = e.Y - drag_lasty;
+
                 if (!HiResMode) {
                     dx *= 2;
                     dy *= 2;
