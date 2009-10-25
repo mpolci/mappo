@@ -254,9 +254,15 @@ namespace MapsLibrary
                 ProjectedGeoPoint min, max;
 
                 min = point;
-                min.nLat /= 0x10000; min.nLat *= 0x10000;
-                min.nLon /= 0x10000; min.nLon *= 0x10000;
-                max = min;    max.nLat += 0x10000;  max.nLon += 0x10000;
+                // Le istruzioni qui sotto equivalgono ad un AND sui bit con 0xFFFF0000 
+                //min.nLat /= 0x10000; min.nLat *= 0x10000;
+                //min.nLon /= 0x10000; min.nLon *= 0x10000;
+                const int mask = -1 << 16;  // 0xFFFF0000
+                const int size =  1 << 16;  // 0x00010000
+                System.Diagnostics.Debug.Assert(mask == 0xFFFF0000 && size == 0x00010000, "addPoint: incorrect mask and size");
+                min.nLat &= mask;
+                min.nLon &= mask;
+                max = min;    max.nLat += size;  max.nLon += size;
                 this.root = new QTreeNode(min, max);
             }
             while (!root.contains(point)) {
