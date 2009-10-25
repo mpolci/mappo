@@ -129,7 +129,7 @@ namespace MapsLibrary
                 }
                 else
                 {
-                    throw new InvalidOperationException("Key already present in the queue: " + k.ToString());
+                    throw new ArgumentException("Key already present in the queue: " + k.ToString());
                 }
             }
         }

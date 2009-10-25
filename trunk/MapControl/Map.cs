@@ -758,7 +758,8 @@ namespace MapsLibrary
         public override Bitmap getImageTile(TileNum tn)
         {
             if (!AsyncLoad)
-                return base.getImageTile(tn);
+                lock (lruqueue)
+                    return base.getImageTile(tn);
 
             Bitmap retbmp = null;
             Debug.Assert(lruqueue != null, "null lruqueue");
@@ -820,14 +821,14 @@ namespace MapsLibrary
                 {
                     if (lruqueue.Count >= maxitems)
                     {
-                        // rimuove un elemento dalla coda
+                        // rimuove un elemento dalla coda per liberare spazio
                         Bitmap olderbmp;
                         lock (lruqueue)
                             olderbmp = lruqueue.Dequeue();
                         Trace.Assert(olderbmp != null, "old bitmap in cache is null");
                         olderbmp.Dispose();
                     }
-                    Bitmap bmp;
+                    Bitmap bmp = null;
                     try
                     {
                         bmp = base.createImageTile(tn);
@@ -843,6 +844,13 @@ namespace MapsLibrary
                     }
                     catch (TileNotFoundException)
                     { }
+                    catch (ArgumentException e)  // thrown by lruqueue.Enqueue(...) if tn is already present in the queue
+                    {
+                        //FIXME: Visto l'utilizzo minimale delle primitive di sincronizzazione potrebbe succedere che fra lruqueue.Contains() e lruqueue.Enqueue() un altro processo abbia effettuato il caricamento del tile disabilitando il caricamento asincrono.
+                        System.Diagnostics.Trace.Write(DateTime.Now + " - Tile load conflict: " + e.ToString());
+                        if (bmp != null)
+                            bmp.Dispose();
+                    }
                 }
                 else
                 {
