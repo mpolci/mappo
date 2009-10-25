@@ -14,12 +14,6 @@ namespace MapsLibrary
 
     public class SpatialObjectCollection
     {
-        public interface Iterator
-        {
-            void process(SpatialObject o);
-        }
-
-        public delegate void SpatialObjectHandler(SpatialObject o);
 
         protected class QTreeNode
         {
@@ -180,39 +174,41 @@ namespace MapsLibrary
             /// <summary>
             /// Visita dell'albero. Tutti gli oggetti contenuti vengono elaborati.
             /// </summary>
-            /// <param name="iterator"></param>
             /// <param name="maxdepth">Massima profondità da raggiungere. Se il valore è negativo arriva fino alle foglie.</param>
-            public void iterate(Iterator iterator, int maxdepth)
+            public IEnumerable iterate(int maxdepth)
             {
                 foreach (SpatialObject o in bucket)
-                    iterator.process(o);
+                    yield return o;
 
                 if (q != null && maxdepth != 0)
                     foreach (QTreeNode n in q) 
-                        n.iterate(iterator, maxdepth - 1);
+                        foreach (SpatialObject o in n.iterate(maxdepth - 1))
+                            yield return o;
+                        //n.iterate(iterator, maxdepth - 1);
             }
 
             /// <summary>
             /// Visita l'albero elaborando gli oggetti che intersecano un'area.
             /// </summary>
-            /// <param name="iterator"></param>
             /// <param name="filterarea">Elabora solo gli oggetti che intersecano quest'area.</param>
             /// <param name="maxdepth">Massima profondità da raggiungere. Se il valore è negativo arriva fino alle foglie.</param>
-            public void iterate(ProjectedGeoArea filterarea, Iterator iterator, int maxdepth)
+            public IEnumerable iterate(ProjectedGeoArea filterarea, int maxdepth)
             {
                 switch (filterarea.testIntersection(this.area))
                 {
                     case AreaIntersectionType.fullContains:
-                        this.iterate(iterator, maxdepth);
+                        foreach (SpatialObject o in this.iterate(maxdepth))
+                            yield return o;
                         break;
                     case AreaIntersectionType.partialIntersection:
                     case AreaIntersectionType.fullContained:
                         foreach (SpatialObject o in bucket)
                             if (filterarea.testIntersection(o.ContainigArea) != AreaIntersectionType.noItersection)
-                                iterator.process(o);
+                                yield return o;
                         if (q != null && maxdepth != 0)
                             foreach (QTreeNode n in q)
-                                n.iterate(filterarea, iterator, maxdepth - 1);
+                                foreach (SpatialObject o in n.iterate(filterarea, maxdepth - 1))
+                                    yield return o;
                         break;
                     case AreaIntersectionType.noItersection:
                         // niente da fare
@@ -228,21 +224,22 @@ namespace MapsLibrary
             /// </param>
             /// <param name="iterator"></param>
             /// <param name="maxdepth">Massima profondità da raggiungere. Se il valore è negativo arriva fino alle foglie.</param>
-            public void iterate(ProjectedGeoPoint point, Iterator iterator, int maxdepth)
+            public IEnumerable iterate(ProjectedGeoPoint point, int maxdepth)
             {
                 //if (!this.area.contains(point))
                 //    return;
 
                 foreach (SpatialObject o in bucket)
                     if (o.ContainigArea.contains(point))
-                        iterator.process(o);
+                        yield return o;
 
                 if (q != null && maxdepth != 0)
                 {
                     ProjectedGeoPoint middle = this.area.center;
                     int x = point.nLon < middle.nLon ? 0 : 1;
                     int y = point.nLat < middle.nLat ? 0 : 1;
-                    q[x, y].iterate(point, iterator, maxdepth - 1);
+                    foreach (SpatialObject o in q[x, y].iterate(point, maxdepth - 1))
+                        yield return o;
                 }
             }
 
@@ -320,21 +317,30 @@ namespace MapsLibrary
         /// Elabora gli oggetti che intersecano una determinata area.
         /// </summary>
         /// <param name="maxdepth">Massima profondità da raggiungere. Se il valore è negativo arriva fino alle foglie.</param>
-        public void Iterate(ProjectedGeoArea filterarea, Iterator iterator, int maxdepth)
+        public IEnumerable Iterate(ProjectedGeoArea filterarea, int maxdepth)
         {
-            if (root != null) root.iterate(filterarea, iterator, maxdepth);
+            if (root != null)
+                return root.iterate(filterarea, maxdepth);
+            else
+                return emptyenum();
         }
 
         /// <summary>
         /// Elabora gli oggetti che contengono un determinato punto.
         /// </summary>
         /// <param name="point">Elabora solo gli oggetti che contengono questo punto.</param>
-        /// <param name="iterator"></param>
         /// <param name="maxdepth">Massima profondità da raggiungere. Se il valore è negativo arriva fino alle foglie.</param>
-        public void Iterate(ProjectedGeoPoint point, Iterator iterator, int maxdepth)
+        public IEnumerable Iterate(ProjectedGeoPoint point, int maxdepth)
         {
             if (root != null && root.area.contains(point))
-                root.iterate(point, iterator, maxdepth);
+                return root.iterate(point, maxdepth);
+            else
+                return emptyenum();
+        }
+
+        private IEnumerable emptyenum()
+        {
+            yield break;
         }
 
         /// <summary>
