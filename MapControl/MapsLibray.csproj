@@ -67,6 +67,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LayerSpatialObjects.cs" />
+    <Compile Include="SpatialObjectCollection.cs" />
     <Compile Include="BasicTypes.cs" />
     <Compile Include="ConfigurableMapSystem.cs" />
     <Compile Include="GoogleMapsTileMapSystem.cs" />
