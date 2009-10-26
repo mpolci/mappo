@@ -4,15 +4,13 @@ using System.Drawing;
 
 namespace MapsLibrary
 {
-    public abstract class DrawableSpatialObjects : SpatialObject
+    public interface IDrawableObject 
     {
-        public abstract void Draw(System.Drawing.Graphics dst, PxCoordinates corner, uint zoom, MercatorProjectionMapSystem mapsystem);
+        void Draw(System.Drawing.Graphics dst, PxCoordinates corner, uint zoom, MercatorProjectionMapSystem mapsystem);
     }
 
     public class LayerSpatialObjects : IMap
     {
-
- 
         protected SpatialObjectCollection objects;
         protected MercatorProjectionMapSystem mapsys;
         protected static readonly double ln2 = Math.Log(2);
@@ -30,11 +28,16 @@ namespace MapsLibrary
             objects = new SpatialObjectCollection();
         }
 
-        public virtual void addObject(DrawableSpatialObjects o)
+        /// <summary>
+        /// Aggiunge l'oggetto al contenitore. Solo gli oggetti che implementano IDrawableObject saranno
+        /// renderizzati.
+        /// </summary>
+        /// <param name="o"></param>
+        public virtual void addObject(SpatialObject o)
         {
             objects.AddObject(o);
 
-            if (MapChanged != null)
+            if (MapChanged != null && typeof(IDrawableObject).IsAssignableFrom(o.GetType()) )
                 MapChanged(this, o.ContainingArea);
         }
 
@@ -63,9 +66,11 @@ namespace MapsLibrary
             pxGraphCorner.xpx -= delta.X;
             pxGraphCorner.ypx -= delta.Y;
 
-            foreach (DrawableSpatialObjects dso in objects.Iterate(area, depth))
+            foreach (SpatialObject so in objects.Iterate(area, depth))
             {
-                dso.Draw(dst, pxGraphCorner, zoom, this.mapsys);
+                IDrawableObject dso = so as IDrawableObject;
+                if (dso != null)
+                    dso.Draw(dst, pxGraphCorner, zoom, this.mapsys);
             }
         }
 
