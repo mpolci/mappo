@@ -136,7 +136,7 @@ namespace MapsLibrary
                     newNode.createQ3(newMiddle);
                     newNode.q[1,1] = this;
                 }
-                else if (direction.nLon > pMin.nLon && direction.nLat < pMin.nLat) 
+                else if (direction.nLon >= pMin.nLon && direction.nLat < pMin.nLat) 
                 {   // quadrante 3
                     newMin = new ProjectedGeoPoint(2 * pMin.nLat - pMax.nLat, pMin.nLon);
                     newMiddle = new ProjectedGeoPoint(pMin.nLat, pMax.nLon);
@@ -148,7 +148,7 @@ namespace MapsLibrary
                     newNode.createQ4(newMiddle);
                     newNode.q[0,1] = this;
                 }
-                else if (direction.nLon < pMin.nLon && direction.nLat > pMin.nLat) 
+                else if (direction.nLon < pMin.nLon && direction.nLat >= pMin.nLat) 
                 {   // quadrante 2
                     newMin = new ProjectedGeoPoint(pMin.nLat, 2 * pMin.nLon - pMax.nLon);
                     newMiddle = new ProjectedGeoPoint(pMax.nLat, pMin.nLon);
@@ -160,7 +160,7 @@ namespace MapsLibrary
                     newNode.createQ4(newMiddle);
                     newNode.q[1,0] = this;
                 }
-                else if (direction.nLon > pMin.nLon && direction.nLat > pMin.nLat) 
+                else if (direction.nLon >= pMin.nLon && direction.nLat >= pMin.nLat) 
                 {   // quadrante 1
                     newMax = new ProjectedGeoPoint(2 * pMax.nLat - pMin.nLat, 2 * pMax.nLon - pMin.nLon);
                     newMiddle = pMax;
@@ -400,6 +400,13 @@ namespace MapsLibrary
 
         #endregion
 
+        /// <summary>
+        /// Calcola la profondità massima necessaria per la visita dell'albero, supponendo di avere 
+        /// una certa area da rappresentare su un'immagine di una certa grandezza in pixel.
+        /// </summary>
+        /// <param name="drawarea">Area da rappresentare.</param>
+        /// <param name="wsize">Dimensione in pixel dell'immagine rappresentante l'area indicata.</param>
+        /// <returns></returns>
         protected int calcMaxDepth(ProjectedGeoArea drawarea, Size wsize)
         {
             // calcola la profondità massima per la visita dell'albero            
