@@ -38,6 +38,11 @@ namespace MapsLibrary
                 MapChanged(this, o.ContainingArea);
         }
 
+        public System.Collections.IEnumerable Iterate(ProjectedGeoPoint p)
+        {
+            return objects.Iterate(p, -1);
+        }
+
         /// <summary>
         /// Elimina tutti i punti dal layer
         /// </summary>
