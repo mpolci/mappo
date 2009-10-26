@@ -110,7 +110,8 @@ namespace MapsLibrary
                 }
             }
 
-
+            // TODO: l'expand del QTree non è compatibile con il sistema dei tile, ma non è detto che sia un problema, tutt'altro.
+            // Anche partendo da un primo nodo compatibile, con il sistema dei tile c'è sempre una sola possibile espansione.
             public QTreeNode expand(ProjectedGeoPoint direction) {
                 ProjectedGeoPoint newMin, newMiddle, newMax;
                 QTreeNode newNode;
@@ -126,7 +127,7 @@ namespace MapsLibrary
                     newNode.createQ3(newMiddle);
                     newNode.q[1,1] = this;
                 }
-                else if (direction.nLon > pMin.nLon && direction.nLat < pMin.nLat) 
+                else if (direction.nLon >= pMin.nLon && direction.nLat < pMin.nLat) 
                 {   // quadrante 3
                     newMin = new ProjectedGeoPoint(2 * pMin.nLat - pMax.nLat, pMin.nLon);
                     newMiddle = new ProjectedGeoPoint(pMin.nLat, pMax.nLon);
@@ -138,7 +139,7 @@ namespace MapsLibrary
                     newNode.createQ4(newMiddle);
                     newNode.q[0,1] = this;
                 }
-                else if (direction.nLon < pMin.nLon && direction.nLat > pMin.nLat) 
+                else if (direction.nLon < pMin.nLon && direction.nLat >= pMin.nLat) 
                 {   // quadrante 2
                     newMin = new ProjectedGeoPoint(pMin.nLat, 2 * pMin.nLon - pMax.nLon);
                     newMiddle = new ProjectedGeoPoint(pMax.nLat, pMin.nLon);
@@ -150,7 +151,7 @@ namespace MapsLibrary
                     newNode.createQ4(newMiddle);
                     newNode.q[1,0] = this;
                 }
-                else if (direction.nLon > pMin.nLon && direction.nLat > pMin.nLat) 
+                else if (direction.nLon >= pMin.nLon && direction.nLat >= pMin.nLat) 
                 {   // quadrante 1
                     newMax = new ProjectedGeoPoint(2 * pMax.nLat - pMin.nLat, 2 * pMax.nLon - pMin.nLon);
                     newMiddle = pMax;
@@ -230,7 +231,7 @@ namespace MapsLibrary
                 //    return;
 
                 foreach (SpatialObject o in bucket)
-                    if (o.ContainingArea.contains(point))
+                    if (o.Contains(point))
                         yield return o;
 
                 if (q != null && maxdepth != 0)
