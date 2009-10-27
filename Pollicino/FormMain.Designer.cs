@@ -90,6 +90,7 @@ namespace MapperTools.Pollicino
             this.gpx_saver = new MapperTools.Pollicino.GPXSaver(this.components);
             this.gpxSaver1 = new MapperTools.Pollicino.GPXSaver(this.components);
             this.label_odometer = new System.Windows.Forms.Label();
+            this.menuItem_LoadPlan = new System.Windows.Forms.MenuItem();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -148,6 +149,7 @@ namespace MapperTools.Pollicino
             // menuItem4
             // 
             this.menuItem4.MenuItems.Add(this.menuItem_downloadmaps);
+            this.menuItem4.MenuItems.Add(this.menuItem_LoadPlan);
             this.menuItem4.MenuItems.Add(this.menuItem_loadtrack);
             this.menuItem4.MenuItems.Add(this.menuItem_TracksManager);
             this.menuItem4.Text = "Other";
@@ -338,6 +340,11 @@ namespace MapperTools.Pollicino
             this.label_odometer.Size = new System.Drawing.Size(50, 18);
             this.label_odometer.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // menuItem_LoadPlan
+            // 
+            this.menuItem_LoadPlan.Text = "Load track plan...";
+            this.menuItem_LoadPlan.Click += new System.EventHandler(this.menuItem_LoadPlan_Click);
+            // 
             // Form_MapperToolMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -401,6 +408,7 @@ namespace MapperTools.Pollicino
         private System.Windows.Forms.MenuItem menuItem_HiRes;
         private System.Windows.Forms.Label label_odometer;
         private System.Windows.Forms.MenuItem menuItem_Odometer;
+        private System.Windows.Forms.MenuItem menuItem_LoadPlan;
 
 
 

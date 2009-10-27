@@ -125,6 +125,22 @@ namespace MapperTools.Pollicino
             }
         }
 
+        public bool HiResMode
+        {
+            get
+            {
+                System.Diagnostics.Debug.Assert(options.Application.HiResDisplayMode == mapcontrol.HiResMode, @"HiResMode inconsistente");
+                System.Diagnostics.Debug.Assert(menuItem_HiRes.Checked == mapcontrol.HiResMode, @"HiResMode inconsistente");
+                return mapcontrol.HiResMode;
+            }
+            set
+            {
+                options.Application.HiResDisplayMode = value;
+                mapcontrol.HiResMode = value;
+                menuItem_HiRes.Checked = value;
+            }
+        }
+
         public Form_MapperToolMain()
         {
             InitializeComponent();
@@ -183,9 +199,10 @@ namespace MapperTools.Pollicino
             menuItem_autodownload.Checked = options.Maps.AutoDownload;
             // show position flag
             ShowPosition = options.Application.ShowPosition;
+            // show scale reference flag
             ShowScaleRef = options.Application.ShowScale;
             //HiRes flags
-            menuItem_HiRes.Checked = mapcontrol.HiResMode;
+            HiResMode = options.Application.HiResDisplayMode;
             
             // Gestore del tracking online
             tracking = new OnlineTrackingHandler();
@@ -285,18 +302,34 @@ namespace MapperTools.Pollicino
             ApplicationOptions.LoadTileMaps(this.configfile, options);
         }
 
+        private SpatialObject alarmLast = null;
+
         /// <summary>
         /// Responds to sentence events from GPS receiver
         /// </summary>
         protected void GPSEventHandler(GPSControl sender, GPSControl.GPSPosition gpsdata)
         {
-            this.trackpoints.addPoint(map.mapsystem.CalcProjection(gpsdata.position));
+            ProjectedGeoPoint position = map.mapsystem.CalcProjection(gpsdata.position);
+            // salva il punto nella traccia
+            this.trackpoints.addPoint(position);
+            // centra la mappa
             if (autocenter)
-                mapcontrol.Center = map.mapsystem.CalcProjection(gpsdata.position);
-
+                mapcontrol.Center = position;
+            // online tracking
             tracking.HandleGPSEvent(gpsdata, options.OnlineTracking.UpdateInterval);
+            // contachilometri
             odo.HandleGPSEvent(gpsdata);
             label_odometer.Text = odo.ToString();
+            // allarmi di posizione
+            SpatialObject alarm = null;
+            foreach (SpatialObject o in planelements.Iterate(position))
+                alarm = o;
+            if (alarm != alarmLast)
+            {
+                if (alarm != null)
+                    System.Media.SystemSounds.Exclamation.Play();
+                alarmLast = alarm;
+            }
         }
 
         /// <summary>
@@ -381,21 +414,29 @@ namespace MapperTools.Pollicino
             ShowNextMap();
         }
 
-        private void action_loadtrack(string file)
+        private bool selectfile(out string file, string opendir)
         {
-            if (file == null)
+            if (!Directory.Exists(opendir))
+                opendir = Program.GetPath();
+            using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
             {
-                string opendir = options.GPS.LogsDir;
-                if (!Directory.Exists(opendir))
-                    opendir = Program.GetPath();
-                using (FormOpenFile openfiledlg = new FormOpenFile(opendir, false))
+                if (openfiledlg.ShowDialog() == DialogResult.OK)
                 {
-                    if (openfiledlg.ShowDialog() == DialogResult.OK)
-                        file = openfiledlg.openfile;
-                    else
-                        return;
+                    file = openfiledlg.openfile;
+                    return true;
+                }
+                else
+                {
+                    file = null;
+                    return false;
                 }
             }
+        }
+
+        private void action_loadtrack(string file)
+        {
+            if (file == null && !selectfile(out file, options.GPS.LogsDir))
+                return;
 
             // count: for debug
             int count = 0;
@@ -460,27 +501,13 @@ namespace MapperTools.Pollicino
 
                     try
                     {
-                        NMEA2GPX.GPXBaseType gpxdata = NMEA2GPX.GPXBaseType.Deserialize(gpxfile);
-                        ProjectedGeoPoint pgp = this.mapcontrol.Center;
-                        if (gpxdata.HasTrack)
-                        {
-                            NMEA2GPX.WaypointType[] trackpoints = gpxdata.trk.GetPoints();
-                            foreach (NMEA2GPX.WaypointType wp in trackpoints)
-                            {
-                                pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
-                                this.trackpoints.addPoint(pgp);
-                            }
-                        }
+                        ProjectedGeoPoint lastpoint = mapcontrol.Center;
+                        ProcessGPX(gpxfile, 
+                                   (p) => { this.trackpoints.addPoint(p); lastpoint = p; },
+                                   (p) => this.waypoints.addPoint(p)
+                            );
                         // centra la mappa alla fine della traccia caricata
-                        this.mapcontrol.Center = pgp;
-
-                        if (gpxdata.wpt != null)
-                            foreach (NMEA2GPX.WaypointType wp in gpxdata.wpt)
-                            {
-                                pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
-                                this.waypoints.addPoint(pgp);
-                            }
-                        System.Windows.Forms.Cursor.Current = Cursors.Default;
+                        this.mapcontrol.Center = lastpoint;
                     }
                     catch (Exception e)
                     {
@@ -495,6 +522,64 @@ namespace MapperTools.Pollicino
                     }
                 }
             }
+        }
+
+        private void action_loadplan(string gpxfile)
+        {
+            if (gpxfile == null && !selectfile(out gpxfile, options.GPS.LogsDir))
+                return;
+
+            SetPlanVisibility(false);
+            System.Windows.Forms.Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                ProjectedGeoPoint? prevpoint = null;
+                ProcessGPX(gpxfile,
+                           (trkpnt) =>
+                           {
+                               if (prevpoint != null)
+                                   this.planelements.addObject(new Line(prevpoint.Value, trkpnt));
+                               prevpoint = trkpnt;
+                           },
+                           (wpt) => this.planelements.addObject(new Circle(wpt, 40, map.mapsystem))
+                );
+                // centra la mappa alla fine della traccia caricata
+                this.mapcontrol.Center = prevpoint.Value;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Trace.WriteLine(e);
+                System.Windows.Forms.Cursor.Current = Cursors.Default;
+                MessageBox.Show("Load error");
+            }
+            finally
+            {
+                SetPlanVisibility(true);
+            }
+        }
+
+        private delegate void HandlePointDelegate(ProjectedGeoPoint p);
+
+        private void ProcessGPX(string gpxfile, HandlePointDelegate processtrackpoint, HandlePointDelegate processwaypoint)
+        {
+            NMEA2GPX.GPXBaseType gpxdata = NMEA2GPX.GPXBaseType.Deserialize(gpxfile);
+            ProjectedGeoPoint pgp = this.mapcontrol.Center;
+            if (gpxdata.HasTrack)
+            {
+                NMEA2GPX.WaypointType[] trackpoints = gpxdata.trk.GetPoints();
+                foreach (NMEA2GPX.WaypointType wp in trackpoints)
+                {
+                    pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                    processtrackpoint(pgp);
+                }
+            }
+            if (gpxdata.wpt != null)
+                foreach (NMEA2GPX.WaypointType wp in gpxdata.wpt)
+                {
+                    pgp = map.mapsystem.CalcProjection(new GeoPoint(wp.lat, wp.lon));
+                    processwaypoint(pgp);
+                }
+            System.Windows.Forms.Cursor.Current = Cursors.Default;
         }
 
         private void action_ToggleOnlineTracking()
@@ -910,19 +995,17 @@ namespace MapperTools.Pollicino
 
         private void menuItem_HiRes_Click(object sender, EventArgs e)
         {
-            menuItem_HiRes.Checked = !menuItem_HiRes.Checked;
-            mapcontrol.HiResMode = menuItem_HiRes.Checked;
+            HiResMode = !HiResMode;
         }
-
-        //private void menuItem_HiRes_customdraw_Click(object sender, EventArgs e)
-        //{
-        //    menuItem_HiRes_customdraw.Checked = !menuItem_HiRes_customdraw.Checked;
-        //    mapcontrol.HiResModeCustomDraw = menuItem_HiRes_customdraw.Checked;
-        //}
 
         private void menuItem_Odometer_Click(object sender, EventArgs e)
         {
             ShowOdometer = !ShowOdometer;
+        }
+
+        private void menuItem_LoadPlan_Click(object sender, EventArgs e)
+        {
+            action_loadplan(null);
         }
     }
 
@@ -975,4 +1058,64 @@ namespace MapperTools.Pollicino
         }        
     }
 
+    class RectArea : SORectArea, IDrawableObject
+    {
+
+        public RectArea(ProjectedGeoArea area)
+            : base(area)
+        { }
+
+        void IDrawableObject.Draw(Graphics dst, PxCoordinates corner, uint zoom, MercatorProjectionMapSystem mapsystem)
+        {
+            PxCoordinates pxmin = mapsystem.PointToPx(ContainingArea.pMin, zoom);
+            PxCoordinates pxsize = mapsystem.PointToPx(ContainingArea.pMax, zoom);
+            pxsize -= pxmin;
+            pxmin -= corner;
+            using (Pen p = new Pen(Color.Yellow))
+                dst.DrawRectangle(p, new Rectangle(pxmin.xpx, pxmin.ypx, pxsize.xpx, pxsize.ypx));
+        }
+    }
+
+    class Line : SOLine, IDrawableObject
+    {
+        public Line(ProjectedGeoPoint begin, ProjectedGeoPoint end)
+            : base(begin, end)
+        { }
+
+        void IDrawableObject.Draw(Graphics dst, PxCoordinates corner, uint zoom, MercatorProjectionMapSystem mapsystem)
+        {
+            PxCoordinates pxbegin = mapsystem.PointToPx(begin, zoom);
+            PxCoordinates pxend = mapsystem.PointToPx(end, zoom);
+            pxbegin -= corner;
+            pxend -= corner;
+            using (Pen p = new Pen(Color.Blue))
+                dst.DrawLine(p, pxbegin.xpx, pxbegin.ypx, pxend.xpx, pxend.ypx);
+        }
+    }
+
+    class Circle : SOCircularArea, IDrawableObject
+    {
+        /// <param name="center"></param>
+        /// <param name="radius">Raggio in metri</param>
+        /// <param name="mapsystem"></param>
+        public Circle(ProjectedGeoPoint center, double radius, MercatorProjectionMapSystem mapsystem)
+            : base(center, radius, mapsystem)
+        { }
+
+        void IDrawableObject.Draw(Graphics dst, PxCoordinates corner, uint zoom, MercatorProjectionMapSystem mapsystem)
+        {
+            PxCoordinates pxmin = mapsystem.PointToPx(ContainingArea.pMin, zoom);
+            PxCoordinates pxsize = mapsystem.PointToPx(ContainingArea.pMax, zoom);
+            pxsize -= pxmin;
+            pxmin -= corner;
+            PxCoordinates pxcenter = mapsystem.PointToPx(center, zoom);
+            pxcenter -= corner;
+            using (Pen p = new Pen(Color.Violet))
+            {
+                dst.DrawEllipse(p, new Rectangle(pxmin.xpx, pxmin.ypx, pxsize.xpx, pxsize.ypx));
+                dst.DrawLine(p, pxcenter.xpx - 5, pxcenter.ypx - 5, pxcenter.xpx + 5, pxcenter.ypx + 5);
+                dst.DrawLine(p, pxcenter.xpx - 5, pxcenter.ypx + 5, pxcenter.xpx + 5, pxcenter.ypx - 5);
+            }
+        }
+    }
 }

@@ -29,6 +29,7 @@ namespace MapperTools.Pollicino
         protected LayeredMap lmap;
         protected LayerPoints trackpoints;
         protected LayerPoints waypoints;
+        protected LayerSpatialObjects planelements;
 
         private void InitMaps()
         {
@@ -37,6 +38,9 @@ namespace MapperTools.Pollicino
                                                 SelectActiveMap(0), 
                                                 required_buffers(true));
             lmap.addLayerOnTop(map);
+            // Piano per il mapping
+            planelements = new LayerSpatialObjects(map.mapsystem);
+            idx_layer_planelements = lmap.addLayerOnTop(planelements);
             // Tracciato GPS
             trackpoints = new LayerPoints(map.mapsystem);
             waypoints = new LayerPoints(map.mapsystem);
@@ -45,7 +49,7 @@ namespace MapperTools.Pollicino
             idx_layer_waypnt = lmap.addLayerOnTop(waypoints);
         }
 
-        private int idx_layer_trkpnt = 0, idx_layer_waypnt = 0;
+        private int idx_layer_trkpnt = 0, idx_layer_waypnt = 0, idx_layer_planelements = 0;
         /// <summary>
         /// Indice nell'array options.Maps.ActiveTileMaps del MapSystem attualmente utilizzato da map.
         /// </summary>
@@ -55,6 +59,11 @@ namespace MapperTools.Pollicino
         {
             lmap.setVisibility(idx_layer_trkpnt, v);
             lmap.setVisibility(idx_layer_waypnt, v);
+        }
+
+        public void SetPlanVisibility(bool v)
+        {
+            lmap.setVisibility(idx_layer_planelements, v);
         }
 
         public void RefreshActiveMapsList()
